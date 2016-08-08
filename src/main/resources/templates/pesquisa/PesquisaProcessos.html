@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+<head>
+<title>Pesquisa de Processos</title>
+</head>
+
+<section layout:fragment="conteudo">
+
+
+<div class="panel panel-default">
+		
+		<div class="panel-heading">
+		<div class="clearfix">	
+			<h1 class="panel-title">Pesquisa de Processos</h1>
+			<form method="GET" action="/transparenciactb/processos">
+			<div class="col-lg-3">
+   				 <div class="input-group">
+     				 <input type="text" class="form-control" placeholder="Pesquise aqui..." name="busca"/>
+    				  <span class="input-group-btn">
+       					 <button class="btn btn-default" type="submit">Go!</button>
+      				</span>
+   				 </div>
+ 			 </div>
+ 			 <div class="col-lg-12">
+ 			 	<input type="radio" name ="nome" /> Número do processo
+ 			 	<input type="radio" name ="setor" /> Data de abertura
+ 			 </div>
+ 			  
+ 			</form>
+			<a class="btn btn-link aw-link-panel" href="/transparenciactb/processos/novo">Novo processo</a>
+		</div>
+		</div>
+		<div class="panel-body">
+		
+		<table class="table table-bordered table-striped">
+		
+			<thead>
+				<tr>
+				<th class="text-center col-md-2">Número do processo</th>
+				<th class="text-center col-md-2">Data de abertura</th>
+				<th class="text-center col-md-2">Data de pagamento</th>
+				<th class="text-center col-md-2">Pago</th>
+				</tr>
+				
+			</thead>
+			<tbody>
+				<tr th:each="processo : ${todosProcessos}">
+					<td class="text-center" th:text="${processo.numero_processo}"></td>
+					<td class="text-center" th:text="${#dates.format(processo.data_abertura, 'dd/MM/yyyy')}"></td>
+					<td class="text-center" th:text="${#dates.format(processo.data_pagamento, 'dd/MM/yyyy')}"></td>
+					<td class="text-center" th:text="${processo.pago}"></td>	
+				</tr>
+				
+			<tr>
+				<td colspan="6" th:if="${#lists.isEmpty(todosProcessos)}">Nenhum processo encontrado</td>
+			</tr>
+			</tbody>
+		
+		</table>
+		</div>
+	</div>	
+</section>
+
+</html>

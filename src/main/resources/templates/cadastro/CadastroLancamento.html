@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+<head>
+
+<title>Cadastro de Lancamentos</title>
+</head>
+
+<section layout:fragment="conteudo">
+<form class="form-horizontal" method="POST" action="/transparenciactb/lancamentos" th:object="${lancamento}">
+		<div class="panel panel-default">
+		<div class="panel-heading">
+			<div class="clearfix">
+			<h1 class="panel-title">Novo Lançamento</h1>
+		<a class="btn btn-link aw-link-panel" href="/gereteci/usuarios">Voltar para pesquisa</a>
+		</div>
+		</div>
+	
+	
+	<div class="panel-body">
+	<input type="hidden" th:field="*{id_lancamento}" />
+		
+			<div class="form-group" >
+			<label for="nome" class="col-sm-2 control-label" >Número do aditivo:</label>
+			<div class="col-sm-4">
+				<input type="text" class="form-control" id="aditivo_n" name="aditivo_n" th:field="*{aditivo_n}"/>
+			</div>
+		</div>
+			<div class="form-group" >
+			<label for="matricula" class="col-sm-2 control-label">Número da nota fiscal:</label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control" id="numero_nota_fiscal" name="numero_nota_fiscal" th:field="*{numero_nota_fiscal}" />
+			</div>
+		</div>
+			<div class="form-group" >
+			<label for="funcao" class="col-sm-2 control-label">Observação:</label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control" id="observacao" name="observacao" th:field="*{observacao}"/>
+			</div>
+		</div>
+		
+		<div class="form-group" >
+			<label for="funcao" class="col-sm-2 control-label">Data do lançamento:</label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control" id="data" name="data" th:field="*{data}"/>
+			</div>
+		</div>
+			
+		<div class="form-group" >
+			<label for="funcao" class="col-sm-2 control-label">Valor:</label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control" id="valor" name="valor" th:field="*{valor}"/>
+			</div>
+		</div>
+			<div class="form-group">
+			<label for="arquitetura" class="col-sm-2 control-label">Processo de pagamento(número):</label>
+			<div class="col-sm-6">
+				<select class="form-control" name="lancamento_id_processo">
+					<option th:each="processo : ${todosProcessos}" th:value="${processo.id_processo}" th:text="${processo.numero_processo}"></option>
+				</select>
+			</div>
+		</div>	    
+			<div class="form-group">
+     		<div class="col-sm-offset-2 col-sm-10">
+				<button type="submit" class="btn btn-primary">Cadastrar</button>
+			</div>
+		</div>
+		
+		
+	</div>
+	</div>
+</form>
+</section>
+</html>
