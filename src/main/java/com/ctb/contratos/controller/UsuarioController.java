@@ -1,6 +1,7 @@
 package com.ctb.contratos.controller;
 
 import java.text.ParseException;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,9 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ctb.contratos.model.Contrato;
+import com.ctb.contratos.model.Lancamento;
 import com.ctb.contratos.model.Usuario;
+import com.ctb.contratos.repository.Contratos;
 import com.ctb.contratos.repository.Usuarios;
 
 @Controller
@@ -25,6 +28,8 @@ public class UsuarioController {
 	private static final String CADASTRO_VIEW = "/cadastro/CadastroUsuario"; 
 	@Autowired
 	private Usuarios usuarios;
+	@Autowired
+	private Contratos contratos;
 	
 	@RequestMapping("/novo")
 	public ModelAndView novo()
@@ -63,18 +68,52 @@ public class UsuarioController {
 		mv.addObject(usuario);
 		return mv;
 	}
-	@RequestMapping(value="{id_usuario}", method=RequestMethod.DELETE)
+	@RequestMapping(value="/remove/{id_usuario}")
 	public String excluir(@PathVariable Integer id_usuario, RedirectAttributes attributes)
 	{
+		Usuario usuario = usuarios.findOne(id_usuario);
+		removerGestorOuFiscal(usuario);
+		usuarios.delete(id_usuario);
+		
 		attributes.addFlashAttribute("mensagem", "Usuário excluido com sucesso com sucesso!");	
 		//usuarios.delete(id_usuario);
 		return "redirect:/transparenciactb/usuarios";	
 	
 	}
+	
 	@ModelAttribute("todosUsuarios")
 	public List<Usuario> todosUsuarios()
 	{
 		return usuarios.findAll();
+	}
+	
+	public void removerGestorOuFiscal(Usuario usuario)
+	{
+		List<Contrato> contrats = contratos.findAll();
+		Iterator it = contrats.iterator();
+		
+		
+		while(it.hasNext())
+		{
+			Contrato obj = (Contrato) it.next();
+			//System.out.println(obj.getProcesso().getId_processo());
+			if(obj.getGestor() != null)
+			{
+				if(obj.getGestor().getId_usuario() == usuario.getId_usuario())
+				{
+					obj.setGestor(null);
+					contratos.save(obj);
+					
+				}
+			}
+			if(obj.getFiscal()!= null) {
+				 if(obj.getFiscal().getId_usuario() == usuario.getId_usuario())
+				{
+					obj.setFiscal(null);
+					contratos.save(obj);
+				}
+			}
+		}
 	}
 	
 }

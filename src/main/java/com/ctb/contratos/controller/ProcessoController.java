@@ -1,6 +1,8 @@
 package com.ctb.contratos.controller;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +17,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ctb.Processo;
 import com.ctb.contratos.model.Contratado;
+import com.ctb.contratos.model.Contrato;
+import com.ctb.contratos.model.Lancamento;
 import com.ctb.contratos.model.Usuario;
 import com.ctb.contratos.repository.Contratados;
+import com.ctb.contratos.repository.Lancamentos;
 import com.ctb.contratos.repository.Processos;
 
 @Controller
@@ -26,6 +31,9 @@ public class ProcessoController {
 
 	@Autowired
 	private Processos processos;
+	
+	@Autowired
+	private Lancamentos lancamentos;
 	
 	@RequestMapping("/novo")
 	public ModelAndView novo()
@@ -71,4 +79,38 @@ public class ProcessoController {
 		mv.addObject(processo);
 		return mv;
 	}
+	
+	@RequestMapping(value="/remove/{id_processo}"/*, method=RequestMethod.DELETE*/)
+	public String excluir(@PathVariable Integer id_processo, RedirectAttributes attributes)
+	{
+		
+		attributes.addFlashAttribute("mensagem", "Processo removido com sucesso com sucesso!");
+		
+		Lancamento lancamento = buscarLancamentoProcesso(id_processo);
+		Processo processo = processos.findOne(id_processo);
+		lancamento.setProcesso(null);
+		lancamentos.save(lancamento);
+		processos.delete(processo);
+		
+		
+		return "redirect:/transparenciactb/processos/";	
+	
+	}
+	
+	public Lancamento buscarLancamentoProcesso(Integer numero_processo)
+	{
+		List<Lancamento> lancamentosABuscar = lancamentos.findAll();
+		Iterator it = lancamentosABuscar.iterator();
+		
+		while(it.hasNext())
+		{
+			Lancamento obj = (Lancamento) it.next();
+			//System.out.println(obj.getProcesso().getId_processo());
+			if(obj.getProcesso().getId_processo() == numero_processo)
+				return obj;
+			
+		}
+		return null;
+	}
+	
 }

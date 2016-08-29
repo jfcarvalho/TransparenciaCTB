@@ -54,7 +54,7 @@
 					<td class="text-center" th:text="${usuario.funcao}"></td>
 					<td class="text-center" th:text="${usuario.email}"></td>
 					<td class="text-center" th:text="${usuario.telefone}"></td>
-					<td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/usuarios/{id_usuario}(id_usuario=${usuario.id_usuario})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a class="btn btn-link btn-xs" data-toggle="modal" data-target="#confirmacaoExclusaoModal" th:attr="data-id_usuario=${usuario.id_usuario}, data-nome=${usuario.nome}"><span class="glyphicon glyphicon-remove"></span></a></td> 
+					<td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/usuarios/{id_usuario}(id_usuario=${usuario.id_usuario})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:href="@{/transparenciactb/usuarios/remove/{id_usuario}(id_usuario=${usuario.id_usuario})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> Remover</span></a></td>
 				</tr>
 				
 			<tr>

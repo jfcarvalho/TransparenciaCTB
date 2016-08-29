@@ -50,7 +50,7 @@
 					<td class="text-center" th:text="${#dates.format(processo.data_abertura, 'dd/MM/yyyy')}"></td>
 					<td class="text-center" th:text="${#dates.format(processo.data_pagamento, 'dd/MM/yyyy')}"></td>
 					<td class="text-center" th:text="${processo.pago}"></td>
-					<td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/processos/{id_processo}(id_processo=${processo.id_processo})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a class="btn btn-link btn-xs" data-toggle="modal" data-target="#confirmacaoExclusaoModal" th:attr="data-id_usuario=${processo.id_processo}, data-nome=${processo.numero_processo}"><span class="glyphicon glyphicon-remove"></span></a></td>	
+					<td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/processos/{id_processo}(id_processo=${processo.id_processo})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:href="@{/transparenciactb/processos/remove/{id_processo}(id_processo=${processo.id_processo})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> Remover</span></a></td>	
 				</tr>
 				
 			<tr>

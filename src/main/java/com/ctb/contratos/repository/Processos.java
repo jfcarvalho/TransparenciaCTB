@@ -10,5 +10,5 @@ import com.ctb.contratos.model.Contratado;
 import com.ctb.contratos.model.Usuario;
 
 public interface Processos extends JpaRepository<Processo, Integer>{
-		
+
 }

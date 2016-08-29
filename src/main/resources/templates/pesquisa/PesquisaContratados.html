@@ -27,7 +27,7 @@
  			 </div>
  			  
  			</form>
-			<a class="btn btn-link aw-link-panel" href="/transparenciactb/usuarios/novo">Novo usuário</a>
+			<a class="btn btn-link aw-link-panel" href="/transparenciactb/contratados/novo">Novo contratado</a>
 		</div>
 		</div>
 		<div class="panel-body">
@@ -46,7 +46,7 @@
 				<tr th:each="contratados : ${todosContratados}">
 					<td class="text-center" th:text="${contratados.nome}"></td>
 					<td class="text-center" th:text="${contratados.cnpj}"></td>	
-					<td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/contratados/{id_contratados}(id_contratados=${contratados.id_contratado})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a class="btn btn-link btn-xs" data-toggle="modal" data-target="#confirmacaoExclusaoModal" th:attr="data-id_usuario=${contratados.id_contratado}, data-nome=${contratados.nome}"><span class="glyphicon glyphicon-remove"></span></a></td>
+					<td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/contratados/{id_contratados}(id_contratados=${contratados.id_contratado})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:href="@{/transparenciactb/contratados/remove/{id_contratados}(id_contratados=${contratados.id_contratado})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> remover</span></a></td>
 				</tr>
 				
 			<tr>
