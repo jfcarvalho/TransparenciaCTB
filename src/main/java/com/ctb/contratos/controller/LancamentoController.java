@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -75,5 +76,17 @@ public class LancamentoController {
 		//mv.addObject("usuarios", todosUsuarios);
     
 	return mv;
+	}
+	
+	@RequestMapping("{id_lancamento}")
+	public ModelAndView edicao(@PathVariable("id_lancamento") Lancamento lancamento)
+	{
+		//System.out.println(">>>>>>> codigo recebido: " + id_usuario);
+		//Usuario usuario = usuarios.findOne(id_usuario);
+		
+		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
+		mv.addObject("lancamento", lancamento);
+		mv.addObject(lancamento);
+		return mv;
 	}
 }

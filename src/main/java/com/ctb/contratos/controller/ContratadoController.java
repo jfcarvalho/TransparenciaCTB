@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.ctb.Processo;
 import com.ctb.contratos.model.Contratado;
 import com.ctb.contratos.model.Contrato;
 import com.ctb.contratos.repository.Contratados;
@@ -72,6 +73,7 @@ public class ContratadoController {
 		return "redirect:/transparenciactb/usuarios";	
 	
 	}
+	
 	
 	@ModelAttribute("todosContratados")
 	public List<Contratado> todosContratados()

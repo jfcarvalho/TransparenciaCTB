@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -58,5 +59,16 @@ public class ProcessoController {
 	public List<Processo> todosProcessos()
 	{
 		return processos.findAll();
+	}
+	@RequestMapping("{id_processo}")
+	public ModelAndView edicao(@PathVariable("id_processo") Processo processo)
+	{
+		//System.out.println(">>>>>>> codigo recebido: " + id_usuario);
+		//Usuario usuario = usuarios.findOne(id_usuario);
+		
+		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
+		mv.addObject("processo", processo);
+		mv.addObject(processo);
+		return mv;
 	}
 }
