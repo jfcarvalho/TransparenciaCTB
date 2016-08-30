@@ -1,6 +1,7 @@
 package com.ctb.contratos.controller;
 
 import java.text.ParseException;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +44,6 @@ public class LancamentoController {
 	{
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
 		mv.addObject(new Lancamento());
-		
-		//mv.addObject("todosNiveisUsuario", Nivel.values());
 		return mv;
 	}
 	
@@ -82,7 +81,7 @@ public class LancamentoController {
 	public ModelAndView pesquisar(String busca, String nome, String setor) throws ParseException
 	{
 		ModelAndView mv = new ModelAndView("/pesquisa/PesquisaLancamentos");
-		//mv.addObject("usuarios", todosUsuarios);
+		
     
 	return mv;
 	}
@@ -90,8 +89,7 @@ public class LancamentoController {
 	@RequestMapping("{id_lancamento}")
 	public ModelAndView edicao(@PathVariable("id_lancamento") Lancamento lancamento)
 	{
-		//System.out.println(">>>>>>> codigo recebido: " + id_usuario);
-		//Usuario usuario = usuarios.findOne(id_usuario);
+		
 		
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
 		mv.addObject("lancamento", lancamento);
@@ -104,4 +102,67 @@ public class LancamentoController {
 	{
 		return contratos.findAll();
 	}
+	
+	@RequestMapping(value="/remove/{id_lancamento}")
+	public String excluir(@PathVariable Integer id_lancamento, RedirectAttributes attributes)
+	{
+		Lancamento lancamento = lancamentos.findOne(id_lancamento);
+		attributes.addFlashAttribute("mensagem", "Contrato excluído com sucesso com sucesso!");	
+		//usuarios.delete(id_usuario);
+		desvincularLancamento(lancamento);
+		lancamentos.delete(id_lancamento);
+		return "redirect:/transparenciactb/lancamentos";	
+	
+	}
+	
+public void desvincularLancamento(Lancamento lancamento)
+	
+	{
+	
+	if(lancamento.getContrato() != null)
+	{
+		desvincularContratoLancamento(lancamento.getContrato());
+	}
+	
+	
+	
+	/*
+	Iterator it = contratosLancamentos.iterator();
+	
+	while(it.hasNext())
+	{
+		Lancamento obj = (Lancamento) it.next();
+		System.out.println("Entrou aqui nesse laço");
+		System.out.println(obj.getContrato().getNumero());
+		if(obj.getContrato().getNumero() == contrato.getNumero()) {
+			obj.setContrato(null);
+			lancamentos.save(obj);
+			}
+		}
+		*/
+		
+	}
+
+public void desvincularContratoLancamento(Contrato contrato)
+{
+	List<Lancamento> contratosLancamentos = contrato.getLancamentos();
+	System.out.println(contratosLancamentos);
+	//System.out.println(contratosLancamentos.size());
+	if(contratosLancamentos != null) {
+		Iterator it = contratosLancamentos.iterator();
+	
+	while(it.hasNext())
+	{
+		Lancamento obj = (Lancamento) it.next();
+		System.out.println("Entrou aqui nesse laço");
+		System.out.println(obj.getContrato().getNumero());
+		if(obj.getContrato().getNumero() == contrato.getNumero()) {
+			obj.setContrato(null);
+			lancamentos.save(obj);
+			}
+		}
+	}
+	
+}
+
 }

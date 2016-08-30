@@ -22,6 +22,7 @@ import com.ctb.contratos.model.Lancamento;
 import com.ctb.contratos.model.Usuario;
 import com.ctb.contratos.repository.Contratados;
 import com.ctb.contratos.repository.Contratos;
+import com.ctb.contratos.repository.Lancamentos;
 import com.ctb.contratos.repository.Usuarios;
 
 @Controller
@@ -37,6 +38,8 @@ public class ContratoController {
 	@Autowired
 	private Contratos contratos;
 
+	@Autowired
+	private Lancamentos lancamentos;
 	
 	@RequestMapping("/novo")
 	public ModelAndView novo()
@@ -82,51 +85,98 @@ public class ContratoController {
 		mv.addObject(contrato);
 		return mv;
 	}
-	/*@RequestMapping(value="{id_contrato}")
+	
+	@RequestMapping(value="/remove/{id_contrato}")
 	public String excluir(@PathVariable Integer id_contrato, RedirectAttributes attributes)
 	{
 		Contrato contrato = contratos.findOne(id_contrato);
-		attributes.addFlashAttribute("mensagem", "Usuário excluido com sucesso com sucesso!");	
+		attributes.addFlashAttribute("mensagem", "Contrato excluído com sucesso com sucesso!");	
 		//usuarios.delete(id_usuario);
-		return "redirect:/transparenciactb/usuarios";	
+		desvincularContrato(contrato);
+		contratos.delete(id_contrato);
+		return "redirect:/transparenciactb/contratos";	
 	
 	}
-	*/
+	
 	public void desvincularContrato(Contrato contrato)
 	
 	{
 		if(contrato.getGestor() != null)
 		{
 			contrato.setGestor(null);
+			desvincularGestoresContratos(contrato);
 		}
 		if (contrato.getFiscal() != null)
 		{
 			contrato.setFiscal(null);
+			desvincularFiscaisContratos(contrato);
 		}
 		if(contrato.getLancamentos() != null)
 		{
+			desvincularLancamentos(contrato);
+			contrato.setLancamentos(null);
 			
 		}
+		
+		contratos.save(contrato);
 	}
-	/*
-	public void desvincularLancamentos(List<Lancamento> lancamentos, Integer contrato)
+	
+	public void desvincularLancamentos(Contrato contrato)
 	{
-		Iterator it = lancamentos.iterator();
+		System.out.println("Entrou aqui nesse método");
+		List<Lancamento> contratosLancamentos = contrato.getLancamentos();
+		System.out.println(contratosLancamentos);
+		//System.out.println(contratosLancamentos.size());
+		if(contratosLancamentos != null) {
+			Iterator it = contratosLancamentos.iterator();
 		
 		while(it.hasNext())
 		{
 			Lancamento obj = (Lancamento) it.next();
-			//System.out.println(obj.getProcesso().getId_processo());
-			if(obj.get) 
-			{
-				obj.setProcesso(null);
-				processos
+			System.out.println("Entrou aqui nesse laço");
+			System.out.println(obj.getContrato().getNumero());
+			if(obj.getContrato().getNumero() == contrato.getNumero()) {
+				obj.setContrato(null);
+				lancamentos.save(obj);
+				}
 			}
-				
-			
 		}
 	}
-	*/
+	
+	public void desvincularGestoresContratos(Contrato contrato)
+	{
+		if(contrato.getGestor() != null) {
+			Usuario gestor = usuarios.findOne(contrato.getGestor().getId_usuario());
+			List<Contrato> contratosGestor = gestor.getContratosGeridos();
+			Iterator it = contratosGestor.iterator();
+			
+			while(it.hasNext())
+			{
+				Contrato obj = (Contrato) it.next();
+				if(obj.getNumero() == contrato.getNumero()) {
+					obj.setGestor(null);
+					contratos.save(obj);
+				}
+			}
+	}
+}
+	public void desvincularFiscaisContratos(Contrato contrato)
+	{
+		if(contrato.getFiscal() != null) {
+			Usuario fiscal = usuarios.findOne(contrato.getFiscal().getId_usuario());
+			List<Contrato> contratosFiscal= fiscal.getContratosGeridos();
+			Iterator it = contratosFiscal.iterator();
+			
+			while(it.hasNext())
+			{
+				Contrato obj = (Contrato) it.next();
+				if(obj.getNumero() == contrato.getNumero()) {
+					obj.setFiscal(null);
+					contratos.save(obj);
+					}
+				}
+			}
+	}	
 	
 	@ModelAttribute("todosGestores")
 	public List<Usuario> todosGestores()

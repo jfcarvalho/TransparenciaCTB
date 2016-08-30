@@ -52,7 +52,7 @@
 					<td class="text-center" th:text="${lancamento.valor}"></td>
 					<td class="text-center" th:text="${lancamento.aditivo_n}"></td>
 					<td class="text-center" th:text="${lancamento.observacao}"></td>
-						<td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/lancamentos/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a class="btn btn-link btn-xs" data-toggle="modal" data-target="#confirmacaoExclusaoModal" th:attr="data-id_usuario=${lancamento.id_lancamento}, data-nome=${lancamento.observacao}"><span class="glyphicon glyphicon-remove"></span></a></td>
+						<td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/lancamentos/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:href="@{/transparenciactb/lancamentos/remove/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> Remover</span></a></td>
 					
 				</tr>
 				

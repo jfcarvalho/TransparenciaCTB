@@ -52,7 +52,7 @@
 					<td class="text-center" th:text="${#dates.format(contrato.data_assinatura, 'dd/MM/yyyy')}"></td>
 					<td class="text-center" th:text="${#dates.format(contrato.data_vencimento, 'dd/MM/yyyy')}"></td>
 					<td class="text-center" th:text="${contrato.saldo_contrato}"></td>
-					<td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/contratos/{id_contrato}(id_contrato=${contrato.id_contrato})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a class="btn btn-link btn-xs" data-toggle="modal" data-target="#confirmacaoExclusaoModal" th:attr="data-id_usuario=${contrato.id_contrato}, data-nome=${contrato.numero}"><span class="glyphicon glyphicon-remove"></span></a></td>
+					<td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/contratos/{id_contrato}(id_contrato=${contrato.id_contrato})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:href="@{/transparenciactb/contratos/remove/{id_contrato}(id_contrato=${contrato.id_contrato})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> remover</span></a></td>
 					
 				</tr>
 				
