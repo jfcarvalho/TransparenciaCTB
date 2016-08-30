@@ -40,6 +40,12 @@ public class Lancamento {
 	@JoinColumn(name="lancamento_id_processo")
 	private Processo processo;
 	
+	@ManyToOne
+	@JoinColumn(name= "lancamento_id_contrato")
+	private Contrato contrato;
+	
+	
+	
 	public Integer getId_lancamento()
 	{
 		return this.id_lancamento;
@@ -105,5 +111,15 @@ public class Lancamento {
 	{
 		this.observacao = observacao;
 	}
+	
+	public Contrato getContrato()
+	{
+		return this.contrato;
+	}
+	public void setContrato(Contrato contrato)
+	{
+		this.contrato= contrato;
+	}
+	
 	
 }

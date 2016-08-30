@@ -50,11 +50,9 @@ public class Contrato {
 	@JoinColumn(name="cotrato_id_fiscal")
 	private Usuario fiscal;
 	
-	
-	
-	
-	@OneToMany(mappedBy="processo")
+	@OneToMany(mappedBy="contrato")
 	private List<Lancamento> lancamentos;
+	
 	
 	public Integer getId_contrato()
 	{
@@ -219,6 +217,7 @@ public class Contrato {
 	
 	public void setLancamentos(List<Lancamento> lancamentos)
 	{
-		this.lancamentos= lancamentos;
+		this.lancamentos = lancamentos;
 	}
+	
 }

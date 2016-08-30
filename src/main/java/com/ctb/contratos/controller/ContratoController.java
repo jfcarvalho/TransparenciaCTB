@@ -1,6 +1,7 @@
 package com.ctb.contratos.controller;
 
 import java.text.ParseException;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.ctb.Processo;
 import com.ctb.contratos.model.Contratado;
 import com.ctb.contratos.model.Contrato;
+import com.ctb.contratos.model.Lancamento;
 import com.ctb.contratos.model.Usuario;
 import com.ctb.contratos.repository.Contratados;
 import com.ctb.contratos.repository.Contratos;
@@ -80,14 +82,51 @@ public class ContratoController {
 		mv.addObject(contrato);
 		return mv;
 	}
-	@RequestMapping(value="{id_usuario}", method=RequestMethod.DELETE)
-	public String excluir(@PathVariable Integer id_usuario, RedirectAttributes attributes)
+	/*@RequestMapping(value="{id_contrato}")
+	public String excluir(@PathVariable Integer id_contrato, RedirectAttributes attributes)
 	{
+		Contrato contrato = contratos.findOne(id_contrato);
 		attributes.addFlashAttribute("mensagem", "Usuário excluido com sucesso com sucesso!");	
 		//usuarios.delete(id_usuario);
 		return "redirect:/transparenciactb/usuarios";	
 	
 	}
+	*/
+	public void desvincularContrato(Contrato contrato)
+	
+	{
+		if(contrato.getGestor() != null)
+		{
+			contrato.setGestor(null);
+		}
+		if (contrato.getFiscal() != null)
+		{
+			contrato.setFiscal(null);
+		}
+		if(contrato.getLancamentos() != null)
+		{
+			
+		}
+	}
+	/*
+	public void desvincularLancamentos(List<Lancamento> lancamentos, Integer contrato)
+	{
+		Iterator it = lancamentos.iterator();
+		
+		while(it.hasNext())
+		{
+			Lancamento obj = (Lancamento) it.next();
+			//System.out.println(obj.getProcesso().getId_processo());
+			if(obj.get) 
+			{
+				obj.setProcesso(null);
+				processos
+			}
+				
+			
+		}
+	}
+	*/
 	
 	@ModelAttribute("todosGestores")
 	public List<Usuario> todosGestores()

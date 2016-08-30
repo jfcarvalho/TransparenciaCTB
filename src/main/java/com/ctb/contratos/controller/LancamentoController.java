@@ -16,8 +16,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ctb.Processo;
 import com.ctb.contratos.model.Contratado;
+import com.ctb.contratos.model.Contrato;
 import com.ctb.contratos.model.Lancamento;
 import com.ctb.contratos.repository.Contratados;
+import com.ctb.contratos.repository.Contratos;
 import com.ctb.contratos.repository.Lancamentos;
 import com.ctb.contratos.repository.Processos;
 
@@ -32,6 +34,8 @@ public class LancamentoController {
 	private Lancamentos lancamentos;
 	@Autowired
 	private Processos processos;
+	@Autowired
+	private Contratos contratos;
 	
 	
 	@RequestMapping("/novo")
@@ -45,13 +49,18 @@ public class LancamentoController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public String salvar(@Validated Lancamento lancamento, @RequestParam Integer lancamento_id_processo,RedirectAttributes attributes)
+	public String salvar(@Validated Lancamento lancamento, @RequestParam Integer lancamento_id_processo,@RequestParam Integer lancamento_id_contrato,RedirectAttributes attributes)
 	{
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
 		if(lancamento_id_processo != null)
 		{
 			Processo processo = processos.findOne(lancamento_id_processo);
 			lancamento.setProcesso(processo);
+		}
+		if(lancamento_id_contrato != null)
+		{
+			Contrato contrato = contratos.findOne(lancamento_id_contrato);
+			lancamento.setContrato(contrato);
 		}
 		lancamentos.save(lancamento);		
 		attributes.addFlashAttribute("mensagem", "Empresa contratada salva com sucesso!");	
@@ -88,5 +97,11 @@ public class LancamentoController {
 		mv.addObject("lancamento", lancamento);
 		mv.addObject(lancamento);
 		return mv;
+	}
+	
+	@ModelAttribute("todosContratos")
+	public List<Contrato> todosContratos()
+	{
+		return contratos.findAll();
 	}
 }
