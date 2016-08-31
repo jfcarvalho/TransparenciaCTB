@@ -122,5 +122,10 @@ public class ContratadoController {
 		return listaNova;
 	}
 
+	@RequestMapping("/teste")
+	public String teste()
+	{
+		return "/cadastro/cadastro-produto";
+	}
 	
 }
