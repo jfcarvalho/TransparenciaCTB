@@ -3,18 +3,32 @@
 <head>
 
 <title>Cadastro de Usuários</title>
+ 	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/vendors.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/algaworks.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/application.css"/>
 </head>
 
-<section layout:fragment="conteudo">
+<body>
+
+<div class="aw-layout-page">
+
+<div layout:include="/cabecalho/Cabecalho"></div>
+
+<div layout:include="/cabecalho/DashBoard"></div>
+
+<section class="aw-layout-content  js-content">
+
+<div class="page-header">
+	<div class="container-fluid">
+		<h1>
+			Cadastro de Usuários
+		</h1>
+	</div>
+</div>
+<div class="container-fluid">
+
 <form class="form-horizontal" method="POST" action="/transparenciactb/usuarios" th:object="${usuario}">
 		<div class="panel panel-default">
-		<div class="panel-heading">
-			<div class="clearfix">
-			<h1 class="panel-title">Novo Usuário</h1>
-		<a class="btn btn-link aw-link-panel" href="/transparenciactb/usuarios">Voltar para pesquisa</a>
-		</div>
-		</div>
-	
 	
 	<div class="panel-body">
 	<input type="hidden" th:field="*{id_usuario}" />
@@ -70,5 +84,39 @@
 	</div>
 	</div>
 </form>
+
+</div>
+
+<script>
+function excluir() {
+	swal({
+		title: "Tem certeza?",
+		text: "Você não poderá recuperar o produto após a exclusão.",
+		type: "warning",
+		showCancelButton: true,
+		confirmButtonColor: "#DD6B55",
+		confirmButtonText: "Sim, exclua agora!",
+		closeOnConfirm: false,
+		showLoaderOnConfirm: true
+	}, function() {
+		setTimeout(function() {
+			swal("Excluído!", "O produto foi excluído com sucesso.", "success");
+		}, 2000);
+	});
+}
+</script>
+
 </section>
+
+<footer class="aw-layout-footer  js-content">
+		<div class="container-fluid">
+			<span class="aw-footer-disclaimer">&copy; Companhia de Transportes do Estado da Bahia . Todos os direitos reservados.</span>
+		</div>
+	</footer>
+
+</div>
+
+<script src="/layout/javascripts/vendors.min.js"></script>
+<script src="/layout/javascripts/algaworks.min.js"></script>
+</body>
 </html>

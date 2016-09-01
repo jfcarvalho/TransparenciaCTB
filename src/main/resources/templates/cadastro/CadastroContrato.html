@@ -10,100 +10,12 @@
 
 <body>
 <div class="aw-layout-page">
-<nav class="navbar  navbar-fixed-top  navbar-default  js-sticky-reference" id="main-navbar">
-	  <div class="container-fluid">
 
-	    <div class="navbar-header">
-	      <a class="navbar-brand  hidden-xs" href="#">
-	       Transparencia CTB
-	      </a>
+<div layout:include="/cabecalho/Cabecalho"></div>
 
-	      <ul class="nav  navbar-nav">
-	        <li>
-	          <a href="#" class="js-sidebar-toggle"><i class="fa  fa-bars"></i></a>
-	        </li>
-	      </ul>
-	    </div>
+<div layout:include="/cabecalho/DashBoard"></div>
 
-	    <ul class="nav navbar-nav navbar-right">
-	      
-	      <li>
-	        <a href="#"><em class="fa  fa-sign-out"></em></a>
-	      </li> 
-	    </ul>
-
-	  </div>
-	</nav>
-		<aside class="aw-layout-sidebar  js-sidebar">
-		<div class="aw-layout-sidebar__content">
-
-    <nav class="aw-menu  js-menu">
-      <ul class="aw-menu__list">
-
-        <li class="aw-menu__item">
-          <a href="dashboard.html"><i class="fa  fa-fw  fa-home"></i><span>Dashboard</span></a>
-        </li>
-
-        <li class="aw-menu__item  is-active">
-          <a href="#">
-            <i class="fa  fa-fw  fa-file-text"></i><span>Contratos</span>
-            <i class="aw-menu__navigation-icon  fa"></i>
-          </a>
-      
-          <ul class="aw-menu__list  aw-menu__list--sublist">
-            <li class="aw-menu__item  aw-menu__item--link"><a href="cadastro-produto.html">Cadastro de produto</a></li>
-            <li class="aw-menu__item  aw-menu__item--link  is-active"><a href="pesquisa-produtos.html">Pesquisa de produtos</a></li>
-            
-          </ul>
-        </li>
-        
-         <li class="aw-menu__item  is-active">
-          <a href="#">
-            <i class="fa  fa-fw  fa-file-text"></i><span>Empresas contratadas</span>
-            <i class="aw-menu__navigation-icon  fa"></i>
-          </a>
-      
-          <ul class="aw-menu__list  aw-menu__list--sublist">
-            <li class="aw-menu__item  aw-menu__item--link"><a href="cadastro-produto.html">Cadastro de produto</a></li>
-            <li class="aw-menu__item  aw-menu__item--link  is-active"><a href="pesquisa-produtos.html">Pesquisa de produtos</a></li>
-            
-          </ul>
-        </li>
-        
-         <li class="aw-menu__item  is-active">
-          <a href="#">
-            <i class="fa  fa-fw  fa-file-text"></i><span>Usuários</span>
-            <i class="aw-menu__navigation-icon  fa"></i>
-          </a>
-      
-          <ul class="aw-menu__list  aw-menu__list--sublist">
-            <li class="aw-menu__item  aw-menu__item--link"><a href="cadastro-produto.html">Cadastro de produto</a></li>
-            <li class="aw-menu__item  aw-menu__item--link  is-active"><a href="pesquisa-produtos.html">Pesquisa de produtos</a></li>
-            
-          </ul>
-        </li>
-        
-           <li class="aw-menu__item  is-active">
-          <a href="#">
-            <i class="fa  fa-fw  fa-file-text"></i><span>Processos</span>
-            <i class="aw-menu__navigation-icon  fa"></i>
-          </a>
-      
-          <ul class="aw-menu__list  aw-menu__list--sublist">
-            <li class="aw-menu__item  aw-menu__item--link"><a href="cadastro-produto.html">Cadastro de processos</a></li>
-            <li class="aw-menu__item  aw-menu__item--link  is-active"><a href="pesquisa-produtos.html">Pesquisa de processos</a></li>
-          </ul>
-        </li>
-        
-
-       
-
-      </ul>
-    </nav>
-
-		</div>
-	</aside>
-		<section class="aw-layout-content  js-content">
+<section class="aw-layout-content  js-content">
 
 
 <div class="page-header">
@@ -116,10 +28,6 @@
 
 <div class="container-fluid">
 
-	<div class="alert  alert-danger  alert-dismissible" role="alert">
-		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		<i class="fa  fa-exclamation-circle"></i> Já existe um contrato com o nome informado.
-	</div>
 
 	<form class="form-horizontal" method="POST" action="/transparenciactb/contratos" th:object="${contrato}">
 		
