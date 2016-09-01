@@ -2,9 +2,22 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
 <head>
 <title>Pesquisa de Processos</title>
+<link rel="stylesheet" type="text/css" href="/layout/stylesheets/vendors.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/algaworks.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/application.css"/>
+
+
 </head>
 
-<section layout:fragment="conteudo">
+<body>
+
+<div class="aw-layout-page">
+<div layout:include="/cabecalho/Cabecalho"></div>
+
+<div layout:include="/cabecalho/DashBoard"></div>
+
+
+<section class="aw-layout-content  js-content">
 
 
 <div class="panel panel-default">
@@ -30,9 +43,10 @@
 			<a class="btn btn-link aw-link-panel" href="/transparenciactb/processos/novo">Novo processo</a>
 		</div>
 		</div>
+		<div class="table-responsive  bw-tabela-simples">
 		<div class="panel-body">
 		
-		<table class="table table-bordered table-striped">
+			<table class="table  table-hover">
 		
 			<thead>
 				<tr>
@@ -60,7 +74,13 @@
 		
 		</table>
 		</div>
+		</div>
 	</div>	
 </section>
+</div>
 
+<script src="/layout/javascripts/vendors.min.js"></script>
+<script src="/layout/javascripts/algaworks.min.js"></script>
+
+</body>
 </html>

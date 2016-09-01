@@ -88,8 +88,10 @@ public class ProcessoController {
 		
 		Lancamento lancamento = buscarLancamentoProcesso(id_processo);
 		Processo processo = processos.findOne(id_processo);
-		lancamento.setProcesso(null);
-		lancamentos.save(lancamento);
+		if(lancamento != null) {
+			lancamento.setProcesso(null);
+			lancamentos.save(lancamento);
+		}
 		processos.delete(processo);
 		
 		

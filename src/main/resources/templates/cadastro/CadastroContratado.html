@@ -26,11 +26,18 @@
 		</h1>
 	</div>
 </div>
-
+		
+		
 <div class="container-fluid">
 
 <form class="form-horizontal" method="POST" action="/transparenciactb/contratados" th:object="${contratado}">
 		<div class="panel panel-default">
+		<div class="panel-heading">
+			<div class="clearfix">
+			<h1 class="panel-title">Nova Empresa</h1>
+		<a class="btn btn-link aw-link-panel" href="/gereteci/usuarios">Voltar para pesquisa</a>
+		</div>
+	</div>
 	
 	<div class="panel-body">
 	<input type="hidden" th:field="*{id_contratado}" />

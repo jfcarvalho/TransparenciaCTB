@@ -29,7 +29,12 @@
 
 <form class="form-horizontal" method="POST" action="/transparenciactb/usuarios" th:object="${usuario}">
 		<div class="panel panel-default">
-	
+	<div class="panel-heading">
+			<div class="clearfix">
+			<h1 class="panel-title">Novo Usuário</h1>
+		<a class="btn btn-link aw-link-panel" href="/gereteci/usuarios">Voltar para pesquisa</a>
+		</div>
+	</div>
 	<div class="panel-body">
 	<input type="hidden" th:field="*{id_usuario}" />
 		<div class="form-group" th:classappend="${#fields.hasErrors('nome')} ? has-error">
