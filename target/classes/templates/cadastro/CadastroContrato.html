@@ -50,84 +50,86 @@
 		</div>
 			<div class="form-group">
 			<label for="cnpj" class="col-sm-2 control-label">Fonte:</label>
-			<div class="col-sm-2">
+			<div class="col-sm-4">
 				<input type="text" class="form-control" id="fonte" name="fonte" th:field="*{fonte}" />
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="cnpj" class="col-sm-2 control-label">Objeto:</label>
-			<div class="col-sm-2">
+			<div class="col-sm-4">
 				<input type="text" class="form-control" id="objeto" name="objeto" th:field="*{objeto}" />
 			</div>
 		</div>
 			
 			<div class="form-group">
 			<label for="cnpj" class="col-sm-2 control-label">Recurso:</label>
-			<div class="col-sm-2">
+			<div class="col-sm-4">
 				<input type="text" class="form-control" id="recurso" name="recurso" th:field="*{recurso}" />
 			</div>
 		</div>
 		
 			<div class="form-group">
 			<label for="cnpj" class="col-sm-2 control-label">Saldo do contrato:</label>
-			<div class="col-sm-2">
+			<div class="col-sm-4">
 				<input type="text" class="form-control" id="saldo_contrato" name="saldo_contrato" th:field="*{saldo_contrato}" />
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="cnpj" class="col-sm-2 control-label">Uso:</label>
-			<div class="col-sm-2">
+			<div class="col-sm-4">
 				<input type="text" class="form-control" id="uso" name="uso" th:field="*{uso}" />
 			</div>
 		</div>
 		
+		
+		
 		<div class="form-group">
 			<label for="cnpj" class="col-sm-2 control-label">Duração(em meses):</label>
-			<div class="col-sm-2">
+			<div class="col-sm-4">
 				<input type="text" class="form-control" id="duracao_meses" name="duracao_meses" th:field="*{duracao_meses}" />
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="cnpj" class="col-sm-2 control-label">Meses para o vencimento:</label>
-			<div class="col-sm-2">
+			<div class="col-sm-4">
 				<input type="text" class="form-control" id="meses_vencimento" name="meses_vencimento" th:field="*{meses_vencimento}" />
 			</div>
 		</div>
 				
 		<div class="form-group">
 			<label for="cnpj" class="col-sm-2 control-label">Vencimento Garantia:</label>
-			<div class="col-sm-2">
+			<div class="col-sm-4">
 				<input type="text" class="form-control" id="vencimento_garantia" name="vencimento_garantia" th:field="*{vencimento_garantia}" />
 			</div>
 		</div>
 		
 		<div class="form-group" >
 			<label for="data_compra" class="col-sm-2 control-label">Data assinatura</label>
-			<div class="col-sm-6">
+			<div class="col-sm-4">
 				<input type="text" class="form-control" id="data_assinatura" name="data_assinatura" th:field="*{data_assinatura}" data-provide="datepicker" data-date-format="dd/mm/yyyy" data-date-language="pt-BR" data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom" value="teste"/>
 			</div>
 		</div>
 		
 		<div class="form-group" >
 			<label for="data_compra" class="col-sm-2 control-label">Data vencimento</label>
-			<div class="col-sm-6">
+			<div class="col-sm-4">
 				<input type="text" class="form-control" id="data_vencimento" name="data_vencimento" th:field="*{data_vencimento}" data-provide="datepicker" data-date-format="dd/mm/yyyy" data-date-language="pt-BR" data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom" value="teste"/>
 			</div>
 		</div>
 		
 		<div class="form-group" >
 			<label for="data_compra" class="col-sm-2 control-label">Ultima atualização</label>
-			<div class="col-sm-6">
+			<div class="col-sm-4">
 				<input type="text" class="form-control" id="ultima_atualizacao" name="ultima_atualizacao" th:field="*{ultima_atualizacao}" data-provide="datepicker" data-date-format="dd/mm/yyyy" data-date-language="pt-BR" data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom" value="teste"/>
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="arquitetura" class="col-sm-2 control-label">Gestor:</label>
-			<div class="col-sm-6">
+			<div class="col-sm-4">
 				<select class="form-control" name="contrato_id_gestor">
 					<option th:each="gestor : ${todosGestores}" th:value="${gestor.id_usuario}" th:text="${gestor.nome}" th:selected="${contrato.gestor} ? ${contrato.gestor.id_usuario} == ${gestor.id_usuario}"></option>
 				</select>
@@ -136,7 +138,7 @@
 		
 		<div class="form-group">
 			<label for="arquitetura" class="col-sm-2 control-label">Fiscal:</label>
-			<div class="col-sm-6">
+			<div class="col-sm-4">
 				<select class="form-control" name="contrato_id_fiscal">
 					<option th:each="fiscal : ${todosFiscais}" th:value="${fiscal.id_usuario}" th:text="${fiscal.nome}" th:selected="${contrato.fiscal} ? ${contrato.fiscal.id_usuario} == ${fiscal.id_usuario}"></option>
 				</select>
@@ -145,7 +147,7 @@
 		
 		<div class="form-group">
 			<label for="arquitetura" class="col-sm-2 control-label">Empresa contratada:</label>
-			<div class="col-sm-6">
+			<div class="col-sm-4">
 				<select class="form-control" name="contrato_id_contrato">
 					<option th:each="contratado : ${todosContratados}" th:value="${contratado.id_contratado}" th:text="${contratado.nome}" th:selected="${contrato.contratado} ? ${contratado.id_contratado} == ${contrato.contratado.id_contratado}"></option>
 				</select>

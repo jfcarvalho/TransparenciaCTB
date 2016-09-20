@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+<link rel="stylesheet" type="text/css" href="/layout/stylesheets/bootstrap-datepicker.standalone.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/bootstrap.min.css"/>
+ 	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/vendors.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/algaworks.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/application.css"/>
 <head>
 
 <title>Cadastro de Lancamentos</title>
 </head>
 
 <section layout:fragment="conteudo">
-<form class="form-horizontal" method="POST" action="/transparenciactb/lancamentos" th:object="${lancamento}">
+<form class="form-horizontal" method="POST" action="/transparenciactb/lancamentos/" th:object="${lancamento}">
 		<div class="panel panel-default">
 		<div class="panel-heading">
 			<div class="clearfix">
@@ -18,6 +23,7 @@
 	
 	<div class="panel-body">
 	<input type="hidden" th:field="*{id_lancamento}" />
+	
 		
 			<div class="form-group" >
 			<label for="nome" class="col-sm-2 control-label" >Número do aditivo:</label>
@@ -61,13 +67,15 @@
 		</div>	    
 		
 		<div class="form-group">
-			<label for="arquitetura" class="col-sm-2 control-label">Contrato:</label>
-			<div class="col-sm-6">
+			<label for="cnpj" class="col-sm-2 control-label">Contrato:</label>
+			<div class="col-sm-2">
 				<select class="form-control" name="lancamento_id_contrato">
-					<option th:each="contrato : ${todosContratos}" th:value="${contrato.id_contrato}" th:text="${contrato.numero}" th:selected="${lancamento.contrato} ? ${lancamento.contrato.id_contrato} == ${contrato.id_contrato}"></option>
+					<option th:value="${contrato.id_contrato}" th:text="${contrato.numero}" ></option>
 				</select>
 			</div>
-		</div>	    
+		</div>
+	
+		
 		
 			<div class="form-group">
      		<div class="col-sm-offset-2 col-sm-10">
@@ -76,8 +84,17 @@
 		</div>
 		
 		
+		
 	</div>
 	</div>
 </form>
 </section>
+<script src="/layout/javascripts/vendors.min.js"></script>
+<script src="/layout/javascripts/algaworks.min.js"></script>
+
+
+<script src="/layout/javascripts/bootstrap-datepicker.min.js"></script>
+ <script src="/layout/javascripts/bootstrap-datepicker.pt-BR.min.js"></script>
+<script src="/layout/javascripts/bootstrap.min.js"></script>
+<script src="/layout/javascripts/jquery-2.2.0.min.js"></script>
 </html>

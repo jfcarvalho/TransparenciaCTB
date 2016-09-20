@@ -32,6 +32,7 @@ public class Lancamento {
 	private String numero_nota_fiscal;
 	private float valor;
 	private Integer aditivo_n;
+	private float valor_aditivo;
 	private String observacao;
 	
 	
@@ -85,6 +86,16 @@ public class Lancamento {
 	{
 		this.valor = valor;
 	}
+	
+	public float getValor_aditivo()
+	{
+		return this.valor_aditivo;
+	}
+	public void setValor_aditivo(float valor_aditivo)
+	{
+		this.valor_aditivo = valor_aditivo;
+	}
+	
 	public Integer getAditivo_n()
 	{
 		return this.aditivo_n;

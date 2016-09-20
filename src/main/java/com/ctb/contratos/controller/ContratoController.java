@@ -23,6 +23,7 @@ import com.ctb.contratos.model.Usuario;
 import com.ctb.contratos.repository.Contratados;
 import com.ctb.contratos.repository.Contratos;
 import com.ctb.contratos.repository.Lancamentos;
+import com.ctb.contratos.repository.Processos;
 import com.ctb.contratos.repository.Usuarios;
 
 @Controller
@@ -30,7 +31,10 @@ import com.ctb.contratos.repository.Usuarios;
 
 public class ContratoController {
 	private static final String CADASTRO_VIEW = "/cadastro/CadastroContrato"; 
-
+	private static final String LANCAMENTOS_VIEW = "/pesquisa/PesquisaLancamentos";
+	private static final String VISUALIZAR_VIEW = "/visualizacao/VisualizarContrato";
+	public static Integer numero_contrato =0;
+	
 	@Autowired
 	private Usuarios usuarios;
 	@Autowired
@@ -40,16 +44,82 @@ public class ContratoController {
 
 	@Autowired
 	private Lancamentos lancamentos;
+	@Autowired
+	private Processos processos;
 	
 	@RequestMapping("/novo")
 	public ModelAndView novo()
 	{
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
 		mv.addObject(new Contrato());
-		
+		//numero_contrato
 		//mv.addObject("todosNiveisUsuario", Nivel.values());
 		return mv;
 	}
+	@RequestMapping("/visualizar/{id_contrato}")
+	public ModelAndView visualizar(@PathVariable("id_contrato") Integer Id_contrato)
+	{
+		
+		
+		ModelAndView mv = new ModelAndView(VISUALIZAR_VIEW);
+		Contrato c = contratos.findOne(Id_contrato);
+		float totalAditivosPorcentagem;
+		float totalAditivos = calcularAditivos(c.getLancamentos());
+		
+		float valorTotal = calcularValorTotal(c.getLancamentos());
+		if(totalAditivos == 0) {
+			totalAditivosPorcentagem = c.getSaldo_contrato();
+		} else {totalAditivosPorcentagem = totalAditivos;}
+		float porcentagemConcluida = (valorTotal/(totalAditivosPorcentagem)*100);
+		System.out.println(valorTotal);
+		System.out.println(totalAditivosPorcentagem);
+		
+		mv.addObject("contrato", c);
+		mv.addObject("total_aditivos", totalAditivos);
+		mv.addObject("total", valorTotal);
+		mv.addObject("totalcomaditivos", totalAditivos+valorTotal);
+		mv.addObject("saldo_contrato", c.getSaldo_contrato()-valorTotal+totalAditivos);
+		mv.addObject("porcentagem_concluida", porcentagemConcluida);
+		mv.addObject("porcentagem_a_concluir", 100 - porcentagemConcluida);
+		//	mv.addObject(new Contrato());
+		//numero_contrato
+		//mv.addObject("todosNiveisUsuario", Nivel.values());
+		return mv;
+	}
+	
+	public float calcularAditivos(List<Lancamento> lancamentos)
+	{
+		float acumulador = 0;
+		Iterator it = lancamentos.iterator();
+		
+		while(it.hasNext())
+		{
+			Lancamento obj = (Lancamento) it.next();
+			if(obj.getValor_aditivo() != 0)
+			{
+				acumulador += obj.getValor_aditivo(); 
+			}
+			
+		}
+		return acumulador;
+	}
+	
+	public float calcularValorTotal(List<Lancamento> lancamentos)
+	{
+		float acumulador = 0;
+		Iterator it = lancamentos.iterator();
+		
+		while(it.hasNext())
+		{
+			Lancamento obj = (Lancamento) it.next();
+		//	System.out.println(obj.getValor());
+			acumulador += obj.getValor(); 
+			
+			
+		}
+		return acumulador;
+	}
+			
 	@RequestMapping(method = RequestMethod.POST)
 	public String salvar(@Validated Contrato contrato, @RequestParam Integer contrato_id_gestor, @RequestParam Integer contrato_id_fiscal, @RequestParam Integer contrato_id_contrato, RedirectAttributes attributes)
 	{
@@ -199,4 +269,6 @@ public class ContratoController {
 	{
 		return contratos.findAll();
 	}
+	
+	
 }

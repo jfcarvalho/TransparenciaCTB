@@ -2,17 +2,24 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
 <head>
 <title>Pesquisa de Usuários</title>
+<link rel="stylesheet" type="text/css" href="/layout/stylesheets/vendors.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/algaworks.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/application.css"/>
 </head>
 
-<section layout:fragment="conteudo">
+<body>
+<div class="aw-layout-page">
 
+
+<section class="aw-layout-content  js-content is-toggled">
+<div layout:include="/cabecalho/CabecalhoLancamento"></div>
 
 <div class="panel panel-default">
 		
 		<div class="panel-heading">
 		<div class="clearfix">	
 			<h1 class="panel-title">Pesquisa de Lançamentos</h1>
-			<form method="GET" action="/transparenciactb/lancamentos">
+			<form method="GET" action="/transparenciactb/lancamentos/novo/{id_contrato}">
 			<div class="col-lg-3">
    				 <div class="input-group">
      				 <input type="text" class="form-control" placeholder="Pesquise aqui..." name="busca"/>
@@ -27,7 +34,7 @@
  			 </div>
  			  
  			</form>
-			<a class="btn btn-link aw-link-panel" href="/transparenciactb/lancamentos/novo">Novo lançamento</a>
+			<a class="btn btn-link aw-link-panel" th:href="@{/transparenciactb/lancamentos/novo/{id_contrato}(id_contrato=${contrato.id_contrato})}">Novo lançamento</a>
 		</div>
 		</div>
 		<div class="panel-body">
@@ -52,7 +59,7 @@
 					<td class="text-center" th:text="${lancamento.valor}"></td>
 					<td class="text-center" th:text="${lancamento.aditivo_n}"></td>
 					<td class="text-center" th:text="${lancamento.observacao}"></td>
-						<td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/lancamentos/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:href="@{/transparenciactb/lancamentos/remove/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> Remover</span></a></td>
+						<td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/lancamentos/{id_contrato}/{id_lancamento}(id_lancamento=${lancamento.id_lancamento}, id_contrato=${contrato.id_contrato})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:href="@{/transparenciactb/lancamentos/remove/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> Remover</span></a></td>
 					
 				</tr>
 				
@@ -65,5 +72,8 @@
 		</div>
 	</div>	
 </section>
-
+</div>
+<script src="/layout/javascripts/vendors.min.js"></script>
+<script src="/layout/javascripts/algaworks.min.js"></script>
+</body>
 </html>
