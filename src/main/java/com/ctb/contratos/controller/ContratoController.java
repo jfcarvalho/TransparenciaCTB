@@ -1,6 +1,7 @@
 package com.ctb.contratos.controller;
 
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,7 +19,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.ctb.Processo;
 import com.ctb.contratos.model.Contratado;
 import com.ctb.contratos.model.Contrato;
+import com.ctb.contratos.model.Fonte;
 import com.ctb.contratos.model.Lancamento;
+import com.ctb.contratos.model.Recurso;
+import com.ctb.contratos.model.Uso;
 import com.ctb.contratos.model.Usuario;
 import com.ctb.contratos.repository.Contratados;
 import com.ctb.contratos.repository.Contratos;
@@ -269,6 +273,22 @@ public class ContratoController {
 	{
 		return contratos.findAll();
 	}
+	
+
+	@ModelAttribute("todosUsos")
+	public List<Uso> todosUsos() {
+		return Arrays.asList(Uso.values());
+}
+	
+	@ModelAttribute("todasFontes")
+	public List<Fonte> todosFontes() {
+		return Arrays.asList(Fonte.values());
+}
+	
+	@ModelAttribute("todosRecursos")
+	public List<Recurso> todosRecursos() {
+		return Arrays.asList(Recurso.values());
+}
 	
 	
 }

@@ -1,6 +1,7 @@
 package com.ctb.contratos.controller;
 
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -18,7 +19,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.ctb.Processo;
 import com.ctb.contratos.model.Contratado;
 import com.ctb.contratos.model.Contrato;
+import com.ctb.contratos.model.Fonte;
 import com.ctb.contratos.model.Lancamento;
+import com.ctb.contratos.model.TipoAditivo;
 import com.ctb.contratos.repository.Contratados;
 import com.ctb.contratos.repository.Contratos;
 import com.ctb.contratos.repository.Lancamentos;
@@ -189,6 +192,11 @@ public void desvincularContratoLancamento(Contrato contrato)
 		}
 	}
 	
+}
+
+@ModelAttribute("todosTipos")
+public List<TipoAditivo> todosAditivos() {
+	return Arrays.asList(TipoAditivo.values());
 }
 
 }

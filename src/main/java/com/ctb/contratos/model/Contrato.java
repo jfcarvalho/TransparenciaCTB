@@ -3,7 +3,10 @@ package com.ctb.contratos.model;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -29,9 +32,12 @@ public class Contrato {
 	@DateTimeFormat(pattern= "dd/MM/yyyy")
 	private Date data_vencimento;
 	private String objeto;
-	private String uso;
-	private String recurso;
-	private String fonte;
+	@Enumerated(EnumType.STRING)
+	private Uso uso;
+	@Enumerated(EnumType.STRING)
+	private Recurso recurso;
+	@Enumerated(EnumType.STRING)
+	private Fonte fonte;
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern= "dd/MM/yyyy")
 	private Date ultima_atualizacao;
@@ -39,19 +45,22 @@ public class Contrato {
 	private Integer meses_vencimento;
 	private Integer vencimento_garantia;
 	private float saldo_contrato;
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY, cascade = {CascadeType.PERSIST})
 	@JoinColumn(name="cotrato_id_contrato")
 	private Contratado contratado;
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY, cascade = {CascadeType.PERSIST})
 	@JoinColumn(name="cotrato_id_gestor")
 	private Usuario gestor;
 			
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY, cascade = {CascadeType.PERSIST})
 	@JoinColumn(name="cotrato_id_fiscal")
 	private Usuario fiscal;
 	
 	@OneToMany(mappedBy="contrato")
 	private List<Lancamento> lancamentos;
+	
+	private String nomeResponsavel;
+	private String cpfResponsavel;
 	
 	
 	public Integer getId_contrato()
@@ -101,32 +110,32 @@ public class Contrato {
 		this.objeto = objeto;
 	}
 	
-	public String getUso()
+	public Uso getUso()
 	{
 		return this.uso;
 	}
 	
-	public void setUso(String uso)
+	public void setUso(Uso uso)
 	{
 		this.uso = uso;
 	}
 	
-	public String getRecurso()
+	public Recurso getRecurso()
 	{
 		return this.recurso;
 	}
 	
-	public void setRecurso(String recurso)
+	public void setRecurso(Recurso recurso)
 	{
 		this.recurso = recurso;
 	}
 	
-	public String getFonte()
+	public Fonte getFonte()
 	{
 		return this.fonte;
 	}
 	
-	public void setFonte(String fonte)
+	public void setFonte(Fonte fonte)
 	{
 		this.fonte = fonte;
 	}
@@ -218,6 +227,18 @@ public class Contrato {
 	public void setLancamentos(List<Lancamento> lancamentos)
 	{
 		this.lancamentos = lancamentos;
+	}
+	public String getNomeResponsavel() {
+		return nomeResponsavel;
+	}
+	public void setNomeResponsavel(String nomeResponsavel) {
+		this.nomeResponsavel = nomeResponsavel;
+	}
+	public String getCpfResponsavel() {
+		return cpfResponsavel;
+	}
+	public void setCpfResponsavel(String cpfResponsavel) {
+		this.cpfResponsavel = cpfResponsavel;
 	}
 	
 }

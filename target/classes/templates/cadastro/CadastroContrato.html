@@ -37,7 +37,7 @@
 		<div class="panel-heading">
 			<div class="clearfix">
 			<h1 class="panel-title">Novo Contrato</h1>
-		<a class="btn btn-link aw-link-panel" href="/gereteci/usuarios">Voltar para pesquisa</a>
+		<a class="btn btn-link aw-link-panel" href="/transparenciactb/contratos">Voltar para pesquisa</a>
 		</div>
 	</div>
 	
@@ -51,7 +51,9 @@
 			<div class="form-group">
 			<label for="cnpj" class="col-sm-2 control-label">Fonte:</label>
 			<div class="col-sm-4">
-				<input type="text" class="form-control" id="fonte" name="fonte" th:field="*{fonte}" />
+				<select class="form-control" name="fonte">
+					<option th:each="fonte : ${todasFontes}" th:value="${fonte}" th:text="${fonte.fonte}" th:selected="${su} ? ${su.fonte.fonte} == ${fonte.fonte}"></option>
+				</select>
 			</div>
 		</div>
 		
@@ -65,12 +67,14 @@
 			<div class="form-group">
 			<label for="cnpj" class="col-sm-2 control-label">Recurso:</label>
 			<div class="col-sm-4">
-				<input type="text" class="form-control" id="recurso" name="recurso" th:field="*{recurso}" />
+				<select class="form-control" name="recurso">
+					<option th:each="recurso : ${todosRecursos}" th:value="${recurso}" th:text="${recurso.recurso}" th:selected="${su} ? ${su.recurso.recurso} == ${recurso.recurso}"></option>
+				</select>
 			</div>
 		</div>
 		
 			<div class="form-group">
-			<label for="cnpj" class="col-sm-2 control-label">Saldo do contrato:</label>
+			<label for="cnpj" class="col-sm-2 control-label">Valor do contrato:</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="saldo_contrato" name="saldo_contrato" th:field="*{saldo_contrato}" />
 			</div>
@@ -79,7 +83,9 @@
 		<div class="form-group">
 			<label for="cnpj" class="col-sm-2 control-label">Uso:</label>
 			<div class="col-sm-4">
-				<input type="text" class="form-control" id="uso" name="uso" th:field="*{uso}" />
+				<select class="form-control" name="uso">
+					<option th:each="uso : ${todosUsos}" th:value="${uso}" th:text="${uso.uso}" th:selected="${su} ? ${su.uso.uso} == ${uso.uso}"></option>
+				</select>
 			</div>
 		</div>
 		
@@ -88,14 +94,42 @@
 		<div class="form-group">
 			<label for="cnpj" class="col-sm-2 control-label">Duração(em meses):</label>
 			<div class="col-sm-4">
-				<input type="text" class="form-control" id="duracao_meses" name="duracao_meses" th:field="*{duracao_meses}" />
+				<select class="form-control" name="duracao_meses">
+ 						 	<option th:value="12">12</option>
+  						 	<option th:value="11">11</option>
+ 						 	<option th:value="10">10</option>
+ 						 	<option th:value="09">09</option>
+ 						 	<option th:value="08">08</option>
+ 						 	<option th:value="07">07</option>
+  						 	<option th:value="06">06</option>
+ 						 	<option th:value="05">05</option>
+ 						 	<option th:value="04">04</option>
+ 						 	<option th:value="03">03</option>
+ 						 	<option th:value="02">02</option>
+ 						 	<option th:value="01">01</option>
+ 						 	
+</select>
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="cnpj" class="col-sm-2 control-label">Meses para o vencimento:</label>
 			<div class="col-sm-4">
-				<input type="text" class="form-control" id="meses_vencimento" name="meses_vencimento" th:field="*{meses_vencimento}" />
+				<select class="form-control" name="meses_vencimento">
+ 						 	<option th:value="12">12</option>
+  						 	<option th:value="11">11</option>
+ 						 	<option th:value="10">10</option>
+ 						 	<option th:value="09">09</option>
+ 						 	<option th:value="08">08</option>
+ 						 	<option th:value="07">07</option>
+  						 	<option th:value="06">06</option>
+ 						 	<option th:value="05">05</option>
+ 						 	<option th:value="04">04</option>
+ 						 	<option th:value="03">03</option>
+ 						 	<option th:value="02">02</option>
+ 						 	<option th:value="01">01</option>
+ 						 	
+</select>
 			</div>
 		</div>
 				
@@ -154,6 +188,19 @@
 			</div>
 		</div>	    
 		
+		<div class="form-group">
+			<label for="cnpj" class="col-sm-2 control-label">Nome do responsável:</label>
+			<div class="col-sm-4">
+				<input type="text" class="form-control" id="nomeResponsavel" name="nomeResponsavel" th:field="*{nomeResponsavel}" />
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label for="cnpj" class="col-sm-2 control-label">Cpf responsável:</label>
+			<div class="col-sm-4">
+				<input type="text" class="form-control" id="cpfResponsavel" name="cpfResponsavel" th:field="*{cpfResponsavel}" />
+			</div>
+		</div>
 			<div class="form-group">
      		<div class="col-sm-offset-2 col-sm-10">
 				<button type="submit" class="btn btn-primary">Cadastrar</button>

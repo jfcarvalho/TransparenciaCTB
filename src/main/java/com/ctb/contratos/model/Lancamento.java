@@ -3,6 +3,8 @@ package com.ctb.contratos.model;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -34,6 +36,12 @@ public class Lancamento {
 	private Integer aditivo_n;
 	private float valor_aditivo;
 	private String observacao;
+	private boolean possui_aditivo;
+	@Enumerated(EnumType.STRING)
+	private TipoAditivo tipoaditivo;
+	private boolean liquidado;
+	@DateTimeFormat(pattern= "dd/MM/yyyy")
+	private Date dataliquidacao;
 	
 	
 	
@@ -131,6 +139,30 @@ public class Lancamento {
 	{
 		this.contrato= contrato;
 	}
-	
-	
+	public boolean getPossui_aditivo() {
+		return possui_aditivo;
+	}
+	public void setPossui_aditivo(boolean possui_aditivo) {
+		this.possui_aditivo = possui_aditivo;
+	}
+	public TipoAditivo getTipoaditivo()
+	{
+		return tipoaditivo;
+	}
+	public void setTipoAditivo(TipoAditivo tipoaditivo)
+	{
+		this.tipoaditivo = tipoaditivo;
+	}
+	public boolean getLiquidado() {
+		return liquidado;
+	}
+	public void setLiquidado(boolean liquidado) {
+		this.liquidado = liquidado;
+	}
+	public Date getDataliquidacao() {
+		return dataliquidacao;
+	}
+	public void setDataliquidacao(Date dataliquidacao) {
+		this.dataliquidacao = dataliquidacao;
+	}
 }

@@ -27,6 +27,7 @@ public class Processo {
 	@DateTimeFormat(pattern= "dd/MM/yyyy")
 	private Date data_pagamento;
 	private boolean pago;
+	private String numero_ci;
 	
 	
 	public Integer getId_processo()
@@ -70,6 +71,12 @@ public class Processo {
 	public void setPago(boolean pago)
 	{
 		this.pago = pago;
+	}
+	public String getNumero_ci() {
+		return numero_ci;
+	}
+	public void setNumero_ci(String numero_ci) {
+		this.numero_ci = numero_ci;
 	}
 	
 }
