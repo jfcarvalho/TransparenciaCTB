@@ -11,6 +11,8 @@
 </head>
 
 <section layout:fragment="conteudo">
+<div layout:include="/mensagem/MensagemUsuario"></div>
+
 <form class="form-horizontal" method="POST" action="/transparenciactb/lancamentos/" th:object="${lancamento}">
 		<div class="panel panel-default">
 		<div class="panel-heading">
@@ -47,26 +49,42 @@
 		</div>
 		<div class="form-group" >
 		<div class="col-sm-6">
-			<input type="checkbox" name="possui_aditivo" th:checked="${possui_aditivo}"/>Este contrato possui aditivo?<br/>
+			<input type="checkbox" name="possui_aditivo" th:checked="${possui_aditivo}"/>Este lançamento possui aditivo?<br/>
 		</div>
 		</div>
 		
 			<div class="form-group" >
 			<label for="nome" class="col-sm-2 control-label" >Número do aditivo:</label>
-			<div class="col-sm-4">
+			<div class="col-sm-2">
 				<input type="text" class="form-control" id="aditivo_n" name="aditivo_n" th:field="*{aditivo_n}"/>
 			</div>
 		</div>
 		
 		<div class="form-group" >
+			<label for="nome" class="col-sm-2 control-label" >Valor do aditivo </label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control" id="valor_aditivo" name="valor_aditivo" th:field="*{valor_aditivo}"/>
+			</div>
+		</div>
+		
+		<div class="form-group" >
 			<label for="nome" class="col-sm-2 control-label" >Tipo do aditivo:</label>
-		<div class="col-sm-4">
+		<div class="col-sm-2">
 				<select class="form-control" name="tipoaditivo">
 					<option th:each="tipo : ${todosTipos}" th:value="${tipo}" th:text="${tipo.tipoaditivo}" th:selected="${su} ? ${su.tipoaditivo.tipoaditivo} == ${tipo.tipoaditivo}"></option>
 				</select>
 			</div>
 			</div>
 			
+			<div class="form-group" >
+			<label for="nome" class="col-sm-2 control-label" >Meses de prorrogação (Aditivo de tempo):</label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control" id="meses_prorrogacao" name="meses_prorrogacao" th:field="*{meses_prorrogacao}"/>
+			</div>
+		</div>
+		
+		
+		
 		<div class="form-group" >
 		<div class="col-sm-6">
 			<input type="checkbox" name="liquidado" th:checked="${liquidado}"/>A nota foi liquidada?<br/>
@@ -88,7 +106,7 @@
 		</div>
 			<div class="form-group">
 			<label for="arquitetura" class="col-sm-2 control-label">Processo de pagamento(número):</label>
-			<div class="col-sm-6">
+			<div class="col-sm-2">
 				<select class="form-control" name="lancamento_id_processo">
 					<option th:each="processo : ${todosProcessos}" th:value="${processo.id_processo}" th:text="${processo.numero_processo}" th:selected="${lancamento.processo} ? ${lancamento.processo.id_processo} == ${processo.id_processo}"></option>
 				</select>

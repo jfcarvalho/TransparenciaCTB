@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+<link rel="stylesheet" type="text/css" href="/layout/stylesheets/bootstrap-datepicker.standalone.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/bootstrap.min.css"/>
+ 	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/vendors.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/algaworks.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/application.css"/>
+<head>
+
+
+<title>Resumo de Contrato</title>
+</head>
+
+<body>
+
+<div class="aw-layout-page">
+<section class="aw-layout-content  js-content is-toggled">
+<div layout:include="/cabecalho/CabecalhoLancamento"></div>
+
+  <br/>
+					
+					  
+<h3 style="text-align: center;">Escolha o qual deseja-se ver o resumo do contrato</h3>
+	<div class="clearfix" th:object="${contrato}">	
+		<form method="GET" th:action="@{/transparenciactb/contratos/resumo/{id_contrato}(id_contrato=${contrato.id_contrato})}">
+			<div class="col-lg-3">
+					  <br/>
+					 <div class="input-group">
+					 <span>Escolha o ano</span>
+					<select class="form-control" name="ano">
+ 						 <option value="2014">2014</option>
+ 						 <option value="2015">2015</option>
+ 						 <option value="2016">2016</option>
+ 						 <option value="2017">2017</option>
+ 						 <option value="2018">2018</option>
+ 						 <option value="2019">2019</option>
+					</select>
+     				 </div>
+     				 <br/>
+     				 <div class="input-group">
+    				  <span class="input-group-btn">
+       					 <button class="btn btn-default" type="submit">Gerar</button>
+      				</span>
+   				</div>
+ 			 </div>
+ 			  
+ 			</form>
+		</div>
+</section>
+</div>
+</body>
+
+
+<script src="/layout/javascripts/vendors.min.js"></script>
+<script src="/layout/javascripts/algaworks.min.js"></script>
+
+
+<script src="/layout/javascripts/bootstrap-datepicker.min.js"></script>
+ <script src="/layout/javascripts/bootstrap-datepicker.pt-BR.min.js"></script>
+<script src="/layout/javascripts/bootstrap.min.js"></script>
+<script src="/layout/javascripts/jquery-2.2.0.min.js"></script>
+
+</html>

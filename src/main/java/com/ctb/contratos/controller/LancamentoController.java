@@ -2,6 +2,7 @@ package com.ctb.contratos.controller;
 
 import java.text.ParseException;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -59,6 +60,8 @@ public class LancamentoController {
 	public String salvar(@Validated Lancamento lancamento, @RequestParam Integer lancamento_id_processo, @RequestParam Integer lancamento_id_contrato, RedirectAttributes attributes)
 	{
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
+		Contrato c = contratos.findOne(lancamento_id_contrato);
+		
 		if(lancamento_id_processo != null)
 		{
 			Processo processo = processos.findOne(lancamento_id_processo);
@@ -73,7 +76,25 @@ public class LancamentoController {
 			lancamento.setContrato(contrato);
 			contratos.save(contrato);
 		}
-	
+		if(lancamento.getPossui_aditivo() && lancamento.getMeses_prorrogacao() != 0)
+		{
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(lancamento.getContrato().getData_vencimento());
+			cal.add(Calendar.MONTH, lancamento.getMeses_prorrogacao());
+			//System.out.println(cal.getTime());
+			
+			
+			c.setDuracao_meses(c.getDuracao_meses()+ lancamento.getMeses_prorrogacao());
+			c.setMeses_vencimento(c.getMeses_vencimento()+ lancamento.getMeses_prorrogacao());
+			c.setData_vencimento(cal.getTime());
+			
+			System.out.println(c.getSaldo_contrato() + lancamento.getValor_aditivo() - lancamento.getValor());
+			
+		}
+		lancamento.setSaldo_contrato(c.getSaldo_contrato() + lancamento.getValor_aditivo() - lancamento.getValor());
+		c.setSaldo_contrato(c.getSaldo_contrato() + lancamento.getValor_aditivo() - lancamento.getValor() );
+		
+		contratos.save(c);
 		lancamentos.save(lancamento);		
 		attributes.addFlashAttribute("mensagem", "Lancamento salvo com sucesso!");	
 		return "redirect:/transparenciactb/lancamentos/pesquisar/"+ lancamento_id_contrato;
@@ -97,20 +118,7 @@ public class LancamentoController {
 		List<Lancamento> lancamentos = c.getLancamentos();
 		mv.addObject("todosLancamentos", lancamentos);
 		mv.addObject("contrato", c);
-		
-		//Iterator it = lancamentos.iterator();
-		/*
-		while(it.hasNext())
-		{
-			Lancamento obj = (Lancamento) it.next();
-			System.out.println("Entrou aqui nesse laço");
-			System.out.println(obj.getContrato().getNumero());
-			if(obj.getContrato().getNumero() == contrato.getNumero()) {
-				obj.setContrato(null);
-				lancamentos.save(obj);
-				}
-			}
-    */
+	
 	return mv;
 	}
 	

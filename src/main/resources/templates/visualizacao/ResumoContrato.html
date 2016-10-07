@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+<link rel="stylesheet" type="text/css" href="/layout/stylesheets/bootstrap-datepicker.standalone.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/bootstrap.min.css"/>
+ 	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/vendors.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/algaworks.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/application.css"/>
+<head>
+
+
+<title>Resumo de Contrato</title>
+</head>
+
+<body>
+
+<div class="aw-layout-page">
+<section class="aw-layout-content  js-content is-toggled">
+<div layout:include="/cabecalho/CabecalhoLancamento"></div>
+
+
+<br/>
+<br/>
+<br/>
+
+<table class="table table-bordered table-striped" th:object="${relatorio}">
+ <tr>
+  <td>
+  <p><o:p>&nbsp;</o:p></p>
+  </td>
+  <td>
+  <p>Valor</p>
+  </td>
+  <td>
+  <p>Saldo</p>
+  </td>
+  <td>
+  <p >Aditivo</p>
+  </td>
+  
+ </tr>
+ <tr>
+  <td >
+  <p >Janeiro</p>
+  </td>
+  <td>
+  <p th:text="${mv1}"></p>
+  </td>
+  <td>
+  <p th:text="${ms1}"></p>
+  </td>
+  <td >
+<p th:text="${ma1}"></p>
+  </td>
+ 
+ </tr>
+ <tr >
+  <td>
+  <p>Fevereiro</p>
+  </td>
+  <td>
+<p th:text="${mv2}"></p>
+  </td>
+  <td >
+ <p th:text="${ms2}"></p>
+  </td>
+  <td >
+<p th:text="${ma2}"></p>
+  </td>
+  
+ </tr>
+ <tr>
+  <td>
+  <p>Março</p>
+  </td>
+  <td>
+<p th:text="${mv3}"></p>
+  </td>
+  <td>
+<p th:text="${ms3}"></p>
+  </td>
+  <td >
+<p th:text="${ma3}"></p>
+  </td>
+ </tr>
+ <tr>
+  <td>
+  <p>Abril</p>
+  </td>
+  <td>
+<p th:text="${mv4}"></p>
+  </td>
+  <td>
+<p th:text="${ms4}"></p>
+  </td>
+  <td >
+<p th:text="${ma4}"></p>
+  </td>
+  
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Maio</p>
+  </td>
+  <td>
+<p th:text="${mv5}"></p>
+  </td>
+  <td>
+  <p th:text="${ms5}"></p>
+  </td>
+  <td >
+<p th:text="${ma5}"></p>
+  </td>
+  
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Junho</p>
+  </td>
+  <td>
+  <p th:text="${mv6}"></p>
+  </td>
+  <td>
+  <p th:text="${ms6}"></p>
+  </td>
+  <td >
+<p th:text="${ma6}"></p>
+  </td>
+  
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Julho</p>
+  </td>
+  <td>
+  <p th:text="${mv7}"></p>
+  </td>
+  <td>
+   <p th:text="${ms7}"></p>
+  </td>
+  <td >
+<p th:text="${ma7}"></p>
+  </td>
+ 
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Agosto</p>
+  </td>
+  <td>
+<p th:text="${mv8}"></p>
+  </td>
+  <td>
+<p th:text="${ms8}"></p>
+  </td>
+  <td >
+<p th:text="${ma8}"></p>
+  </td>
+
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Setembro</p>
+  </td>
+  <td>
+<p th:text="${mv9}"></p>
+  </td>
+  <td>
+<p th:text="${ms9}"></p>
+  </td>
+  <td >
+<p th:text="${ma9}"></p>
+  </td>
+ 
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Outubro</p>
+  </td>
+  <td>
+<p th:text="${mv10}"></p>
+  </td>
+  <td>
+<p th:text="${ms10}"></p>
+  </td>
+  <td >
+<p th:text="${ma10}"></p>
+  </td>
+
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Novembro</p>
+  </td>
+  <td>
+<p th:text="${mv11}"></p>
+  </td>
+  <td>
+<p th:text="${ms11}"></p>
+  </td>
+  <td >
+<p th:text="${ma11}"></p>
+  </td>
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Dezembro</p>
+  </td>
+  <td>
+<p th:text="${mv12}"></p>
+  </td>
+  <td>
+<p th:text="${ms12}"></p>
+  </td>
+  <td >
+<p th:text="${ma12}"></p>
+  </td>
+
+ </tr>
+ 
+</table>
+
+
+
+
+
+
+</section>
+</div>
+</body>
+
+<script src="/layout/javascripts/vendors.min.js"></script>
+<script src="/layout/javascripts/algaworks.min.js"></script>
+
+
+<script src="/layout/javascripts/bootstrap-datepicker.min.js"></script>
+ <script src="/layout/javascripts/bootstrap-datepicker.pt-BR.min.js"></script>
+<script src="/layout/javascripts/bootstrap.min.js"></script>
+<script src="/layout/javascripts/jquery-2.2.0.min.js"></script>
+
+</html>

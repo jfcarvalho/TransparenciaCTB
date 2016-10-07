@@ -30,9 +30,13 @@
 </div>
 
 <div class="container-fluid">
-
-
+		
+		<!--   <div layout:include="/mensagem/MensagemErro"></div> -->
+	
 	<form class="form-horizontal" method="POST" action="/transparenciactb/contratos" th:object="${contrato}">
+	<div layout:include="/mensagem/MensagemUsuario"></div>
+	<!-- <div layout:include="/mensagem/MensagemErro"></div>-->	
+	
 		<div class="panel panel-default">
 		<div class="panel-heading">
 			<div class="clearfix">
@@ -40,6 +44,7 @@
 		<a class="btn btn-link aw-link-panel" href="/transparenciactb/contratos">Voltar para pesquisa</a>
 		</div>
 	</div>
+	
 	
 		<div class="panel-body">
 		<div class="form-group" th:classappend="${#fields.hasErrors('numero')} ? has-error">
@@ -57,7 +62,7 @@
 			</div>
 		</div>
 		
-		<div class="form-group">
+		<div class="form-group" th:classappend="${#fields.hasErrors('objeto')} ? has-error">
 			<label for="cnpj" class="col-sm-2 control-label">Objeto:</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="objeto" name="objeto" th:field="*{objeto}" />
@@ -73,14 +78,16 @@
 			</div>
 		</div>
 		
-			<div class="form-group">
+			
 			<label for="cnpj" class="col-sm-2 control-label">Valor do contrato:</label>
 			<div class="col-sm-4">
-				<input type="text" class="form-control" id="saldo_contrato" name="saldo_contrato" th:field="*{saldo_contrato}" />
+				<input type="text" class="form-control" id="valor_contrato" name="valor_contrato" th:field="*{valor_contrato}" />
 			</div>
-		</div>
+	
 		
-		<div class="form-group">
+		<input type="hidden" id="saldo_contrato" name="saldo_contrato" th:field="*{saldo_contrato}"/>
+		
+		<div class="form-group" >
 			<label for="cnpj" class="col-sm-2 control-label">Uso:</label>
 			<div class="col-sm-4">
 				<select class="form-control" name="uso">
@@ -133,12 +140,12 @@
 			</div>
 		</div>
 				
-		<div class="form-group">
+		
 			<label for="cnpj" class="col-sm-2 control-label">Vencimento Garantia:</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="vencimento_garantia" name="vencimento_garantia" th:field="*{vencimento_garantia}" />
 			</div>
-		</div>
+	
 		
 		<div class="form-group" >
 			<label for="data_compra" class="col-sm-2 control-label">Data assinatura</label>
@@ -188,14 +195,14 @@
 			</div>
 		</div>	    
 		
-		<div class="form-group">
+		<div class="form-group" th:classappend="${#fields.hasErrors('nomeResponsavel')} ? has-error">
 			<label for="cnpj" class="col-sm-2 control-label">Nome do responsável:</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="nomeResponsavel" name="nomeResponsavel" th:field="*{nomeResponsavel}" />
 			</div>
 		</div>
 		
-		<div class="form-group">
+		<div class="form-group" th:classappend="${#fields.hasErrors('cpfResponsavel')} ? has-error">
 			<label for="cnpj" class="col-sm-2 control-label">Cpf responsável:</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="cpfResponsavel" name="cpfResponsavel" th:field="*{cpfResponsavel}" />

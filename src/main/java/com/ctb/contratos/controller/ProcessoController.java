@@ -59,7 +59,7 @@ public class ProcessoController {
 	{
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
 		processos.save(processo);		
-		attributes.addFlashAttribute("mensagem", "Empresa contratada salva com sucesso!");	
+		attributes.addFlashAttribute("mensagem", "Processo salvo com sucesso!");	
 		return "redirect:/transparenciactb/processos/novo";
 	}
 	

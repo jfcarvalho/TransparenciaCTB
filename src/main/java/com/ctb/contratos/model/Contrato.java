@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -24,6 +25,7 @@ public class Contrato {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id_contrato;
+	@Size(min=2, max=30, message="Tamanho do campo numero deve ser entre 1 e 30")
 	private String numero;
 	@DateTimeFormat(pattern= "dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
@@ -31,6 +33,7 @@ public class Contrato {
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern= "dd/MM/yyyy")
 	private Date data_vencimento;
+	@Size(min=2, max=30, message="Tamanho do campo objeto deve ser entre 1 e 50")
 	private String objeto;
 	@Enumerated(EnumType.STRING)
 	private Uso uso;
@@ -45,21 +48,23 @@ public class Contrato {
 	private Integer meses_vencimento;
 	private Integer vencimento_garantia;
 	private float saldo_contrato;
+	private float valor_contrato;
 	@ManyToOne(fetch=FetchType.LAZY, cascade = {CascadeType.PERSIST})
-	@JoinColumn(name="cotrato_id_contrato")
+	@JoinColumn(name="contrato_id_contrato")
 	private Contratado contratado;
 	@ManyToOne(fetch=FetchType.LAZY, cascade = {CascadeType.PERSIST})
-	@JoinColumn(name="cotrato_id_gestor")
+	@JoinColumn(name="contrato_id_gestor")
 	private Usuario gestor;
 			
 	@ManyToOne(fetch=FetchType.LAZY, cascade = {CascadeType.PERSIST})
-	@JoinColumn(name="cotrato_id_fiscal")
+	@JoinColumn(name="contrato_id_fiscal")
 	private Usuario fiscal;
 	
 	@OneToMany(mappedBy="contrato")
 	private List<Lancamento> lancamentos;
-	
+	@Size(min=2, max=30, message="Tamanho do campo objeto deve ser entre 1 e 50")
 	private String nomeResponsavel;
+	@Size(min=2, max=30, message="Tamanho do campo objeto deve ser entre 1 e 50")
 	private String cpfResponsavel;
 	
 	
@@ -239,6 +244,12 @@ public class Contrato {
 	}
 	public void setCpfResponsavel(String cpfResponsavel) {
 		this.cpfResponsavel = cpfResponsavel;
+	}
+	public float getValor_contrato() {
+		return valor_contrato;
+	}
+	public void setValor_contrato(float valor_contrato) {
+		this.valor_contrato = valor_contrato;
 	}
 	
 }

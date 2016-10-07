@@ -43,6 +43,9 @@ public class Lancamento {
 	@DateTimeFormat(pattern= "dd/MM/yyyy")
 	private Date dataliquidacao;
 	
+	private Integer meses_prorrogacao;
+	
+	
 	
 	
 	@OneToOne
@@ -52,6 +55,7 @@ public class Lancamento {
 	@ManyToOne
 	@JoinColumn(name= "lancamento_id_contrato")
 	private Contrato contrato;
+	private float saldo_contrato;
 	
 	
 	
@@ -145,7 +149,7 @@ public class Lancamento {
 	public void setPossui_aditivo(boolean possui_aditivo) {
 		this.possui_aditivo = possui_aditivo;
 	}
-	public TipoAditivo getTipoaditivo()
+	public TipoAditivo getTipoAditivo()
 	{
 		return tipoaditivo;
 	}
@@ -164,5 +168,17 @@ public class Lancamento {
 	}
 	public void setDataliquidacao(Date dataliquidacao) {
 		this.dataliquidacao = dataliquidacao;
+	}
+	public Integer getMeses_prorrogacao() {
+		return meses_prorrogacao;
+	}
+	public void setMeses_prorrogacao(Integer meses_prorrogacao) {
+		this.meses_prorrogacao = meses_prorrogacao;
+	}
+	public float getSaldo_contrato() {
+		return saldo_contrato;
+	}
+	public void setSaldo_contrato(float saldo_contrato) {
+		this.saldo_contrato = saldo_contrato;
 	}
 }

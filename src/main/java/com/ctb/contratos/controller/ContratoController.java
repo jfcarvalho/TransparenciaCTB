@@ -2,11 +2,16 @@ package com.ctb.contratos.controller;
 
 import java.text.ParseException;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +42,8 @@ public class ContratoController {
 	private static final String CADASTRO_VIEW = "/cadastro/CadastroContrato"; 
 	private static final String LANCAMENTOS_VIEW = "/pesquisa/PesquisaLancamentos";
 	private static final String VISUALIZAR_VIEW = "/visualizacao/VisualizarContrato";
+	private static final String RESUMO_VIEW = "/visualizacao/ResumoContrato";
+	private static final String GERARRESUMO_VIEW = "/visualizacao/GerarResumoContrato";
 	public static Integer numero_contrato =0;
 	
 	@Autowired
@@ -60,6 +67,138 @@ public class ContratoController {
 		//mv.addObject("todosNiveisUsuario", Nivel.values());
 		return mv;
 	}
+	
+	@RequestMapping("/gerar_resumo/{id_contrato}")
+	public ModelAndView gerarResumo(@PathVariable("id_contrato") Integer Id_contrato)
+	{
+		ModelAndView mv = new ModelAndView(GERARRESUMO_VIEW);
+		Contrato c = contratos.findOne(Id_contrato);
+		mv.addObject("contrato", c);
+		
+		/*Contrato c = contratos.findOne(Id_contrato);
+		
+		List<Lancamento> lista = c.getLancamentos();
+
+		Comparator<Lancamento> cmp = new Comparator<Lancamento>() {
+		        public int compare(Lancamento l1, Lancamento l2) {
+		          return l1.getData().compareTo(l2.getData());
+		        }
+		    };
+
+		Collections.sort(lista, cmp);
+		
+		
+		mv.addObject("lancamentos", lista);
+		*/
+		return mv;
+	}
+	
+
+	
+	@RequestMapping(value="/resumo/{id_contrato}", method= RequestMethod.GET)
+	public ModelAndView resumo(@PathVariable("id_contrato") Integer Id_contrato, String ano)
+	{
+		ModelAndView mv = new ModelAndView(RESUMO_VIEW);
+		List<Lancamento> lancamentos = contratos.findOne(Id_contrato).getLancamentos();
+		//calcularSaldos(lancamentos);
+		int i;
+		String periodoAComparar;
+		float acumuladorValor;
+		float acumuladorAditivo;
+		float acumuladorSaldo;
+		
+		//Funcao Calcular Saldos
+		
+		String primeiro = lancamentos.get(1).getData().toString();
+		String ultimo = lancamentos.get(lancamentos.size()-1).getData().toString();
+		Calendar cal1 = Calendar.getInstance();
+		Calendar cal2 = Calendar.getInstance();
+		cal1.setTime(lancamentos.get(0).getData());
+		cal2.setTime(lancamentos.get(lancamentos.size()-1).getData());
+		int anoprimeiro = cal1.get(Calendar.YEAR);
+		int anoultimo = cal2.get(Calendar.YEAR);
+		int quantidadeAnos = anoultimo-anoprimeiro;
+		String anoACalcular = Integer.toString(anoprimeiro);
+		
+		float tabelaSaldos[][] = new float[13][quantidadeAnos];
+
+		for(int j=0; j < quantidadeAnos; j++) {
+		
+			acumuladorValor=0;
+			acumuladorAditivo=0;
+			acumuladorSaldo=0;
+			
+		for (i=0; i <13; i++)
+		{
+			/* 
+			if(i > 0 && i < 10) {
+				periodoAComparar = ano+ "-0"+ Integer.toString(i);
+			}
+			else {periodoAComparar = ano+ "-"+ Integer.toString(i);}
+			*/
+			
+			Iterator it = lancamentos.iterator();
+			
+			
+			while(it.hasNext())
+			{
+				Lancamento obj = (Lancamento) it.next();
+				
+				if(i > 0 && i < 10) {
+					periodoAComparar = anoACalcular+ "-0"+ Integer.toString(i);
+				}else {periodoAComparar = anoACalcular+ "-"+ Integer.toString(i);}
+				
+				if(obj.getData().toString().contains(periodoAComparar))
+				{ 
+					System.out.println(obj.getValor());
+					acumuladorValor += obj.getValor();
+					acumuladorSaldo += obj.getSaldo_contrato();
+					if(obj.getPossui_aditivo())
+					{
+						acumuladorAditivo += obj.getValor_aditivo();
+					}
+				} 
+			}
+			
+		//	mv.addObject("mv"+Integer.toString(i), acumuladorValor);
+			//mv.addObject("ma"+Integer.toString(i), acumuladorAditivo);	
+			//mv.addObject("ms"+Integer.toString(i), acumuladorSaldo);
+		
+			if(i ==0 && j==0)
+			{
+				tabelaSaldos[0][0] = lancamentos.get(1).getContrato().getValor_contrato();
+			}
+			
+			else if(i == 12 && j != 0)
+			{
+				tabelaSaldos[i][j] = tabelaSaldos[12][j-1];
+			}
+			
+			else 
+			{
+				tabelaSaldos[i][j] = acumuladorSaldo - tabelaSaldos[0][j] + acumuladorAditivo;
+			}
+			
+			
+			}
+		for(int k=0; k < quantidadeAnos; k++)
+		{
+			for(int h=0; h < 13; h++)
+			{
+				System.out.println(tabelaSaldos[h][k]);
+			}
+		}
+		if( i != 0) {
+			anoprimeiro++;
+			anoACalcular = Integer.toString(anoprimeiro);
+		}
+		}
+		return mv;
+		
+	}
+	
+	
+	
 	@RequestMapping("/visualizar/{id_contrato}")
 	public ModelAndView visualizar(@PathVariable("id_contrato") Integer Id_contrato)
 	{
@@ -75,14 +214,13 @@ public class ContratoController {
 			totalAditivosPorcentagem = c.getSaldo_contrato();
 		} else {totalAditivosPorcentagem = totalAditivos;}
 		float porcentagemConcluida = (valorTotal/(totalAditivosPorcentagem)*100);
-		System.out.println(valorTotal);
-		System.out.println(totalAditivosPorcentagem);
+
 		
 		mv.addObject("contrato", c);
 		mv.addObject("total_aditivos", totalAditivos);
 		mv.addObject("total", valorTotal);
-		mv.addObject("totalcomaditivos", totalAditivos+valorTotal);
-		mv.addObject("saldo_contrato", c.getSaldo_contrato()-valorTotal+totalAditivos);
+		mv.addObject("totalcomaditivos", c.getValor_contrato() + totalAditivos);
+		mv.addObject("saldo_contrato", c.getSaldo_contrato());
 		mv.addObject("porcentagem_concluida", porcentagemConcluida);
 		mv.addObject("porcentagem_a_concluir", 100 - porcentagemConcluida);
 		//	mv.addObject(new Contrato());
@@ -91,6 +229,59 @@ public class ContratoController {
 		return mv;
 	}
 	
+	/*
+	public void calcularSaldos(List<Lancamento> lancamentos)
+	{
+		
+
+		/*Comparator<Lancamento> cmp = new Comparator<Lancamento>() {
+		        public int compare(Lancamento l1, Lancamento l2) {
+		          return l1.getData().compareTo(l2.getData());
+		        }
+		    };
+
+		
+		Collections.sort(lancamentos, cmp);
+
+		
+		String primeiro = lancamentos.get(1).getData().toString();
+		String ultimo = lancamentos.get(lancamentos.size()-1).getData().toString();
+		Calendar cal1 = Calendar.getInstance();
+		Calendar cal2 = Calendar.getInstance();
+		cal1.setTime(lancamentos.get(0).getData());
+		cal2.setTime(lancamentos.get(lancamentos.size()-1).getData());
+		int anoprimeiro = cal1.get(Calendar.YEAR);
+		int anoultimo = cal2.get(Calendar.YEAR);
+		int quantidadeAnos = anoultimo-anoprimeiro;
+		float tabelaSaldos[][] = new float[13][quantidadeAnos];
+		//tabelaSaldos[0][0] = lancamentos.get(1).getContrato().getValor_contrato();
+		for(int j=0; j < quantidadeAnos; j++) {
+			for(int i=0; i < 13; i++)
+			{
+				if(i == 0 && j== 0)
+				{
+					tabelaSaldos[i][j] = lancamentos.get(1).getContrato().getValor_contrato();
+				}
+				else if(i == 12 && j != 0)
+				{
+					tabelaSaldos[i][j] = tabelaSaldos[12][j-1];
+				}
+				
+				else 
+				{
+					tabelaSaldos[i][j] = acumuladorSaldo - tabelaSaldos[0][j] + acumuladoAditivo;
+				}
+			}
+		}
+		//String p1 = Integer.toString(anoprimeiro);
+		//String p2 = Integer.toString(anoultimo);
+		//System.out.println(p1);
+		//System.out.println(p2);
+	
+		
+		
+	}
+*/
 	public float calcularAditivos(List<Lancamento> lancamentos)
 	{
 		float acumulador = 0;
@@ -99,7 +290,7 @@ public class ContratoController {
 		while(it.hasNext())
 		{
 			Lancamento obj = (Lancamento) it.next();
-			if(obj.getValor_aditivo() != 0)
+			if(obj.getPossui_aditivo())
 			{
 				acumulador += obj.getValor_aditivo(); 
 			}
@@ -125,19 +316,29 @@ public class ContratoController {
 	}
 			
 	@RequestMapping(method = RequestMethod.POST)
-	public String salvar(@Validated Contrato contrato, @RequestParam Integer contrato_id_gestor, @RequestParam Integer contrato_id_fiscal, @RequestParam Integer contrato_id_contrato, RedirectAttributes attributes)
+	public ModelAndView salvar(@Validated Contrato contrato, @RequestParam Integer contrato_id_gestor, @RequestParam Integer contrato_id_fiscal, @RequestParam Integer contrato_id_contrato, RedirectAttributes attributes, Errors errors)
 	{
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
+		if(errors.hasErrors())
+		{
+			System.out.println("Essa porra tem erro meu irmão!");
+			return mv;
+		}
+		
 		Contratado empresa = contratados.findOne(contrato_id_contrato);
 		Usuario gestor = usuarios.findOne(contrato_id_gestor);
 		Usuario fiscal = usuarios.findOne(contrato_id_fiscal);
+		
+		
+		
 		contrato.setContratado(empresa);
 		contrato.setFiscal(fiscal);
 		contrato.setGestor(gestor);
+		contrato.setSaldo_contrato(contrato.getValor_contrato());
 		
 		contratos.save(contrato);		
-		attributes.addFlashAttribute("mensagem", "Empresa contratada salva com sucesso!");	
-		return "redirect:/transparenciactb/contratos/novo";
+		attributes.addFlashAttribute("mensagem", "Contrato salvo com sucesso!");	
+		return mv;
 	}
 	
 	@RequestMapping(method= RequestMethod.GET)

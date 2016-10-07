@@ -55,7 +55,7 @@
 			<tbody>
 				<tr th:each="lancamento : ${todosLancamentos}">
 					<td class="text-center" th:text="${lancamento.numero_nota_fiscal}"></td>
-					<td class="text-center" th:text="${#dates.format(lancamento.data, 'dd/MM/yyyy')}"></td>
+					<td class="text-center" th:text="${lancamento.data} ? ${#dates.format(lancamento.data, 'dd/MM/yyyy')} : 'Não informado'"></td>
 					<td class="text-center" th:text="${lancamento.valor}"></td>
 					<td class="text-center" th:text="${lancamento.aditivo_n}"></td>
 					<td class="text-center" th:text="${lancamento.observacao}"></td>
