@@ -1,6 +1,7 @@
 package com.ctb.contratos.controller;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
@@ -22,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ctb.Processo;
+import com.ctb.contratos.model.AditivoSetting;
 import com.ctb.contratos.model.Contratado;
 import com.ctb.contratos.model.Contrato;
 import com.ctb.contratos.model.Fonte;
@@ -45,6 +47,7 @@ public class ContratoController {
 	private static final String RESUMO_VIEW = "/visualizacao/ResumoContrato";
 	private static final String GERARRESUMO_VIEW = "/visualizacao/GerarResumoContrato";
 	public static Integer numero_contrato =0;
+	static final ArrayList<AditivoSetting> aditivos = new ArrayList();
 	
 	@Autowired
 	private Usuarios usuarios;
@@ -55,6 +58,7 @@ public class ContratoController {
 
 	@Autowired
 	private Lancamentos lancamentos;
+	
 	@Autowired
 	private Processos processos;
 	
@@ -74,10 +78,19 @@ public class ContratoController {
 		ModelAndView mv = new ModelAndView(GERARRESUMO_VIEW);
 		Contrato c = contratos.findOne(Id_contrato);
 		mv.addObject("contrato", c);
+		return mv;
+	}
+	
+	public float[] gerarSaldos(List<Lancamento> lancamentos, String anoACalcular, int quantidadeAnos)
+	{
 		
-		/*Contrato c = contratos.findOne(Id_contrato);
-		
-		List<Lancamento> lista = c.getLancamentos();
+		//calcularSaldos(lancamentos);
+		int i;
+		String periodoAComparar;
+		float acumuladorValor;
+		float acumuladorSaldo;
+		float acumuladorAditivo = 0;	
+		float vetorSomaSaldos[] = new float[13];
 
 		Comparator<Lancamento> cmp = new Comparator<Lancamento>() {
 		        public int compare(Lancamento l1, Lancamento l2) {
@@ -85,12 +98,49 @@ public class ContratoController {
 		        }
 		    };
 
-		Collections.sort(lista, cmp);
+		Collections.sort(lancamentos, cmp);
 		
+		//Se ano a calcular for o mesmo que o ano inicial
 		
-		mv.addObject("lancamentos", lista);
-		*/
-		return mv;
+		for(i=1; i < 13; i++)
+		{
+			
+			acumuladorValor =0;
+			acumuladorSaldo = 0;
+			if(i > 0 && i < 10) {
+				periodoAComparar = anoACalcular+ "-0"+ Integer.toString(i);
+			}else {periodoAComparar = anoACalcular+ "-"+ Integer.toString(i);}
+			Iterator it = lancamentos.iterator();
+			while(it.hasNext())
+			{
+				Lancamento obj = (Lancamento) it.next();
+			
+				
+				if(obj.getData().toString().contains(periodoAComparar))
+				{ 
+					//System.out.println(obj.getValor());
+					
+					acumuladorValor += obj.getValor();
+					acumuladorSaldo += obj.getSaldo_contrato();
+					if(obj.getPossui_aditivo())
+					{
+						acumuladorAditivo += obj.getValor_aditivo();
+						
+					}
+
+					
+								
+				}
+				
+		}
+			
+			vetorSomaSaldos[i] = acumuladorValor ;
+	}
+		AditivoSetting aditivosomado = new AditivoSetting(0);
+		aditivosomado.setValor(acumuladorAditivo);
+		aditivosomado.setPeriodo(anoACalcular);
+		aditivos.add(aditivosomado);
+		return vetorSomaSaldos;
 	}
 	
 
@@ -98,17 +148,9 @@ public class ContratoController {
 	@RequestMapping(value="/resumo/{id_contrato}", method= RequestMethod.GET)
 	public ModelAndView resumo(@PathVariable("id_contrato") Integer Id_contrato, String ano)
 	{
-		ModelAndView mv = new ModelAndView(RESUMO_VIEW);
 		List<Lancamento> lancamentos = contratos.findOne(Id_contrato).getLancamentos();
-		//calcularSaldos(lancamentos);
-		int i;
-		String periodoAComparar;
-		float acumuladorValor;
-		float acumuladorAditivo;
-		float acumuladorSaldo;
-		
-		//Funcao Calcular Saldos
-		
+		ModelAndView mv = new ModelAndView(RESUMO_VIEW);
+		Contrato c = contratos.findOne(Id_contrato);
 		String primeiro = lancamentos.get(1).getData().toString();
 		String ultimo = lancamentos.get(lancamentos.size()-1).getData().toString();
 		Calendar cal1 = Calendar.getInstance();
@@ -118,87 +160,106 @@ public class ContratoController {
 		int anoprimeiro = cal1.get(Calendar.YEAR);
 		int anoultimo = cal2.get(Calendar.YEAR);
 		int quantidadeAnos = anoultimo-anoprimeiro;
-		String anoACalcular = Integer.toString(anoprimeiro);
-		
-		float tabelaSaldos[][] = new float[13][quantidadeAnos];
-
-		for(int j=0; j < quantidadeAnos; j++) {
-		
-			acumuladorValor=0;
-			acumuladorAditivo=0;
-			acumuladorSaldo=0;
-			
-		for (i=0; i <13; i++)
-		{
-			/* 
-			if(i > 0 && i < 10) {
-				periodoAComparar = ano+ "-0"+ Integer.toString(i);
-			}
-			else {periodoAComparar = ano+ "-"+ Integer.toString(i);}
-			*/
-			
-			Iterator it = lancamentos.iterator();
-			
-			
-			while(it.hasNext())
-			{
-				Lancamento obj = (Lancamento) it.next();
+		float acumuladorValor;
+		float acumuladorAditivo = 0;
+		float tabelaValores[] = new float[13];
+		float tabelaSaldos[][] = new float[14][quantidadeAnos+1];
+		float acumuladorSub = 0;
 				
-				if(i > 0 && i < 10) {
-					periodoAComparar = anoACalcular+ "-0"+ Integer.toString(i);
-				}else {periodoAComparar = anoACalcular+ "-"+ Integer.toString(i);}
-				
-				if(obj.getData().toString().contains(periodoAComparar))
-				{ 
-					System.out.println(obj.getValor());
-					acumuladorValor += obj.getValor();
-					acumuladorSaldo += obj.getSaldo_contrato();
-					if(obj.getPossui_aditivo())
-					{
-						acumuladorAditivo += obj.getValor_aditivo();
-					}
-				} 
-			}
-			
-		//	mv.addObject("mv"+Integer.toString(i), acumuladorValor);
-			//mv.addObject("ma"+Integer.toString(i), acumuladorAditivo);	
-			//mv.addObject("ms"+Integer.toString(i), acumuladorSaldo);
+		int anoInt = Integer.parseInt(ano);
+	//	tabelaValores = gerarSaldos(lancamentos, ano, quantidadeAnos,acumuladorAditivo);
 		
-			if(i ==0 && j==0)
-			{
-				tabelaSaldos[0][0] = lancamentos.get(1).getContrato().getValor_contrato();
-			}
-			
-			else if(i == 12 && j != 0)
-			{
-				tabelaSaldos[i][j] = tabelaSaldos[12][j-1];
-			}
-			
-			else 
-			{
-				tabelaSaldos[i][j] = acumuladorSaldo - tabelaSaldos[0][j] + acumuladorAditivo;
-			}
-			
-			
-			}
-		for(int k=0; k < quantidadeAnos; k++)
+		if( anoprimeiro == anoInt)
 		{
-			for(int h=0; h < 13; h++)
+			tabelaValores = gerarSaldos(lancamentos, ano, quantidadeAnos);
+		}
+		//System.out.println(acumuladorAditivo);
+		tabelaSaldos[0][0] = c.getSaldo_contrato();
+		for(int i=1; i < 13; i++)
+		{
+			acumuladorSub = acumuladorSub+tabelaValores[i]; 
+			tabelaSaldos[i][0] = tabelaValores[i];
+		}
+		
+		if(quantidadeAnos > 0) 
+		{
+		
+			tabelaSaldos[0][1] = tabelaSaldos[0][0] - acumuladorSub;
+		}
+		tabelaSaldos[13][0] = tabelaSaldos[0][0] + aditivos.get(0).getValor() - acumuladorSub;
+		
+		for(int j=1; j < quantidadeAnos; j++)
+		{
+			for(int i=0; i < 14; i++)
 			{
-				System.out.println(tabelaSaldos[h][k]);
+				if(i == 0)
+				{
+					tabelaSaldos[i][j] = tabelaSaldos[i][j-1] - tabelaSaldos[13][j-1];
+				}
+				else if (i ==13) {System.out.println("Calcular o total");}
+				else {
+					int novoano = Integer.parseInt(ano+1);
+					tabelaValores = gerarSaldos(lancamentos, String.valueOf(novoano), quantidadeAnos);}
 			}
 		}
-		if( i != 0) {
-			anoprimeiro++;
-			anoACalcular = Integer.toString(anoprimeiro);
+		System.out.println(tabelaSaldos[0][0]);
+		System.out.println(aditivos.get(0).getValor());
+		System.out.println(acumuladorSub);
+		System.out.println(tabelaSaldos[13][0]);
+		
+		
+		//Funcao Calcular Saldos
+		
+		
+		
+		//TODO: Primeiro o algoritmo tem que percorrer todos os lancamentos e fazer uma soma por mes(com aditivo)[FEITO]
+		//TODO: Após feito o processamento, alimentamos a tabela de saldos
+		//TODO: Exibir informações
+		
+		//Ordenando dados 
+		
+		
+		
+		//Primeiro
+		
+		
+		
+	
+		
+		//Segundo
+		/*
+		acumuladorValor = 0;
+		for(int j=0; j < quantidadeAnos; j++)
+		{
+			for(int i=0; i < 14; i++)
+			{
+				if(i ==0 && j==0)
+				{
+					tabelaSaldos[i][j] = c.getSaldo_contrato(); 
+				}
+				else if(i ==0 && j != 0)
+				{
+					tabelaSaldos[i][j] = tabelaSaldos[0][j] - tabelaSaldos[i+1][j-1];
+				}
+				
+				else if(i == 13)
+				{
+					tabelaSaldos[i][j] = acumuladorValor;
+				}
+				else {
+					tabelaValores = gerarSaldos(lancamentos, ano, quantidadeAnos);
+				}
+				
+			}
 		}
-		}
+		*/
+		//Terceiro
+		
+		
 		return mv;
 		
 	}
-	
-	
-	
+
 	@RequestMapping("/visualizar/{id_contrato}")
 	public ModelAndView visualizar(@PathVariable("id_contrato") Integer Id_contrato)
 	{
@@ -228,60 +289,8 @@ public class ContratoController {
 		//mv.addObject("todosNiveisUsuario", Nivel.values());
 		return mv;
 	}
-	
-	/*
-	public void calcularSaldos(List<Lancamento> lancamentos)
-	{
-		
 
-		/*Comparator<Lancamento> cmp = new Comparator<Lancamento>() {
-		        public int compare(Lancamento l1, Lancamento l2) {
-		          return l1.getData().compareTo(l2.getData());
-		        }
-		    };
 
-		
-		Collections.sort(lancamentos, cmp);
-
-		
-		String primeiro = lancamentos.get(1).getData().toString();
-		String ultimo = lancamentos.get(lancamentos.size()-1).getData().toString();
-		Calendar cal1 = Calendar.getInstance();
-		Calendar cal2 = Calendar.getInstance();
-		cal1.setTime(lancamentos.get(0).getData());
-		cal2.setTime(lancamentos.get(lancamentos.size()-1).getData());
-		int anoprimeiro = cal1.get(Calendar.YEAR);
-		int anoultimo = cal2.get(Calendar.YEAR);
-		int quantidadeAnos = anoultimo-anoprimeiro;
-		float tabelaSaldos[][] = new float[13][quantidadeAnos];
-		//tabelaSaldos[0][0] = lancamentos.get(1).getContrato().getValor_contrato();
-		for(int j=0; j < quantidadeAnos; j++) {
-			for(int i=0; i < 13; i++)
-			{
-				if(i == 0 && j== 0)
-				{
-					tabelaSaldos[i][j] = lancamentos.get(1).getContrato().getValor_contrato();
-				}
-				else if(i == 12 && j != 0)
-				{
-					tabelaSaldos[i][j] = tabelaSaldos[12][j-1];
-				}
-				
-				else 
-				{
-					tabelaSaldos[i][j] = acumuladorSaldo - tabelaSaldos[0][j] + acumuladoAditivo;
-				}
-			}
-		}
-		//String p1 = Integer.toString(anoprimeiro);
-		//String p2 = Integer.toString(anoultimo);
-		//System.out.println(p1);
-		//System.out.println(p2);
-	
-		
-		
-	}
-*/
 	public float calcularAditivos(List<Lancamento> lancamentos)
 	{
 		float acumulador = 0;
@@ -298,6 +307,24 @@ public class ContratoController {
 		}
 		return acumulador;
 	}
+	
+	public float calcularAditivos(List<Lancamento> lancamentos, String periodo)
+	{
+		float acumulador = 0;
+		Iterator it = lancamentos.iterator();
+		
+		while(it.hasNext())
+		{
+			Lancamento obj = (Lancamento) it.next();
+			if(obj.getPossui_aditivo() && obj.getData().toString().contains(periodo))
+			{
+				acumulador += obj.getValor_aditivo(); 
+			}
+			
+		}
+		return acumulador;
+	}
+	
 	
 	public float calcularValorTotal(List<Lancamento> lancamentos)
 	{
@@ -321,7 +348,7 @@ public class ContratoController {
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
 		if(errors.hasErrors())
 		{
-			System.out.println("Essa porra tem erro meu irmão!");
+			
 			return mv;
 		}
 		
@@ -342,13 +369,35 @@ public class ContratoController {
 	}
 	
 	@RequestMapping(method= RequestMethod.GET)
-	public ModelAndView pesquisar(String busca, String nome, String setor) throws ParseException
+	public ModelAndView pesquisar(String busca, String numero, String objeto) throws ParseException
 	{
 		ModelAndView mv = new ModelAndView("/pesquisa/PesquisaContratos");
 		//mv.addObject("usuarios", todosUsuarios);
+		
+		if(numero != null) {
+			if(busca != null && numero.equals("on")) {
+				List<Contrato> todosContratos = contratos.findByNumeroContaining(busca);
+				mv.addObject("buscaContratos", todosContratos);
+				System.out.println(todosContratos.size());
+				
+				return mv;
+			}
+		}
+		else if(objeto != null) {
+			if(busca != null && objeto.equals("on")) {
+				List<Contrato> todosContratos = contratos.findByObjetoContaining(busca);
+				mv.addObject("buscaContratos", todosContratos);
+				return mv;
+			}
+		}
+		   List<Contrato> todosContratos= contratos.findAll();
+		   mv.addObject("buscaContratos", todosContratos);
+	    
+			return mv;
     
-	return mv;
 	}
+	
+	
 	@RequestMapping("{id_contrato}")
 	public ModelAndView edicao(@PathVariable("id_contrato") Contrato contrato)
 	{

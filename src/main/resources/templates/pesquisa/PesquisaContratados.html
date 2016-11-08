@@ -32,8 +32,8 @@
    				 </div>
  			 </div>
  			 <div class="col-lg-12">
- 			 	<input type="radio" name ="nome" /> Nome
- 			 	<input type="radio" name ="setor" /> Setor
+ 			 	<input type="radio" name ="nome" /> Nome	
+ 			 	<input type="radio" name ="cnpj" /> CNPJ
  			 </div>
  			  
  			</form>
@@ -53,14 +53,14 @@
 				
 			</thead>
 			<tbody>
-				<tr th:each="contratados : ${todosContratados}">
+				<tr th:each="contratados : ${buscaContratados}">
 					<td class="text-center" th:text="${contratados.nome}"></td>
 					<td class="text-center" th:text="${contratados.cnpj}"></td>	
 					<td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/contratados/{id_contratados}(id_contratados=${contratados.id_contratado})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:href="@{/transparenciactb/contratados/remove/{id_contratados}(id_contratados=${contratados.id_contratado})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> remover</span></a></td>
 				</tr>
 				
 			<tr>
-				<td colspan="6" th:if="${#lists.isEmpty(todosContratados)}">Nenhuma empresa/serviço contratado(a) encontrado(a)</td>
+				<td colspan="6" th:if="${#lists.isEmpty(buscaContratados)}">Nenhuma empresa/serviço contratado(a) encontrado(a)</td>
 			</tr>
 			</tbody>
 		

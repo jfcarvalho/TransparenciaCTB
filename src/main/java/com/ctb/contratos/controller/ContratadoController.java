@@ -58,12 +58,28 @@ public class ContratadoController {
 	}
 	
 	@RequestMapping(method= RequestMethod.GET)
-	public ModelAndView pesquisar(String busca, String nome, String setor) throws ParseException
+	public ModelAndView pesquisar(String busca, String nome, String cnpj) throws ParseException
 	{
 		ModelAndView mv = new ModelAndView("/pesquisa/PesquisaContratados");
-		//mv.addObject("usuarios", todosUsuarios);
-    
-	return mv;
+		if(nome != null) {
+			if(busca != null && nome.equals("on")) {
+				List<Contratado> todosContratados = contratados.findByNomeContaining(busca);
+				mv.addObject("buscaContratados", todosContratados);
+			
+				
+				return mv;
+			}
+		}
+		else if(cnpj != null) {
+			if(busca != null && cnpj.equals("on")) {
+				List<Contratado> todosContratados = contratados.findByNomeContaining(busca);
+				mv.addObject("buscaContratados", todosContratados);
+				return mv;
+			}
+		}
+		   List<Contratado> todosContratados= contratados.findAll();
+		   mv.addObject("buscaContratados", todosContratados);
+		   return mv;
 	}
 	@RequestMapping("{id_contratado}")
 	public ModelAndView edicao(@PathVariable("id_contratado") Contratado contratado)
@@ -95,21 +111,7 @@ public class ContratadoController {
 	{
 		return contratados.findAll();
 	}
-	/*
-	public Contrato pegarContrato(List<Contrato> contratos)
-	{
-		Iterator it = contratos.iterator();
-		while(it.hasNext())
-		{
-			Contrato obj = (Contrato) it.next();
-			
-			if(obj.getComputadores().isEmpty())
-			{
-					//todasImpressorasDisponiveis.add(obj);
-			}
-}
-	}
-	 */
+	
 
 	public List<Contrato> desvincularContratos(List<Contrato> contratosADesvincular)
 	{

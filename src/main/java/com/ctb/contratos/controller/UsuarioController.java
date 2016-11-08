@@ -50,10 +50,37 @@ public class UsuarioController {
 	}
 	
 	@RequestMapping(method= RequestMethod.GET)
-	public ModelAndView pesquisar(String busca, String nome, String setor) throws ParseException
+	public ModelAndView pesquisar(String busca, String nome, String setor, String matricula) throws ParseException
 	{
 		ModelAndView mv = new ModelAndView("/pesquisa/PesquisaUsuarios");
 		//mv.addObject("usuarios", todosUsuarios);
+		
+		if(nome != null) {
+			if(busca != null && nome.equals("on")) {
+				List<Usuario> todosUsuarios = usuarios.findByNomeContaining(busca);
+				mv.addObject("buscaUsuarios", todosUsuarios);
+				System.out.println(todosUsuarios.size());
+				
+				return mv;
+			}
+		}
+		else if(setor != null) {
+			if(busca != null && setor.equals("on")) {
+				List<Usuario> todosUsuarios= usuarios.findBySetorContaining(busca);
+				mv.addObject("buscaUsuarios", todosUsuarios);
+				return mv;
+			}
+		}
+		else if(matricula != null) {
+			if(busca != null && matricula.equals("on")) {
+				List<Usuario> todosUsuarios= usuarios.findByMatriculaContaining(busca);
+				mv.addObject("buscaUsuarios", todosUsuarios);
+				return mv;
+			}
+		}
+		   List<Contrato> todosContratos= contratos.findAll();
+		   mv.addObject("buscaContratos", todosContratos);
+	    
     
 	return mv;
 	}
