@@ -81,68 +81,6 @@ public class ContratoController {
 		return mv;
 	}
 	
-	public float[] gerarSaldos(List<Lancamento> lancamentos, String anoACalcular, int quantidadeAnos)
-	{
-		
-		//calcularSaldos(lancamentos);
-		int i;
-		String periodoAComparar;
-		float acumuladorValor;
-		float acumuladorSaldo;
-		float acumuladorAditivo = 0;	
-		float vetorSomaSaldos[] = new float[13];
-
-		Comparator<Lancamento> cmp = new Comparator<Lancamento>() {
-		        public int compare(Lancamento l1, Lancamento l2) {
-		          return l1.getData().compareTo(l2.getData());
-		        }
-		    };
-
-		Collections.sort(lancamentos, cmp);
-		
-		//Se ano a calcular for o mesmo que o ano inicial
-		
-		for(i=1; i < 13; i++)
-		{
-			
-			acumuladorValor =0;
-			acumuladorSaldo = 0;
-			if(i > 0 && i < 10) {
-				periodoAComparar = anoACalcular+ "-0"+ Integer.toString(i);
-			}else {periodoAComparar = anoACalcular+ "-"+ Integer.toString(i);}
-			Iterator it = lancamentos.iterator();
-			while(it.hasNext())
-			{
-				Lancamento obj = (Lancamento) it.next();
-			
-				
-				if(obj.getData().toString().contains(periodoAComparar))
-				{ 
-					//System.out.println(obj.getValor());
-					
-					acumuladorValor += obj.getValor();
-					acumuladorSaldo += obj.getSaldo_contrato();
-					if(obj.getPossui_aditivo())
-					{
-						acumuladorAditivo += obj.getValor_aditivo();
-						
-					}
-
-					
-								
-				}
-				
-		}
-			
-			vetorSomaSaldos[i] = acumuladorValor ;
-	}
-		AditivoSetting aditivosomado = new AditivoSetting(0);
-		aditivosomado.setValor(acumuladorAditivo);
-		aditivosomado.setPeriodo(anoACalcular);
-		aditivos.add(aditivosomado);
-		return vetorSomaSaldos;
-	}
-	
 
 	
 	@RequestMapping(value="/resumo/{id_contrato}", method= RequestMethod.GET)
@@ -151,114 +89,127 @@ public class ContratoController {
 		List<Lancamento> lancamentos = contratos.findOne(Id_contrato).getLancamentos();
 		ModelAndView mv = new ModelAndView(RESUMO_VIEW);
 		Contrato c = contratos.findOne(Id_contrato);
-		String primeiro = lancamentos.get(1).getData().toString();
-		String ultimo = lancamentos.get(lancamentos.size()-1).getData().toString();
-		Calendar cal1 = Calendar.getInstance();
-		Calendar cal2 = Calendar.getInstance();
-		cal1.setTime(lancamentos.get(0).getData());
-		cal2.setTime(lancamentos.get(lancamentos.size()-1).getData());
-		int anoprimeiro = cal1.get(Calendar.YEAR);
-		int anoultimo = cal2.get(Calendar.YEAR);
-		int quantidadeAnos = anoultimo-anoprimeiro;
+		int i, indiceElemento;
+		String periodoAComparar;
 		float acumuladorValor;
 		float acumuladorAditivo = 0;
-		float tabelaValores[] = new float[13];
-		float tabelaSaldos[][] = new float[14][quantidadeAnos+1];
-		float acumuladorSub = 0;
-				
-		int anoInt = Integer.parseInt(ano);
-	//	tabelaValores = gerarSaldos(lancamentos, ano, quantidadeAnos,acumuladorAditivo);
-		
-		if( anoprimeiro == anoInt)
-		{
-			tabelaValores = gerarSaldos(lancamentos, ano, quantidadeAnos);
-		}
-		//System.out.println(acumuladorAditivo);
-		tabelaSaldos[0][0] = c.getSaldo_contrato();
-		for(int i=1; i < 13; i++)
-		{
-			acumuladorSub = acumuladorSub+tabelaValores[i]; 
-			tabelaSaldos[i][0] = tabelaValores[i];
-		}
-		
-		if(quantidadeAnos > 0) 
-		{
-		
-			tabelaSaldos[0][1] = tabelaSaldos[0][0] - acumuladorSub;
-		}
-		tabelaSaldos[13][0] = tabelaSaldos[0][0] + aditivos.get(0).getValor() - acumuladorSub;
-		
-		for(int j=1; j < quantidadeAnos; j++)
-		{
-			for(int i=0; i < 14; i++)
-			{
-				if(i == 0)
-				{
-					tabelaSaldos[i][j] = tabelaSaldos[i][j-1] - tabelaSaldos[13][j-1];
-				}
-				else if (i ==13) {System.out.println("Calcular o total");}
-				else {
-					int novoano = Integer.parseInt(ano+1);
-					tabelaValores = gerarSaldos(lancamentos, String.valueOf(novoano), quantidadeAnos);}
-			}
-		}
-		System.out.println(tabelaSaldos[0][0]);
-		System.out.println(aditivos.get(0).getValor());
-		System.out.println(acumuladorSub);
-		System.out.println(tabelaSaldos[13][0]);
-		
-		
-		//Funcao Calcular Saldos
+		float acumuladorSaldo = 0;
+		float [] mesesSaldo = new float[13];
+		float [] mesesValores = new float[13];
+		float [] mesesAditivos = new float[13];
 		
 		
 		
-		//TODO: Primeiro o algoritmo tem que percorrer todos os lancamentos e fazer uma soma por mes(com aditivo)[FEITO]
-		//TODO: Após feito o processamento, alimentamos a tabela de saldos
-		//TODO: Exibir informações
-		
-		//Ordenando dados 
-		
-		
-		
-		//Primeiro
-		
-		
-		
+		Comparator<Lancamento> cmp = new Comparator<Lancamento>() {
+	        public int compare(Lancamento l1, Lancamento l2) {
+	          return l1.getData().compareTo(l2.getData());
+	        }
+	    };
+
+	Collections.sort(lancamentos, cmp);
 	
-		
-		//Segundo
-		/*
-		acumuladorValor = 0;
-		for(int j=0; j < quantidadeAnos; j++)
+	for(i=1; i < 13; i++)
+	{
+		acumuladorValor =0;
+		acumuladorSaldo = 0;
+		if(i > 0 && i < 10) {
+			periodoAComparar = ano+ "-0"+ Integer.toString(i);
+		}else {periodoAComparar = ano+ "-"+ Integer.toString(i);}
+		Iterator it = lancamentos.iterator();
+		while(it.hasNext())
 		{
-			for(int i=0; i < 14; i++)
-			{
-				if(i ==0 && j==0)
+			Lancamento obj = (Lancamento) it.next();
+		
+			
+			if(obj.getData().toString().contains(periodoAComparar))
+			{ 
+				acumuladorValor += obj.getValor();
+				//acumuladorSaldo += obj.getSaldo_contrato();
+				if(obj.getPossui_aditivo())
 				{
-					tabelaSaldos[i][j] = c.getSaldo_contrato(); 
-				}
-				else if(i ==0 && j != 0)
+					acumuladorAditivo += obj.getValor_aditivo();
+					
+				}				
+			}	
+		}
+		
+		Iterator it2 = lancamentos.iterator();
+		while (it2.hasNext()) {
+			Lancamento obj = (Lancamento) it2.next();
+			indiceElemento = lancamentos.indexOf(obj);
+			// System.out.println(indiceElemento);
+			if(indiceElemento < lancamentos.size()-1) {
+				Lancamento l = lancamentos.get(indiceElemento+1);
+				System.out.println(l.getData().toString().contains(periodoAComparar));
+				System.out.println(periodoAComparar);
+				System.out.println(l.getData().toString());
+				// System.out.println(obj.getData().toString() + "---" + l.getData().toString()) ;
+				if(l.getData().toString().contains(periodoAComparar) == false)
 				{
-					tabelaSaldos[i][j] = tabelaSaldos[0][j] - tabelaSaldos[i+1][j-1];
+					System.out.println(l.getData().toString());
+					break;
 				}
-				
-				else if(i == 13)
-				{
-					tabelaSaldos[i][j] = acumuladorValor;
-				}
-				else {
-					tabelaValores = gerarSaldos(lancamentos, ano, quantidadeAnos);
-				}
-				
 			}
 		}
-		*/
-		//Terceiro
+		
+		
+		mesesValores[i] = acumuladorValor;
+		mesesAditivos[i] = acumuladorAditivo;
+		
+	}
+	
+	
+
+				
+		mv.addObject("janeiro_saldo", mesesSaldo[1]);		
+		mv.addObject("fevereiro_saldo", mesesSaldo[2]);
+		mv.addObject("marco_saldo", mesesSaldo[3]);
+		mv.addObject("abril_saldo", mesesSaldo[4]);
+		mv.addObject("maio_saldo", mesesSaldo[5]);
+		mv.addObject("junho_saldo", mesesSaldo[6]);
+		mv.addObject("julho_saldo", mesesSaldo[7]);
+		mv.addObject("agosto_saldo", mesesSaldo[8]);
+		mv.addObject("setembro_saldo", mesesSaldo[9]);
+		mv.addObject("outubro_saldo", mesesSaldo[10]);
+		mv.addObject("novembro_saldo", mesesSaldo[11]);
+		mv.addObject("dezembro_saldo", mesesSaldo[12]);
+		
+		mv.addObject("janeiro_valor", mesesValores[1]);		
+		mv.addObject("fevereiro_valor", mesesValores[2]);
+		mv.addObject("marco_valor", mesesValores[3]);
+		mv.addObject("abril_valor", mesesValores[4]);
+		mv.addObject("maio_valor", mesesValores[5]);
+		mv.addObject("junho_valor", mesesValores[6]);
+		mv.addObject("julho_valor", mesesValores[7]);
+		mv.addObject("agosto_valor", mesesValores[8]);
+		mv.addObject("setembro_valor", mesesValores[9]);
+		mv.addObject("outubro_valor", mesesValores[10]);
+		mv.addObject("novembro_valor", mesesValores[11]);
+		mv.addObject("dezembro_valor", mesesValores[12]);
+		
+		mv.addObject("janeiro_aditivo", mesesAditivos[1]);		
+		mv.addObject("fevereiro_aditivo", mesesAditivos[2]);
+		mv.addObject("marco_aditivo", mesesAditivos[3]);
+		mv.addObject("abril_aditivo", mesesAditivos[4]);
+		mv.addObject("maio_aditivo", mesesAditivos[5]);
+		mv.addObject("junho_aditivo", mesesAditivos[6]);
+		mv.addObject("julho_aditivo", mesesAditivos[7]);
+		mv.addObject("agosto_aditivo", mesesAditivos[8]);
+		mv.addObject("setembro_aditivo", mesesAditivos[9]);
+		mv.addObject("outubro_aditivo", mesesAditivos[10]);
+		mv.addObject("novembro_aditivo", mesesAditivos[11]);
+		mv.addObject("dezembro_aditivo", mesesAditivos[12]);
+		
+		
+		
+		
+		
 		
 		
 		return mv;
 		
 	}
+
 
 	@RequestMapping("/visualizar/{id_contrato}")
 	public ModelAndView visualizar(@PathVariable("id_contrato") Integer Id_contrato)
