@@ -8,7 +8,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -89,6 +91,7 @@ public class ContratoController {
 		List<Lancamento> lancamentos = contratos.findOne(Id_contrato).getLancamentos();
 		ModelAndView mv = new ModelAndView(RESUMO_VIEW);
 		Contrato c = contratos.findOne(Id_contrato);
+		Queue<Integer> meses = new LinkedList();
 		int i, indiceElemento;
 		String periodoAComparar;
 		float acumuladorValor;
@@ -97,6 +100,7 @@ public class ContratoController {
 		float [] mesesSaldo = new float[13];
 		float [] mesesValores = new float[13];
 		float [] mesesAditivos = new float[13];
+		int flagmes = 0;
 		
 		
 		
@@ -110,6 +114,7 @@ public class ContratoController {
 	
 	for(i=1; i < 13; i++)
 	{
+		flagmes = 0;
 		acumuladorValor =0;
 		acumuladorSaldo = 0;
 		if(i > 0 && i < 10) {
@@ -123,6 +128,7 @@ public class ContratoController {
 			
 			if(obj.getData().toString().contains(periodoAComparar))
 			{ 
+				flagmes = 1;
 				acumuladorValor += obj.getValor();
 				//acumuladorSaldo += obj.getSaldo_contrato();
 				if(obj.getPossui_aditivo())
@@ -132,6 +138,15 @@ public class ContratoController {
 				}				
 			}	
 		}
+		if(flagmes == 1)
+		{
+			meses.add(i);
+		}
+		
+		Iterator itpilha = meses.iterator();
+		
+		while (itpilha.hasNext()) {
+			
 		
 		Iterator it2 = lancamentos.iterator();
 		while (it2.hasNext()) {
@@ -151,7 +166,7 @@ public class ContratoController {
 				}
 			}
 		}
-		
+	}
 		
 		mesesValores[i] = acumuladorValor;
 		mesesAditivos[i] = acumuladorAditivo;
