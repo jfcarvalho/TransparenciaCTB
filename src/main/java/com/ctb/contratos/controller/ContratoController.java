@@ -100,7 +100,9 @@ public class ContratoController {
 		float [] mesesSaldo = new float[13];
 		float [] mesesValores = new float[13];
 		float [] mesesAditivos = new float[13];
+		List<String> periodosComparados = new ArrayList<String>();
 		int flagmes = 0;
+		int flagoffset = 0;
 		
 		
 		
@@ -143,35 +145,57 @@ public class ContratoController {
 			meses.add(i);
 		}
 		
-		Iterator itpilha = meses.iterator();
+
+		mesesValores[i] = acumuladorValor;
+		mesesAditivos[i] = acumuladorAditivo;
 		
-		while (itpilha.hasNext()) {
+}
+		Iterator itfila = meses.iterator();
+		
+		while (itfila.hasNext()) {
+			if(meses.peek() != null ) {
+				int mes = meses.peek();
+				meses.poll();
+			
+			if(mes > 0 && mes < 10) {
+				periodoAComparar = ano+ "-0"+ Integer.toString(mes);
+			}else {periodoAComparar = ano+ "-"+ Integer.toString(mes);}
+			
+		//	periodosComparados.add(periodoAComparar);
 			
 		
 		Iterator it2 = lancamentos.iterator();
 		while (it2.hasNext()) {
 			Lancamento obj = (Lancamento) it2.next();
 			indiceElemento = lancamentos.indexOf(obj);
+			
 			// System.out.println(indiceElemento);
-			if(indiceElemento < lancamentos.size()-1) {
+			if(indiceElemento < lancamentos.size()-1 && obj.getData().toString().contains(ano)) {
 				Lancamento l = lancamentos.get(indiceElemento+1);
 				System.out.println(l.getData().toString().contains(periodoAComparar));
 				System.out.println(periodoAComparar);
 				System.out.println(l.getData().toString());
 				// System.out.println(obj.getData().toString() + "---" + l.getData().toString()) ;
-				if(l.getData().toString().contains(periodoAComparar) == false)
+				
+				if(compararPeriodos(obj.getData().toString(), periodosComparados) == false)
 				{
-					System.out.println(l.getData().toString());
+					periodosComparados.add(obj.getData().toString());
+				}
+				
+				
+				if(l.getData().toString().contains(periodoAComparar) == false && compararPeriodos(l.getData().toString(), periodosComparados) == false)
+				{
+					//System.out.println(l.getData().toString());
+					mesesSaldo[mes] = obj.getSaldo_contrato();
 					break;
 				}
 			}
 		}
+		}
 	}
 		
-		mesesValores[i] = acumuladorValor;
-		mesesAditivos[i] = acumuladorAditivo;
 		
-	}
+
 	
 	
 
@@ -226,6 +250,20 @@ public class ContratoController {
 	}
 
 
+	public boolean compararPeriodos(String periodoAComparar, List<String> periodos)
+	{
+		Iterator it = periodos.iterator();
+		while(it.hasNext())
+		{
+			String obj = (String) it.next();
+			if(obj.contains(periodoAComparar))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	@RequestMapping("/visualizar/{id_contrato}")
 	public ModelAndView visualizar(@PathVariable("id_contrato") Integer Id_contrato)
 	{
