@@ -169,26 +169,39 @@ public class ContratoController {
 			Lancamento obj = (Lancamento) it2.next();
 			indiceElemento = lancamentos.indexOf(obj);
 			
+			Lancamento l;			
 			// System.out.println(indiceElemento);
-			if(indiceElemento < lancamentos.size()-1 && obj.getData().toString().contains(ano)) {
-				Lancamento l = lancamentos.get(indiceElemento+1);
+			if(indiceElemento <= lancamentos.size()-1 && obj.getData().toString().contains(ano)) {
+				if (indiceElemento == lancamentos.size()-1)
+				{	
+					 l = lancamentos.get(indiceElemento);
+				}
+				else { l = lancamentos.get(indiceElemento+1);}
 				System.out.println(l.getData().toString().contains(periodoAComparar));
 				System.out.println(periodoAComparar);
 				System.out.println(l.getData().toString());
+				System.out.println(lancamentos.indexOf(l) +" " + lancamentos.size());
 				// System.out.println(obj.getData().toString() + "---" + l.getData().toString()) ;
 				
-				if(compararPeriodos(obj.getData().toString(), periodosComparados) == false)
+				if(compararPeriodos(obj.getData().toString(), periodosComparados) == false ) //precisamos colocar mais uma condição aqui nesse IF
 				{
+					System.out.println(lancamentos.indexOf(obj) +" " + lancamentos.size());
+					
 					periodosComparados.add(obj.getData().toString());
 				}
 				
 				
-				if(l.getData().toString().contains(periodoAComparar) == false && compararPeriodos(l.getData().toString(), periodosComparados) == false)
+				if(l.getData().toString().contains(periodoAComparar) == false && compararPeriodos(l.getData().toString(), periodosComparados) == false || l.getData().toString().equals(obj.getData().toString()))
 				{
-					//System.out.println(l.getData().toString());
-					mesesSaldo[mes] = obj.getSaldo_contrato();
-					break;
-				}
+				/*	if(lancamentos.indexOf(l) == lancamentos.size()-1 && lancamentos.indexOf(obj) != lancamentos.size()-2) { 
+						mesesSaldo[mes] = l.getSaldo_contrato();
+						break;
+					}
+					else { */
+						mesesSaldo[mes] = obj.getSaldo_contrato();
+						break;
+						//}
+					}
 			}
 		}
 		}
