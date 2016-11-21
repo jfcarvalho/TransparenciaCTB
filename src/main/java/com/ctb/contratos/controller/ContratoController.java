@@ -177,10 +177,10 @@ public class ContratoController {
 					 l = lancamentos.get(indiceElemento);
 				}
 				else { l = lancamentos.get(indiceElemento+1);}
-				System.out.println(l.getData().toString().contains(periodoAComparar));
-				System.out.println(periodoAComparar);
-				System.out.println(l.getData().toString());
-				System.out.println(lancamentos.indexOf(l) +" " + lancamentos.size());
+			//	System.out.println(l.getData().toString().contains(periodoAComparar));
+			//	System.out.println(periodoAComparar);
+			//	System.out.println(l.getData().toString());
+			//	System.out.println(lancamentos.indexOf(l) +" " + lancamentos.size());
 				// System.out.println(obj.getData().toString() + "---" + l.getData().toString()) ;
 				
 				if(compararPeriodos(obj.getData().toString(), periodosComparados) == false ) //precisamos colocar mais uma condição aqui nesse IF
@@ -198,7 +198,9 @@ public class ContratoController {
 						break;
 					}
 					else { */
-						mesesSaldo[mes] = obj.getSaldo_contrato();
+					System.out.println(obj.getSaldo_contrato());
+					System.out.println(mesesAditivos[mes]);	
+					mesesSaldo[mes] = obj.getSaldo_contrato() + mesesAditivos[mes];
 						break;
 						//}
 					}
