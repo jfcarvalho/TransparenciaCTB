@@ -228,6 +228,77 @@
 </table>
 
 
+	<div  class="col-sm-6">
+			<div  data-target="#graficoValor"></div>
+				<div id="graficoValor"  th:attr="data-valor=${janeiro_valor} + ',' + ${fevereiro_valor} + ',' + ${marco_valor} + ',' + ${abril_valor} + ',' + ${maio_valor} + ',' + ${junho_valor} + ',' + ${julho_valor} + ',' + ${agosto_valor} + ',' + ${setembro_valor} + ',' + ${outubro_valor} + ',' + ${novembro_valor} + ',' + ${dezembro_valor}" class="aw-graph-box">
+					<div class="aw-graph-box__header">
+						<h2 class="aw-graph-box__title">Vendas por origem <small>últimos 6 meses</small></h2>
+					</div>
+					<div class="aw-graph-box__content">
+						<div class="aw-graph-box__no-data">
+							<!--   <i class="fa  fa-line-chart  fa-2x"></i>
+							<span>Não há dados</span> -->
+						</div>
+						<div>
+							<canvas id="graficoLancamentosValor" height="160"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div  class="col-sm-6">
+			<div  data-target="#graficoSaldo"></div>
+				<div id="graficoSaldo"  th:attr="data-saldo=${janeiro_saldo} + ',' + ${fevereiro_saldo} + ',' + ${marco_saldo} + ',' + ${abril_saldo} + ',' + ${maio_saldo} + ',' + ${junho_saldo} + ',' + ${julho_saldo} + ',' + ${agosto_saldo} + ',' + ${setembro_saldo} + ',' + ${outubro_saldo} + ',' + ${novembro_saldo} + ',' + ${dezembro_saldo}" class="aw-graph-box">
+					<div class="aw-graph-box__header">
+						<h2 class="aw-graph-box__title">Vendas por origem <small>últimos 6 meses</small></h2>
+					</div>
+					<div class="aw-graph-box__content">
+						<div class="aw-graph-box__no-data">
+							<!--   <i class="fa  fa-line-chart  fa-2x"></i>
+							<span>Não há dados</span> -->
+						</div>
+						<div>
+							<canvas id="graficoLancamentosSaldo" height="160"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div  class="col-sm-6">
+			<div  data-target="#graficoGeral"></div>
+				<div id="graficoGeral"  th:attr="data-geral=${saldoGeral} + ',' + ${valorGeral} + ',' + ${aditivoGeral} " class="aw-graph-box">
+					<div class="aw-graph-box__header">
+						<h2 class="aw-graph-box__title">Vendas por origem <small>últimos 6 meses</small></h2>
+					</div>
+					<div class="aw-graph-box__content">
+						<div class="aw-graph-box__no-data">
+							<!--   <i class="fa  fa-line-chart  fa-2x"></i>
+							<span>Não há dados</span> -->
+						</div>
+						<div>
+							<canvas id="graficoLancamentosGeral" height="160"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div  class="col-sm-6">
+			<div  data-target="#graficoPorcentagem"></div>
+				<div id="graficoPorcentagem"  th:attr="data-porcentagem=70 + ',' + 30" class="aw-graph-box">
+					<div class="aw-graph-box__header">
+						<h2 class="aw-graph-box__title">Vendas por origem <small>últimos 6 meses</small></h2>
+					</div>
+					<div class="aw-graph-box__content">
+						<div class="aw-graph-box__no-data">
+							<!--  <i class="fa  fa-line-chart  fa-2x"></i>
+							<span>Não há dados</span> -->
+						</div>
+						<div>
+							<canvas id="graficoLancamentosPorcentagem" height="160"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
 
 
 
@@ -244,5 +315,7 @@
  <script src="/layout/javascripts/bootstrap-datepicker.pt-BR.min.js"></script>
 <script src="/layout/javascripts/bootstrap.min.js"></script>
 <script src="/layout/javascripts/jquery-2.2.0.min.js"></script>
+<script src="/layout/javascripts/Chart.min.js"></script>
+<script src="/layout/javascripts/graficos.js"></script>
 
 </html>

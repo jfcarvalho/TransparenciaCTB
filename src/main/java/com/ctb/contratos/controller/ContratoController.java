@@ -97,6 +97,11 @@ public class ContratoController {
 		float acumuladorValor;
 		float acumuladorAditivo = 0;
 		float acumuladorSaldo = 0;
+		
+		float acumuladorValorGeral = 0;
+		float acumuladorSaldoGeral = 0;
+		float acumuladorAditivoGeral = 0;
+		
 		float [] mesesSaldo = new float[13];
 		float [] mesesValores = new float[13];
 		float [] mesesAditivos = new float[13];
@@ -132,10 +137,12 @@ public class ContratoController {
 			{ 
 				flagmes = 1;
 				acumuladorValor += obj.getValor();
+				acumuladorValorGeral += acumuladorValor;
 				//acumuladorSaldo += obj.getSaldo_contrato();
 				if(obj.getPossui_aditivo())
 				{
 					acumuladorAditivo += obj.getValor_aditivo();
+					acumuladorAditivoGeral += acumuladorAditivo;
 					
 				}				
 			}	
@@ -200,8 +207,9 @@ public class ContratoController {
 					else { */
 					System.out.println(obj.getSaldo_contrato());
 					System.out.println(mesesAditivos[mes]);	
-					mesesSaldo[mes] = obj.getSaldo_contrato() + mesesAditivos[mes];
-						break;
+					mesesSaldo[mes] = obj.getSaldo_contrato() /*+ mesesAditivos[mes] */;
+					acumuladorSaldoGeral += obj.getSaldo_contrato(); 
+					break;
 						//}
 					}
 			}
@@ -253,6 +261,12 @@ public class ContratoController {
 		mv.addObject("outubro_aditivo", mesesAditivos[10]);
 		mv.addObject("novembro_aditivo", mesesAditivos[11]);
 		mv.addObject("dezembro_aditivo", mesesAditivos[12]);
+		
+		mv.addObject("saldoGeral", acumuladorSaldoGeral);
+		mv.addObject("valorGeral", acumuladorValorGeral);
+		mv.addObject("aditivoGeral", acumuladorAditivoGeral);
+		
+		
 		
 		
 		
