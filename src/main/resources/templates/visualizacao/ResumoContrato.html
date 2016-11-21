@@ -229,6 +229,23 @@
 
 
 
+			<div  class="col-sm-6">
+			<div  data-target="#grafico" th:attr="data-teste='va tomar no cu'"></div>
+				<div id="grafico"  th:attr="data-teste=${janeiro_valor} + ',' + ${fevereiro_valor} + ',' + ${marco_valor} + ',' + ${abril_valor} + ',' + ${maio_valor} + ',' + ${junho_valor} " class="aw-graph-box">
+					<div class="aw-graph-box__header">
+						<h2 class="aw-graph-box__title">Vendas por origem <small>últimos 6 meses</small></h2>
+					</div>
+					<div class="aw-graph-box__content">
+						<div class="aw-graph-box__no-data">
+							<i class="fa  fa-line-chart  fa-2x"></i>
+							<span>Não há dados</span>
+						</div>
+						<div>
+							<canvas id="graficoLancamentos" height="160"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
 
 
 
@@ -244,5 +261,6 @@
  <script src="/layout/javascripts/bootstrap-datepicker.pt-BR.min.js"></script>
 <script src="/layout/javascripts/bootstrap.min.js"></script>
 <script src="/layout/javascripts/jquery-2.2.0.min.js"></script>
-
+<script src="https://github.com/chartjs/Chart.js/releases/download/v2.4.0/Chart.min.js"></script>
+<script src="/layout/javascripts/graficos.js"></script>
 </html>
