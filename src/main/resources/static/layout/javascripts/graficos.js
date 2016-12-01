@@ -11,7 +11,6 @@ $('document').ready(function()
 	 dadosSaldo = $('#graficoSaldo').attr('data-saldo');
 	 dadosPorcentagem = $('#graficoPorcentagem').attr('data-porcentagem');
 	 dadosGerais = $('#graficoGeral').attr('data-geral');
-	 console.log("WTF?");
 })
 
 var contratos = contratos || {};

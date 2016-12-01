@@ -7,9 +7,11 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +50,12 @@ public class ContratoController {
 	private static final String VISUALIZAR_VIEW = "/visualizacao/VisualizarContrato";
 	private static final String RESUMO_VIEW = "/visualizacao/ResumoContrato";
 	private static final String GERARRESUMO_VIEW = "/visualizacao/GerarResumoContrato";
+	private static final String GERARRESUMOCONSIGNADO_VIEW = "/visualizacao/GerarResumoConsignadoContrato";
+	private static final String RESUMOCONSIGNADO_VIEW = "/visualizacao/ResumoConsignadoContrato";
 	public static Integer numero_contrato =0;
 	static final ArrayList<AditivoSetting> aditivos = new ArrayList();
+
+    
 	
 	@Autowired
 	private Usuarios usuarios;
@@ -83,7 +89,54 @@ public class ContratoController {
 		return mv;
 	}
 	
-
+	@RequestMapping("/resumo_consignado/")
+	public ModelAndView gerarResumoConsignado()
+	{
+		ModelAndView mv = new ModelAndView(GERARRESUMOCONSIGNADO_VIEW);	
+		Map<String, String> contratosEValores = new HashMap<String, String>();
+		float acumuladoValor;
+		float acumuladoAditivo;
+		
+		
+		List<Contrato> todosContratos = contratos.findAll();
+		Iterator it = todosContratos.iterator();
+		
+		while(it.hasNext())
+		{
+			acumuladoValor = 0;
+			acumuladoAditivo = 0;
+		
+			Contrato obj = (Contrato) it.next();
+			List<Lancamento> cl = obj.getLancamentos();
+			Iterator it2 = todosContratos.iterator();
+			while(it2.hasNext())
+			{
+				Lancamento lanc = (Lancamento) it2.next();
+				acumuladoValor += lanc.getValor();
+				acumuladoAditivo += lanc.getValor_aditivo();
+		
+			}
+			contratosEValores.put(obj.getId_contrato().toString(), String.valueOf(acumuladoValor));
+			System.out.println(contratosEValores.values());
+		    //System.out.println(obj.getValor());
+			//acumulador += obj.getValor(); 
+			
+			
+		}
+		return mv;
+	}
+	/*
+	@RequestMapping(value="/resumoconsignado/{id_usuario}", method= RequestMethod.GET)
+	public ModelAndView resumoConsignado(@PathVariable("Id_usuario") Integer Id_usuario)
+	{
+		
+		ModelAndView mv = new ModelAndView(RESUMOCONSIGNADO_VIEW);
+		//List<Contrato> contratosGestor = contratosGestores(Id_usuario);
+		mv.addObject("contratosGestor", contratosGestor);
+		return mv;
+		
+	}
+	*/
 	
 	@RequestMapping(value="/resumo/{id_contrato}", method= RequestMethod.GET)
 	public ModelAndView resumo(@PathVariable("id_contrato") Integer Id_contrato, String ano)
@@ -535,11 +588,33 @@ public class ContratoController {
 			}
 	}	
 	
+	
+	public Contrato[] maioresValoresContratos()
+	{
+		List<Contrato> contratosABuscar = contratos.findAll();
+		Contrato [] maioresContratos = new Contrato[contratosABuscar.size()];
+		Iterator it = contratosABuscar.iterator();
+	/*	
+		while(it.hasNext())
+		{
+			Contrato obj = (Contrato) it.next();
+			
+			if(obj.getGestor().getId_usuario() == id_usuario) {
+				contratosDoGestor.add(obj);
+			}
+		}
+		return contratosDoGestor;
+	*/
+		return null;
+	}
+	
+	
 	@ModelAttribute("todosGestores")
 	public List<Usuario> todosGestores()
 	{
 		return usuarios.findAll();
 	}
+	
 	
 	@ModelAttribute("todosFiscais")
 	public List<Usuario> todosFiscais()
