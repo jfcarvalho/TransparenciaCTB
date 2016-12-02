@@ -1,6 +1,12 @@
 package com.ctb.licitacoes.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class Licitacao {
+	@Id
+	private Integer Id_licitacao;
 	private String numeroLicitacao;
 	private Modalidade modalidade;
 	private float valor;
