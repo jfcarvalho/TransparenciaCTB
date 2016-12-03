@@ -16,6 +16,7 @@ public class Usuario {
 	private Integer id_usuario;
 	private String nome;
 	private String matricula;
+	private String password;
 	private String setor;
 	private String funcao;
 	private String email;
@@ -101,5 +102,13 @@ public class Usuario {
 	public void setContratosFiscalizados(List<Contrato> contratosFiscalizados)
 	{
 		this.contratosFiscalizados= contratosFiscalizados;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 }
