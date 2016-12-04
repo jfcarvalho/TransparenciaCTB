@@ -77,8 +77,8 @@ public class ContratadoController {
 				return mv;
 			}
 		}
-		   List<Contratado> todosContratados= contratados.findAll();
-		   mv.addObject("buscaContratados", todosContratados);
+		 //  List<Contratado> todosContratados = contratados.findAll();
+		   mv.addObject("buscaContratados", contratados.findAll());
 		   return mv;
 	}
 	@RequestMapping("{id_contratado}")

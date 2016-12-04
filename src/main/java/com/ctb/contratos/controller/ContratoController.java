@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Queue;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
@@ -40,6 +41,8 @@ import com.ctb.contratos.repository.Contratos;
 import com.ctb.contratos.repository.Lancamentos;
 import com.ctb.contratos.repository.Processos;
 import com.ctb.contratos.repository.Usuarios;
+import com.ctb.security.UsuarioSistema;
+import com.ctb.security.AppUserDetailsService;
 
 @Controller
 @RequestMapping("/transparenciactb/contratos")
@@ -70,11 +73,15 @@ public class ContratoController {
 	@Autowired
 	private Processos processos;
 	
+	
 	@RequestMapping("/novo")
 	public ModelAndView novo()
 	{
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
 		mv.addObject(new Contrato());
+		 System.out.println(AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO"));
+		//System.out.println("Valor da variavel estática:" + AppUserDetailsService.cusuario.getClass().getFields());
+		//System.out.println(user.getUsuario().getEmail());
 		//numero_contrato
 		//mv.addObject("todosNiveisUsuario", Nivel.values());
 		return mv;
@@ -457,9 +464,11 @@ public class ContratoController {
 	@RequestMapping(method= RequestMethod.GET)
 	public ModelAndView pesquisar(String busca, String numero, String objeto) throws ParseException
 	{
+		Usuario currentUser = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
+		boolean tem_permissao = AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
 		ModelAndView mv = new ModelAndView("/pesquisa/PesquisaContratos");
 		//mv.addObject("usuarios", todosUsuarios);
-		
+		mv.addObject("tem_permissao", tem_permissao);
 		if(numero != null) {
 			if(busca != null && numero.equals("on")) {
 				List<Contrato> todosContratos = contratos.findByNumeroContaining(busca);
@@ -476,9 +485,30 @@ public class ContratoController {
 				return mv;
 			}
 		}
+		 //  Usuario currentUser = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
+		   
+		   if(AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO") == false)
+		   {
+			   
+			   List<Contrato> todosContratos = contratos.findAll();
+			   List<Contrato> contratosAchados = new ArrayList<Contrato>();
+			   
+			   Iterator it = todosContratos.iterator();
+				while (it.hasNext()) {
+					Contrato c = (Contrato) it.next();
+					if (c.getGestor().getId_usuario() == currentUser.getId_usuario())
+					{
+						
+						contratosAchados.add(c);
+					}
+				}  
+				mv.addObject("buscaContratos", contratosAchados);
+				return mv;
+		   }
+		   
 		   List<Contrato> todosContratos= contratos.findAll();
 		   mv.addObject("buscaContratos", todosContratos);
-	    
+		   
 			return mv;
     
 	}

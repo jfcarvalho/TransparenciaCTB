@@ -23,14 +23,16 @@ public class AppUserDetailsService implements UserDetailsService  {
 
 	@Autowired
 	private Usuarios usuarios;
-	
+	public static UserDetails cusuario = null;
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		Optional<Usuario> usuarioOptional = usuarios.porEmail(email);
 		Usuario usuario = usuarioOptional.orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 		
+		UserDetails aux = new UsuarioSistema(usuario, getPermissoes(usuario));
 		
-		return new User(usuario.getEmail(), usuario.getPassword(), new HashSet<>());
+		AppUserDetailsService.cusuario = aux;
+		return aux;
 	}
 	
 	private Collection<? extends GrantedAuthority> getPermissoes(Usuario usuario)

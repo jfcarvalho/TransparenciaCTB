@@ -38,7 +38,7 @@
  			 </div>
  			  
  			</form>
-			<a class="btn btn-link aw-link-panel" href="/transparenciactb/contratos/novo">Novo contrato</a>
+			<a class="btn btn-link aw-link-panel" th:href="@{/transparenciactb/contratos/novo}" th:if="${tem_permissao}">Novo contrato</a>
 		</div>
 		</div>
 		<div class="table-responsive  bw-tabela-simples">
