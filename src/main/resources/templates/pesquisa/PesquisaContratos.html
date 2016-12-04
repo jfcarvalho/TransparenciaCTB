@@ -64,7 +64,7 @@
 					<td class="text-center" th:text="${#dates.format(contrato.data_assinatura, 'dd/MM/yyyy')}"></td>
 					<td class="text-center" th:text="${#dates.format(contrato.data_vencimento, 'dd/MM/yyyy')}"></td>
 					<td class="text-center" th:text="${contrato.saldo_contrato}"></td>
-					<td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/contratos/{id_contrato}(id_contrato=${contrato.id_contrato})}" ><span class="glyphicon glyphicon-pencil" > editar</span></a><a th:href="@{/transparenciactb/contratos/remove/{id_contrato}(id_contrato=${contrato.id_contrato})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> remover</span></a><a class="btn btn-link btn-xs" target="_blank" th:href="@{/transparenciactb/lancamentos/pesquisar/{id_contrato}(id_contrato=${contrato.id_contrato})}" ><span class="glyphicon glyphicon-th"></span> lançamentos</a><a class="btn btn-link btn-xs" target="_blank" th:href="@{/transparenciactb/contratos/visualizar/{id_contrato}(id_contrato=${contrato.id_contrato})}" >Visualizar</a></td>
+					<td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/contratos/{id_contrato}(id_contrato=${contrato.id_contrato})}" ><span class="glyphicon glyphicon-pencil" > editar</span></a><a th:href="@{/transparenciactb/contratos/remove/{id_contrato}(id_contrato=${contrato.id_contrato})}"  th:if="${permissao}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> remover</span></a><a class="btn btn-link btn-xs" target="_blank" th:href="@{/transparenciactb/lancamentos/pesquisar/{id_contrato}(id_contrato=${contrato.id_contrato})}" ><span class="glyphicon glyphicon-th"></span> lançamentos</a><a class="btn btn-link btn-xs" target="_blank" th:href="@{/transparenciactb/contratos/visualizar/{id_contrato}(id_contrato=${contrato.id_contrato})}" >Visualizar</a></td>
 					
 				</tr>
 				
@@ -74,6 +74,30 @@
 			</tbody>
 		
 		</table>
+		<div class="col-sm-12 text-center">
+		
+				<nav aria-label="Page navigation">
+  <ul class="pagination">
+    <li>
+      <a href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    <li><a href="?page=0">1</a></li>
+    <li><a href="?page=1">2</a></li>
+    <li><a href="?page=2">3</a></li>
+    <li><a href= "?page=3">4</a></li>
+    <li><a href= "?page=4">5</a></li>
+    <li>
+      <a href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+		</div>
+		
+		
 		</div>
 		</div>
 	</div>	

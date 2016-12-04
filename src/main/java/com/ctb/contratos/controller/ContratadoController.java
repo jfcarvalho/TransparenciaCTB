@@ -22,6 +22,7 @@ import com.ctb.contratos.model.Contrato;
 import com.ctb.contratos.repository.Contratados;
 import com.ctb.contratos.repository.Contratos;
 import com.ctb.contratos.repository.Usuarios;
+import com.ctb.security.AppUserDetailsService;
 
 @Controller
 @RequestMapping("/transparenciactb/contratados")
@@ -133,6 +134,11 @@ public class ContratadoController {
 	public String teste()
 	{
 		return "/cadastro/cadastro-produto";
+	}
+	
+	@ModelAttribute("permissao")
+	public boolean temPermissao() {
+		return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
 	}
 	
 }

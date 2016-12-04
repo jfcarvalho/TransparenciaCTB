@@ -56,7 +56,7 @@
 				<tr th:each="contratados : ${buscaContratados}">
 					<td class="text-center" th:text="${contratados.nome}"></td>
 					<td class="text-center" th:text="${contratados.cnpj}"></td>	
-					<td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/contratados/{id_contratados}(id_contratados=${contratados.id_contratado})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:href="@{/transparenciactb/contratados/remove/{id_contratados}(id_contratados=${contratados.id_contratado})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> remover</span></a></td>
+					<td class="text-center" th:if="${permissao}"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/contratados/{id_contratados}(id_contratados=${contratados.id_contratado})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:href="@{/transparenciactb/contratados/remove/{id_contratados}(id_contratados=${contratados.id_contratado})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> remover</span></a></td>
 				</tr>
 				
 			<tr>

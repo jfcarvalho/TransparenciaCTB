@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.Queue;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
@@ -44,6 +46,17 @@ import com.ctb.contratos.repository.Usuarios;
 import com.ctb.security.UsuarioSistema;
 import com.ctb.security.AppUserDetailsService;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+
+
 @Controller
 @RequestMapping("/transparenciactb/contratos")
 
@@ -57,8 +70,10 @@ public class ContratoController {
 	private static final String RESUMOCONSIGNADO_VIEW = "/visualizacao/ResumoConsignadoContrato";
 	public static Integer numero_contrato =0;
 	static final ArrayList<AditivoSetting> aditivos = new ArrayList();
-
+	private static final String DASHBOARD_VIEW = "/cabecalho/DashBoard";
     
+	@PersistenceContext
+	private EntityManager manager;
 	
 	@Autowired
 	private Usuarios usuarios;
@@ -77,13 +92,8 @@ public class ContratoController {
 	@RequestMapping("/novo")
 	public ModelAndView novo()
 	{
-		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
+		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);		
 		mv.addObject(new Contrato());
-		 System.out.println(AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO"));
-		//System.out.println("Valor da variavel estática:" + AppUserDetailsService.cusuario.getClass().getFields());
-		//System.out.println(user.getUsuario().getEmail());
-		//numero_contrato
-		//mv.addObject("todosNiveisUsuario", Nivel.values());
 		return mv;
 	}
 	
@@ -462,13 +472,20 @@ public class ContratoController {
 	}
 	
 	@RequestMapping(method= RequestMethod.GET)
-	public ModelAndView pesquisar(String busca, String numero, String objeto) throws ParseException
+	public ModelAndView pesquisar(String busca, String numero, String objeto, @PageableDefault(size=2) Pageable pageable) throws ParseException
 	{
+		
+		
 		Usuario currentUser = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
 		boolean tem_permissao = AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
 		ModelAndView mv = new ModelAndView("/pesquisa/PesquisaContratos");
 		//mv.addObject("usuarios", todosUsuarios);
 		mv.addObject("tem_permissao", tem_permissao);
+		Criteria criteria = manager.unwrap(Session.class).createCriteria(Contrato.class);
+		int primeiroRegistro = pageable.getPageNumber()*pageable.getPageSize();
+		
+		criteria.setFirstResult(primeiroRegistro);
+		criteria.setMaxResults(pageable.getPageSize());
 		if(numero != null) {
 			if(busca != null && numero.equals("on")) {
 				List<Contrato> todosContratos = contratos.findByNumeroContaining(busca);
@@ -506,8 +523,8 @@ public class ContratoController {
 				return mv;
 		   }
 		   
-		   List<Contrato> todosContratos= contratos.findAll();
-		   mv.addObject("buscaContratos", todosContratos);
+		//   List<Contrato> todosContratos= contratos.findAll();
+		   mv.addObject("buscaContratos", contratos.findAll(pageable));
 		   
 			return mv;
     
@@ -677,6 +694,9 @@ public class ContratoController {
 	public List<Recurso> todosRecursos() {
 		return Arrays.asList(Recurso.values());
 }
-	
+	@ModelAttribute("permissao")
+	public boolean temPermissao() {
+		return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
+	}
 	
 }

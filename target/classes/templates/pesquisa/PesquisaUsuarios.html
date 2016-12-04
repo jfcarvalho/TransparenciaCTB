@@ -54,7 +54,7 @@
 				<th class="text-center col-md-2">Função/Cargo</th>
 				<th class="text-center col-md-2">Email</th>
 				<th class="text-center col-md-1">Telefone</th>
-				<th class="text-center col-md-1">Ação</th>
+				<th class="text-center col-md-1" th:if="${permissao}">Ação</th>
 				</tr>
 				
 			</thead>
@@ -66,7 +66,7 @@
 					<td class="text-center" th:text="${usuario.funcao}"></td>
 					<td class="text-center" th:text="${usuario.email}"></td>
 					<td class="text-center" th:text="${usuario.telefone}"></td>
-					<td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/usuarios/{id_usuario}(id_usuario=${usuario.id_usuario})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:href="@{/transparenciactb/usuarios/remove/{id_usuario}(id_usuario=${usuario.id_usuario})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> Remover</span></a></td>
+					<td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/usuarios/{id_usuario}(id_usuario=${usuario.id_usuario})}"  th:if="${permissao}"><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:href="@{/transparenciactb/usuarios/remove/{id_usuario}(id_usuario=${usuario.id_usuario})}" class="btn btn-link btn-xs"  th:if="${permissao}"><span class="glyphicon glyphicon-remove" th:if="${permissao}"> Remover</span></a></td>
 				</tr>
 				
 			<tr>

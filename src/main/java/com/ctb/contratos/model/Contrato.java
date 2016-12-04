@@ -70,9 +70,6 @@ public class Contrato {
 	private String nomeResponsavel;
 	@Size(min=2, max=30, message="Tamanho do campo objeto deve ser entre 1 e 50")
 	private String cpfResponsavel;
-	@OneToOne
-	@JoinColumn(name="contrato_id_licitacao")
-	private Licitacao licitacao;
 		
 	
 	public Integer getId_contrato()
@@ -231,16 +228,6 @@ public class Contrato {
 		this.gestor= gestor;
 	}
 	
-	public Licitacao getLicitacao()
-	{
-		return this.licitacao;
-	}
-	
-	public void setLicitacao(Licitacao licitacao)
-	{
-		this.licitacao= licitacao;
-	}
-
 	
 	public List<Lancamento> getLancamentos()
 	{

@@ -22,6 +22,7 @@ import com.ctb.contratos.model.Usuario;
 import com.ctb.contratos.repository.Contratos;
 import com.ctb.contratos.repository.Grupos;
 import com.ctb.contratos.repository.Usuarios;
+import com.ctb.security.AppUserDetailsService;
 
 @Controller
 @RequestMapping("/transparenciactb/usuarios")
@@ -145,6 +146,11 @@ public class UsuarioController {
 				}
 			}
 		}
+	}
+	
+	@ModelAttribute("permissao")
+	public boolean temPermissao() {
+		return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_USUARIO");
 	}
 	
 }

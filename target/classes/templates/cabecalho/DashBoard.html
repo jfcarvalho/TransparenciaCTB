@@ -25,13 +25,12 @@
           </a>
       
           <ul class="aw-menu__list  aw-menu__list--sublist">
-        
-            <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/contratos/novo">Cadastro de Contrato</a></li>
+            <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/contratos/novo" th:if="${permissao}">Cadastro de Contrato</a></li>
             <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/contratos">Pesquisa de contratos</a></li>
        
-             <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/contratados/novo">Cadastro de Empresa Contratada</a></li>
+             <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/contratados/novo" th:if="${permissao}">Cadastro de Empresa Contratada</a></li>
             <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/contratados/">Pesquisa de Empresas Contratadas</a></li>
-            <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/usuarios/novo">Cadastro de Usuário</a></li>
+            <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/usuarios/novo" th:if="${permissao}">Cadastro de Usuário</a></li>
             <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/usuarios">Pesquisa de Usuários</a></li>
                         
           </ul>
