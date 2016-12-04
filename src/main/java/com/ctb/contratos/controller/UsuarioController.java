@@ -20,6 +20,7 @@ import com.ctb.contratos.model.Contrato;
 import com.ctb.contratos.model.Lancamento;
 import com.ctb.contratos.model.Usuario;
 import com.ctb.contratos.repository.Contratos;
+import com.ctb.contratos.repository.Grupos;
 import com.ctb.contratos.repository.Usuarios;
 
 @Controller
@@ -31,12 +32,15 @@ public class UsuarioController {
 	@Autowired
 	private Contratos contratos;
 	
+	@Autowired
+	private Grupos grupos;
+	
 	@RequestMapping("/novo")
 	public ModelAndView novo()
 	{
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
 		mv.addObject(new Usuario());
-		
+		mv.addObject("grupos", grupos.findAll());
 		//mv.addObject("todosNiveisUsuario", Nivel.values());
 		return mv;
 	}
@@ -78,8 +82,8 @@ public class UsuarioController {
 				return mv;
 			}
 		}
-		   List<Contrato> todosContratos= contratos.findAll();
-		   mv.addObject("buscaContratos", todosContratos);
+		   List<Usuario> todosUsuarios= usuarios.findAll();
+		   mv.addObject("buscaUsuarios", todosUsuarios);
 	    
     
 	return mv;
