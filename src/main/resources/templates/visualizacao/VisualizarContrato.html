@@ -142,23 +142,23 @@
   Valor do contrato:
   </td>
   <td>
-  <div th:text="${contrato.valor_contrato}"></div>
+  <div th:text=" |R$ ${{contrato.valor_contrato}}|"></div>
   </td>
- </tr>
+ </tr> 
  <tr>
   <td>
   Valor com aditivo:
   </td>
   <td>
-  <div th:text="${totalcomaditivos}"></div>
-  </td>
+  <div th:text=" 'R$' + ${#numbers.formatDecimal(totalcomaditivos, 0, 'POINT', 2, 'COMMA')}"></div>
+  </td> 
  </tr>
  <tr>
   <td>
   Valor total:
   </td>
   <td>
-  <div th:text="${total}"></div>
+  <div th:text= " 'R$' + ${#numbers.formatDecimal(total, 0, 'POINT', 2, 'COMMA')}"></div>
   </td>
  </tr>
  <tr>
@@ -166,7 +166,7 @@
   Saldo contrato:
   </td>
   <td>
-  <div th:text="${saldo_contrato}"></div>
+  <div th:text="'R$' + ${#numbers.formatDecimal(saldo_contrato, 0, 'POINT', 2, 'COMMA')}"></div>
   </td>
  </tr>
  
@@ -194,7 +194,7 @@
   Total aditivos:
   </td>
   <td>
-  <div th:text="${total_aditivos}"></div>
+  <div th:text="'R$' + ${#numbers.formatDecimal(total_aditivos, 0, 'POINT', 2, 'COMMA')} "></div>
   </td>
  </tr>
 </table>
@@ -223,16 +223,18 @@
 </thead>
 <tbody>
 				<tr th:each="lancamento : ${contrato.lancamentos}">
-					<td class="text-center" th:text="${lancamento.data}"></td>
+					<td class="text-center" th:text="${#dates.format(lancamento.data, 'dd/MM/yyyy')}"></td>
 					<!--   <td class="text-center" th:text="${computador.arquitetura.arquitetura}"></td> -->
 					<td class="text-center" th:text="${lancamento.numero_nota_fiscal}"></td>
 					<td class="text-center" th:text="${lancamento.processo.numero_processo}"></td>
-					<td class="text-center" th:text="${lancamento.processo.data_abertura}"></td>
-					<td class="text-center" th:text="${lancamento.valor}"></td>
+					<td class="text-center" th:text="${#dates.format(lancamento.processo.data_abertura, 'dd/MM/yyyy')}"></td>
+					<td class="text-center" th:text=" 'R$' + ${#numbers.formatDecimal(lancamento.valor, 0, 'POINT', 2, 'COMMA')}"></td>
 					<td class="text-center" th:text="${lancamento.aditivo_n}"></td>
-					<td class="text-center" th:text="${lancamento.valor_aditivo} ? ${lancamento.valor_aditivo} : 'Não informado'"></td>
+					<td class="text-center" th:text=" ${lancamento.valor_aditivo}  ? ${#numbers.formatDecimal(lancamento.valor_aditivo, 0, 'POINT', 2, 'COMMA')} : 'Não informado'"></td>
 					<td class="text-center" th:text="${lancamento.observacao}"></td>
-					<td class="text-center" th:text="${lancamento.processo.pago}"></td>
+					<!--<td class="text-center" th:text="${lancamento.processo.pago}"></td> -->
+					<td class="text-center"><div th:switch="${lancamento.processo.pago}" ><span class="label label-success" th:text="'Pago'" th:case="true" ></span><span class="label label-warning" th:text="'Não pago'" th:case="false" ></span></div> </td>
+				
 				</tr>
 				
 			<tr>
