@@ -63,7 +63,7 @@
 		<div class="form-group" >
 			<label for="nome" class="col-sm-2 control-label" >Valor do aditivo </label>
 			<div class="col-sm-2">
-				<input type="text" class="form-control" id="valor_aditivo" name="valor_aditivo" th:field="*{valor_aditivo}"/>
+				<input type="text" class="form-control js-currency" id="valor_aditivo" name="valor_aditivo" th:field="*{valor_aditivo}"/>
 			</div>
 		</div>
 		
@@ -101,7 +101,7 @@
 		<div class="form-group" >
 			<label for="funcao" class="col-sm-2 control-label">Valor:</label>
 			<div class="col-sm-2">
-				<input type="text" class="form-control" id="valor" name="valor" th:field="*{valor}"/>
+				<input type="text" class="form-control js-currency" id="valor" name="valor" th:field="*{valor}"/>
 			</div>
 		</div>
 			<div class="form-group">
@@ -144,4 +144,8 @@
  <script src="/layout/javascripts/bootstrap-datepicker.pt-BR.min.js"></script>
 <script src="/layout/javascripts/bootstrap.min.js"></script>
 <script src="/layout/javascripts/jquery-2.2.0.min.js"></script>
+<script src="/layout/javascripts/jquery.maskMoney.min.js"></script>
+<script src="/layout/javascripts/jquery.maskMoney.js"></script>
+
+<script src="/layout/javascripts/ctb.js"></script>
 </html>

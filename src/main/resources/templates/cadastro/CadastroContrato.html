@@ -81,7 +81,7 @@
 			
 			<label for="cnpj" class="col-sm-2 control-label">Valor do contrato:</label>
 			<div class="col-sm-4">
-				<input type="text" class="form-control" id="valor_contrato" name="valor_contrato" th:field="*{valor_contrato}" />
+				<input type="text" class="form-control js-currency" id="valor_contrato" name="valor_contrato" th:field="*{valor_contrato}" />
 			</div>
 	
 		
@@ -256,6 +256,10 @@ function excluir() {
  <script src="/layout/javascripts/bootstrap-datepicker.pt-BR.min.js"></script>
 <script src="/layout/javascripts/bootstrap.min.js"></script>
 <script src="/layout/javascripts/jquery-2.2.0.min.js"></script>
+<script src="/layout/javascripts/jquery.maskMoney.min.js"></script>
+<script src="/layout/javascripts/jquery.maskMoney.js"></script>
+
+<script src="/layout/javascripts/ctb.js"></script>
 
 </body>
 </html>

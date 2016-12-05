@@ -6,7 +6,18 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -37,6 +48,8 @@ public class LancamentoController {
 	private static final String CADASTRO_VIEW = "/cadastro/CadastroLancamento"; 
 	private static final String LANCAMENTOS_VIEW = "/pesquisa/PesquisaLancamentos";
 	
+	@PersistenceContext
+	private EntityManager manager;
 	
 	@Autowired
 	private Lancamentos lancamentos;
@@ -110,13 +123,25 @@ public class LancamentoController {
 	
 	
 	@RequestMapping(value="/pesquisar/{id_contrato}")
-	public ModelAndView pesquisar(@PathVariable("id_contrato") Integer Id_contrato, String busca, String nome, String setor) throws ParseException
+	public ModelAndView pesquisar(@PathVariable("id_contrato") Integer Id_contrato, String busca, String nome, String setor, @PageableDefault(size=10) Pageable pageable) throws ParseException
 	{
 		ModelAndView mv = new ModelAndView("/pesquisa/PesquisaLancamentos");
-		
 		Contrato c = contratos.findOne(Id_contrato);
-		List<Lancamento> lancamentos = c.getLancamentos();
-		mv.addObject("todosLancamentos", lancamentos);
+		Criteria criteria = manager.unwrap(Session.class).createCriteria(Lancamento.class);
+		int paginaAtual = pageable.getPageNumber();
+		int totalRegistrosPorPagina = pageable.getPageSize();
+		int primeiroRegistro = paginaAtual * totalRegistrosPorPagina;
+		
+		criteria.setFirstResult(primeiroRegistro);
+        criteria.setMaxResults(totalRegistrosPorPagina);
+		criteria.add(Restrictions.eq("contrato", c));
+		
+		List<Lancamento> lanc= c.getLancamentos();
+		Page<Lancamento> pags = new PageImpl<Lancamento>(criteria.list(), pageable, total(criteria));
+		//Page<Lancamento> lancamentos = criteria.list();
+		System.out.println(criteria);
+		//c.getLancamentos();
+		mv.addObject("todosLancamentos", pags);
 		mv.addObject("contrato", c);
 	
 	return mv;
@@ -205,6 +230,11 @@ public void desvincularContratoLancamento(Contrato contrato)
 @ModelAttribute("todosTipos")
 public List<TipoAditivo> todosAditivos() {
 	return Arrays.asList(TipoAditivo.values());
+}
+
+private Long total(Criteria criteria) {
+	criteria.setProjection(Projections.rowCount());
+	return (Long) criteria.uniqueResult();
 }
 
 }

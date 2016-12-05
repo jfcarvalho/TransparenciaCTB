@@ -472,7 +472,7 @@ public class ContratoController {
 	}
 	
 	@RequestMapping(method= RequestMethod.GET)
-	public ModelAndView pesquisar(String busca, String numero, String objeto, @PageableDefault(size=2) Pageable pageable) throws ParseException
+	public ModelAndView pesquisar(String busca, String numero, String objeto, @PageableDefault(size=5) Pageable pageable) throws ParseException
 	{
 		
 		

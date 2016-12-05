@@ -43,13 +43,13 @@
   <p >Janeiro</p>
   </td>
   <td>
-  <p th:text="${janeiro_valor}"></p>
+  <p th:text="'R$' + ${#numbers.formatDecimal(janeiro_valor, 0, 'POINT', 2, 'COMMA')}"></p> 
   </td>
   <td>
-  <p th:text="${janeiro_saldo}"></p>
+  <p th:text="'R$' + ${#numbers.formatDecimal(janeiro_saldo, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
   <td >
-<p th:text="${janeiro_aditivo}"></p>
+<p th:text="'R$' + ${#numbers.formatDecimal(janeiro_aditivo, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
  
  </tr>
@@ -58,13 +58,13 @@
   <p>Fevereiro</p>
   </td>
   <td>
-<p th:text="${fevereiro_valor}"></p>
+<p th:text= " 'R$' + ${#numbers.formatDecimal(fevereiro_valor, 0, 'POINT', 2, 'COMMA')} "></p>
   </td>
   <td >
- <p th:text="${fevereiro_saldo}"></p>
+ <p th:text=" 'R$' + ${#numbers.formatDecimal(fevereiro_saldo, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
   <td >
-<p th:text="${fevereiro_aditivo}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(fevereiro_aditivo, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
   
  </tr>
@@ -73,13 +73,13 @@
   <p>Março</p>
   </td>
   <td>
-<p th:text="${marco_valor}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(marco_valor, 0, 'POINT', 2, 'COMMA')} "></p>
   </td>
   <td>
-<p th:text="${marco_saldo}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(marco_saldo, 0, 'POINT', 2, 'COMMA')} "></p>
   </td>
   <td >
-<p th:text="${marco_aditivo}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(marco_aditivo, 0, 'POINT', 2, 'COMMA')} "></p>
   </td>
  </tr>
  <tr>
@@ -87,13 +87,13 @@
   <p>Abril</p>
   </td>
   <td>
-<p th:text="${abril_valor}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(abril_valor, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
   <td>
-<p th:text="${abril_saldo}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(abril_saldo, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
   <td >
-<p th:text="${abril_aditivo}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(abril_aditivo, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
   
  </tr>
@@ -103,13 +103,13 @@
   <p>Maio</p>
   </td>
   <td>
-<p th:text="${maio_valor}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(maio_valor, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
   <td>
-  <p th:text="${maio_saldo}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(maio_saldo, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
   <td >
-<p th:text="${maio_aditivo}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(maio_aditivo, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
   
  </tr>
@@ -119,13 +119,13 @@
   <p>Junho</p>
   </td>
   <td>
-  <p th:text="${junho_valor}"></p>
+  <p th:text=" 'R$' + ${#numbers.formatDecimal(junho_valor, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
   <td>
-  <p th:text="${junho_saldo}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(junho_saldo, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
   <td >
-<p th:text="${junho_aditivo}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(junho_aditivo, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
   
  </tr>
@@ -135,13 +135,13 @@
   <p>Julho</p>
   </td>
   <td>
-  <p th:text="${julho_valor}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(julho_valor, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
   <td>
-   <p th:text="${julho_saldo}"></p>
+   <p th:text=" 'R$' + ${#numbers.formatDecimal(julho_saldo, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
   <td >
-<p th:text="${julho_aditivo}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(julho_aditivo, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
  
  </tr>
@@ -151,13 +151,13 @@
   <p>Agosto</p>
   </td>
   <td>
-<p th:text="${agosto_valor}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(agosto_valor, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
   <td>
-<p th:text="${agosto_saldo}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(agosto_saldo, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
   <td >
-<p th:text="${agosto_aditivo}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(agosto_aditivo, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
 
  </tr>
@@ -167,13 +167,13 @@
   <p>Setembro</p>
   </td>
   <td>
-<p th:text="${setembro_valor}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(setembro_valor, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
   <td>
-<p th:text="${setembro_saldo}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(setembro_saldo, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
   <td >
-<p th:text="${setembro_aditivo}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(setembro_aditivo, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
  
  </tr>
@@ -183,13 +183,13 @@
   <p>Outubro</p>
   </td>
   <td>
-<p th:text="${outubro_valor}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(outubro_valor, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
   <td>
-<p th:text="${outubro_saldo}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(outubro_saldo, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
   <td >
-<p th:text="${outubro_aditivo}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(outubro_aditivo, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
 
  </tr>
@@ -199,13 +199,13 @@
   <p>Novembro</p>
   </td>
   <td>
-<p th:text="${novembro_valor}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(novembro_valor, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
   <td>
-<p th:text="${novembro_saldo}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(novembro_saldo, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
   <td >
-<p th:text="${novembro_aditivo}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(novembro_aditivo, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
  </tr>
  
@@ -214,13 +214,13 @@
   <p>Dezembro</p>
   </td>
   <td>
-<p th:text="${dezembro_valor}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(dezembro_valor, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
   <td>
-<p th:text="${dezembro_saldo}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(dezembro_saldo, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
   <td >
-<p th:text="${dezembro_aditivo}"></p>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(dezembro_aditivo, 0, 'POINT', 2, 'COMMA')}"></p>
   </td>
 
  </tr>

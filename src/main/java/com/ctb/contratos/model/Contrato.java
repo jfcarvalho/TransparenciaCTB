@@ -17,9 +17,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
 
 import com.ctb.Processo;
 import com.ctb.licitacoes.model.Licitacao;
@@ -51,7 +54,13 @@ public class Contrato {
 	private Integer duracao_meses;
 	private Integer meses_vencimento;
 	private Integer vencimento_garantia;
+	@DecimalMin(value = "0.01", message = "Valor não pode ser menor que 0,01")
+	@DecimalMax(value = "9999999.99", message = "Valor não pode ser maior que 9.999.999,99")
+   @NumberFormat(pattern = "#,##0.00")
 	private float saldo_contrato;
+	@DecimalMin(value = "0.01", message = "Valor não pode ser menor que 0,01")
+	@DecimalMax(value = "9999999.99", message = "Valor não pode ser maior que 9.999.999,99")
+   @NumberFormat(pattern = "#,##0.00")
 	private float valor_contrato;
 	@ManyToOne(fetch=FetchType.LAZY, cascade = {CascadeType.PERSIST})
 	@JoinColumn(name="contrato_id_contrato")

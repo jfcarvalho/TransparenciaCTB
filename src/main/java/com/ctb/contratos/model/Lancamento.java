@@ -14,8 +14,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
 
 import com.ctb.Processo;
 
@@ -32,6 +35,9 @@ public class Lancamento {
 	private Date data;
 	
 	private String numero_nota_fiscal;
+	@DecimalMin(value = "0.00", message = "Valor não pode ser menor que 0,00")
+	@DecimalMax(value = "9999999.99", message = "Valor não pode ser maior que 9.999.999,99")
+   @NumberFormat(pattern = "#,##0.00")
 	private float valor;
 	private Integer aditivo_n;
 	private float valor_aditivo;

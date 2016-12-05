@@ -56,7 +56,7 @@
 				<tr th:each="lancamento : ${todosLancamentos}">
 					<td class="text-center" th:text="${lancamento.numero_nota_fiscal}"></td>
 					<td class="text-center" th:text="${lancamento.data} ? ${#dates.format(lancamento.data, 'dd/MM/yyyy')} : 'Não informado'"></td>
-					<td class="text-center" th:text="${lancamento.valor}"></td>
+					<td class="text-center" th:text=" |R$ ${{lancamento.valor}}|"></td>
 					<td class="text-center" th:text="${lancamento.aditivo_n}"></td>
 					<td class="text-center" th:text="${lancamento.observacao}"></td>
 						<td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/lancamentos/{id_contrato}/{id_lancamento}(id_lancamento=${lancamento.id_lancamento}, id_contrato=${contrato.id_contrato})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:href="@{/transparenciactb/lancamentos/remove/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> Remover</span></a></td>
@@ -79,11 +79,15 @@
         <span aria-hidden="true">&laquo;</span>
       </a>
     </li>
-    <li><a href="#">1</a></li>
-    <li><a href="#">2</a></li>
-    <li><a href="#">3</a></li>
-    <li><a href="#">4</a></li>
-    <li><a href="#">5</a></li>
+    <li><a href="?page=0">1</a></li>
+    <li><a href="?page=1">2</a></li>
+    <li><a href="?page=2">3</a></li>
+    <li><a href="?page=3">4</a></li>
+    <li><a href="?page=4">5</a></li>
+    <li><a href="?page=5">6</a></li>
+    <li><a href="?page=6">7</a></li>
+    <li><a href="?page=7">8</a></li>
+    
     <li>
       <a href="#" aria-label="Next">
         <span aria-hidden="true">&raquo;</span>
