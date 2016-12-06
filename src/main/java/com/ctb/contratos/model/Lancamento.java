@@ -35,17 +35,20 @@ public class Lancamento {
 	private Date data;
 	
 	private String numero_nota_fiscal;
-	@DecimalMin(value = "0.00", message = "Valor não pode ser menor que 0,00")
+
 	@DecimalMax(value = "9999999.99", message = "Valor não pode ser maior que 9.999.999,99")
    @NumberFormat(pattern = "#,##0.00")
 	private float valor;
 	private Integer aditivo_n;
+	@DecimalMax(value = "9999999.99", message = "Valor não pode ser maior que 9.999.999,99")
+	 @NumberFormat(pattern = "#,##0.00")
 	private float valor_aditivo;
 	private String observacao;
 	private boolean possui_aditivo;
 	@Enumerated(EnumType.STRING)
 	private TipoAditivo tipoaditivo;
 	private boolean liquidado;
+	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern= "dd/MM/yyyy")
 	private Date dataliquidacao;
 	

@@ -69,8 +69,10 @@ public class LancamentoController {
 		return mv;
 	}
 	
+
+	
 	@RequestMapping(method = RequestMethod.POST)
-	public String salvar(@Validated Lancamento lancamento, @RequestParam Integer lancamento_id_processo, @RequestParam Integer lancamento_id_contrato, RedirectAttributes attributes)
+	public String salvar(Lancamento lancamento, @RequestParam Integer lancamento_id_processo, @RequestParam Integer lancamento_id_contrato, RedirectAttributes attributes)
 	{
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
 		Contrato c = contratos.findOne(lancamento_id_contrato);
@@ -94,14 +96,12 @@ public class LancamentoController {
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(lancamento.getContrato().getData_vencimento());
 			cal.add(Calendar.MONTH, lancamento.getMeses_prorrogacao());
-			//System.out.println(cal.getTime());
+	
 			
 			
 			c.setDuracao_meses(c.getDuracao_meses()+ lancamento.getMeses_prorrogacao());
 			c.setMeses_vencimento(c.getMeses_vencimento()+ lancamento.getMeses_prorrogacao());
 			c.setData_vencimento(cal.getTime());
-			
-			System.out.println(c.getSaldo_contrato() + lancamento.getValor_aditivo() - lancamento.getValor());
 			
 		}
 		lancamento.setSaldo_contrato(c.getSaldo_contrato() + lancamento.getValor_aditivo() - lancamento.getValor());
@@ -110,7 +110,7 @@ public class LancamentoController {
 		contratos.save(c);
 		lancamentos.save(lancamento);		
 		attributes.addFlashAttribute("mensagem", "Lancamento salvo com sucesso!");	
-		return "redirect:/transparenciactb/lancamentos/pesquisar/"+ lancamento_id_contrato;
+		return "redirect:/transparenciactb/contratos";
 	}
 
 	
@@ -137,11 +137,11 @@ public class LancamentoController {
 		criteria.add(Restrictions.eq("contrato", c));
 		
 		List<Lancamento> lanc= c.getLancamentos();
-		Page<Lancamento> pags = new PageImpl<Lancamento>(criteria.list(), pageable, total(criteria));
+	//	Page<Lancamento> pags = new PageImpl<Lancamento>(criteria.list(), pageable, total(criteria));
 		//Page<Lancamento> lancamentos = criteria.list();
 		System.out.println(criteria);
 		//c.getLancamentos();
-		mv.addObject("todosLancamentos", pags);
+		mv.addObject("todosLancamentos", lanc);
 		mv.addObject("contrato", c);
 	
 	return mv;
@@ -170,10 +170,18 @@ public class LancamentoController {
 	{
 		Lancamento lancamento = lancamentos.findOne(id_lancamento);
 		attributes.addFlashAttribute("mensagem", "Contrato excluído com sucesso com sucesso!");	
+		Contrato c = contratos.findOne(lancamento.getContrato().getId_contrato());
+		c.setSaldo_contrato(c.getSaldo_contrato() + lancamento.getValor());
+		if(lancamento.getPossui_aditivo() == true)
+		{
+			c.setSaldo_contrato(c.getSaldo_contrato() - lancamento.getValor_aditivo());
+			
+		}
+		contratos.save(c);
 		//usuarios.delete(id_usuario);
 		desvincularLancamento(lancamento);
 		lancamentos.delete(id_lancamento);
-		return "redirect:/transparenciactb/lancamentos";	
+		return "redirect:/transparenciactb/lancamentos/pesquisar/"+ lancamento.getContrato().getId_contrato();	
 	
 	}
 	

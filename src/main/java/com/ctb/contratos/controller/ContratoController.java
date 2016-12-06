@@ -77,6 +77,7 @@ public class ContratoController {
 	private static final String RESUMOCONSIGNADO_VIEW = "/visualizacao/ResumoConsignadoContrato";
 	private static final String EDICAOINFORMACOES_VIEW = "/edicao/EdicaoContratoInformacoes";
 	private static final String EDICAOGESTORES_VIEW = "/edicao/EditarContratoGestor";
+	private static final String EDICAO_VIEW = "/edicao/EdicaoContrato";
 	public static Integer numero_contrato =0;
 	static final ArrayList<AditivoSetting> aditivos = new ArrayList();
 	private static final String DASHBOARD_VIEW = "/cabecalho/DashBoard";
@@ -165,6 +166,16 @@ public class ContratoController {
 		
 	}
 	*/
+	@RequestMapping("/editar_contrato/{id_contrato}")
+	public ModelAndView editar_contrato(@PathVariable("id_contrato") Integer Id_contrato)
+	{
+		ModelAndView mv = new ModelAndView(EDICAO_VIEW);
+		Contrato c = contratos.findOne(Id_contrato);
+		mv.addObject("contrato", c);
+		return mv;
+	}
+	
+	
 	
 	@RequestMapping(value="/resumo/{id_contrato}", method= RequestMethod.GET)
 	public ModelAndView resumo(@PathVariable("id_contrato") Integer Id_contrato, String ano)
@@ -389,7 +400,12 @@ public class ContratoController {
 			totalAditivosPorcentagem = c.getSaldo_contrato();
 		} else {totalAditivosPorcentagem = totalAditivos;}
 		float porcentagemConcluida = (valorTotal/(totalAditivosPorcentagem)*100);
-
+		
+		DateTime inicio = new DateTime();
+		DateTime fim = new DateTime(c.getData_vencimento());
+		Months m = Months.monthsBetween(inicio, fim);
+		c.setMeses_vencimento(m.getMonths());
+		contratos.save(c);
 		
 		mv.addObject("contrato", c);
 		mv.addObject("total_aditivos", totalAditivos);
@@ -510,20 +526,11 @@ public class ContratoController {
 		Criteria criteria = manager.unwrap(Session.class).createCriteria(Contrato.class);
 		int primeiroRegistro = pageable.getPageNumber()*pageable.getPageSize();
 		
-	//	DateTime dt = new DateTime("yyyy-MM-dd");
-		//DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	//	Date date = new Date();
-		//System.out.println(dateFormat.format(date));
 		Date dataAtual = new Date();
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
 		System.out.println(dateFormat.format(dataAtual));
 		System.out.println(dataAtual.toString());
-	
-	//	Date date = dateFormat.parse(dataAtual.toString());
-		//Date date = (Date)dateFormat.parse(dateFormat.format(dataAtual));
-		
-	//    System.out.println(date.toString());
 		
 		criteria.setFirstResult(primeiroRegistro);
 		criteria.setMaxResults(pageable.getPageSize());
@@ -543,7 +550,7 @@ public class ContratoController {
 				return mv;
 			}
 		}
-		 //  Usuario currentUser = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
+
 		   
 		   if(AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO") == false)
 		   {

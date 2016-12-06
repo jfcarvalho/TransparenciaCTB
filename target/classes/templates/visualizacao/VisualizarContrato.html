@@ -127,7 +127,7 @@
   Vencimento garantia:
   </td>
   <td>
-  <div th:text="${contrato.vencimento_garantia}"></div>
+  <div th:text="${#dates.format(contrato.vencimento_garantia, 'dd/MM/yyyy')}"></div>
   </td>
  </tr>
 
