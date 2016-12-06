@@ -1,6 +1,8 @@
 package com.ctb.contratos.controller;
 
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -53,6 +55,9 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
@@ -68,6 +73,8 @@ public class ContratoController {
 	private static final String GERARRESUMO_VIEW = "/visualizacao/GerarResumoContrato";
 	private static final String GERARRESUMOCONSIGNADO_VIEW = "/visualizacao/GerarResumoConsignadoContrato";
 	private static final String RESUMOCONSIGNADO_VIEW = "/visualizacao/ResumoConsignadoContrato";
+	private static final String EDICAOINFORMACOES_VIEW = "/edicao/EdicaoContratoInformacoes";
+	private static final String EDICAOGESTORES_VIEW = "/edicao/EditarContratoGestor";
 	public static Integer numero_contrato =0;
 	static final ArrayList<AditivoSetting> aditivos = new ArrayList();
 	private static final String DASHBOARD_VIEW = "/cabecalho/DashBoard";
@@ -94,6 +101,8 @@ public class ContratoController {
 	{
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);		
 		mv.addObject(new Contrato());
+		//DateTime dt = new DateTime(); 
+		//System.out.println(dt.toString() );
 		return mv;
 	}
 	
@@ -451,7 +460,6 @@ public class ContratoController {
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
 		if(errors.hasErrors())
 		{
-			
 			return mv;
 		}
 		
@@ -460,14 +468,24 @@ public class ContratoController {
 		Usuario fiscal = usuarios.findOne(contrato_id_fiscal);
 		
 		
-		
+		System.out.println(contrato.getValor_contrato());
 		contrato.setContratado(empresa);
 		contrato.setFiscal(fiscal);
 		contrato.setGestor(gestor);
 		contrato.setSaldo_contrato(contrato.getValor_contrato());
 		
+		Date dataAtual = new Date();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		dateFormat.format(dataAtual);
+		
+		
+		//date = dateFormat.format(date);
+		//System.out.println(dateFormat.format(date2.toString()));
+		contrato.setUltima_atualizacao(dataAtual);
+		
 		contratos.save(contrato);		
-		attributes.addFlashAttribute("mensagem", "Contrato salvo com sucesso!");	
+		//attributes.addFlashAttribute("mensagem", "Contrato salvo com sucesso!");	
+		mv.addObject("mensagem", "Contrato salvo com sucesso!");
 		return mv;
 	}
 	
@@ -483,6 +501,21 @@ public class ContratoController {
 		mv.addObject("tem_permissao", tem_permissao);
 		Criteria criteria = manager.unwrap(Session.class).createCriteria(Contrato.class);
 		int primeiroRegistro = pageable.getPageNumber()*pageable.getPageSize();
+		
+	//	DateTime dt = new DateTime("yyyy-MM-dd");
+		//DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	//	Date date = new Date();
+		//System.out.println(dateFormat.format(date));
+		Date dataAtual = new Date();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		System.out.println(dateFormat.format(dataAtual));
+		System.out.println(dataAtual.toString());
+	
+	//	Date date = dateFormat.parse(dataAtual.toString());
+		//Date date = (Date)dateFormat.parse(dateFormat.format(dataAtual));
+		
+	//    System.out.println(date.toString());
 		
 		criteria.setFirstResult(primeiroRegistro);
 		criteria.setMaxResults(pageable.getPageSize());
@@ -577,6 +610,73 @@ public class ContratoController {
 		
 		contratos.save(contrato);
 	}
+	@RequestMapping("/editar_informacoes/{id_contrato}")
+	public ModelAndView edicao1(@PathVariable("id_contrato") Contrato contrato)
+	{
+		ModelAndView mv = new ModelAndView(EDICAOINFORMACOES_VIEW);
+		mv.addObject("su", contrato);
+		mv.addObject(contrato);
+		return mv;
+	}
+	
+	@RequestMapping(value="/{id_contrato}/salvar1",method = RequestMethod.POST)
+	public String salvar1(@Validated Contrato contratoform, Errors errors, RedirectAttributes attributes)
+	{
+		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
+		if(errors.hasErrors())
+		{
+			return "CadastroContrato";
+		}
+	
+		Contrato contratobd = contratos.findOne(contratoform.getId_contrato());
+		contratobd.setNumero(contratoform.getNumero());
+		contratobd.setFonte(contratoform.getFonte());
+		contratobd.setObjeto(contratoform.getObjeto());
+		contratobd.setRecurso(contratoform.getRecurso());
+		contratobd.setValor_contrato(contratoform.getValor_contrato());
+		contratobd.setUso(contratoform.getUso());
+		contratobd.setDuracao_meses(contratoform.getDuracao_meses());
+		contratobd.setVencimento_garantia(contratoform.getVencimento_garantia());
+		contratobd.setData_assinatura(contratoform.getData_assinatura());
+		contratobd.setData_vencimento(contratoform.getData_vencimento());
+		contratobd.setNomeResponsavel(contratoform.getNomeResponsavel());
+		contratobd.setCpfResponsavel(contratoform.getCpfResponsavel());
+		
+		contratos.save(contratobd);
+		attributes.addFlashAttribute("mensagem", "Contrato salvo com sucesso!");	
+		return "redirect:/transparenciactb/contratos/novo";
+		
+	}
+	
+	@RequestMapping(value="/{id_contrato}/salvar2",method = RequestMethod.POST)
+	public String salvar2(Contrato contratoform, @RequestParam Integer contrato_id_gestor,@RequestParam Integer contrato_id_fiscal, Errors errors, RedirectAttributes attributes)
+	{
+		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
+		Contrato contratobd = contratos.findOne(contratoform.getId_contrato());
+		Usuario gestor = usuarios.findOne(contrato_id_gestor);
+		Usuario fiscal = usuarios.findOne(contrato_id_fiscal);
+		//System.out.println(contratoform.getId_contrato());
+		//System.out.println(contratoform.getCpfResponsavel());
+			contratobd.setGestor(gestor);
+			contratobd.setFiscal(fiscal);
+		
+		contratos.save(contratobd);
+		
+		attributes.addFlashAttribute("mensagem", "Contrato salvo com sucesso!");	
+		return "redirect:/transparenciactb/contratos/novo";
+		
+	}
+	
+		
+	@RequestMapping("/editar_gestor/{id_contrato}")
+	public ModelAndView edicao2(@PathVariable("id_contrato") Contrato contrato)
+	{
+		ModelAndView mv = new ModelAndView(EDICAOGESTORES_VIEW);
+		mv.addObject("su", contrato);
+		mv.addObject(contrato);
+		return mv;
+	}
+	
 	
 	public void desvincularLancamentos(Contrato contrato)
 	{

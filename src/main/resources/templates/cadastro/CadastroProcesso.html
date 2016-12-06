@@ -31,9 +31,10 @@
 </div>
 
 <div class="container-fluid">
-<div layout:include="/mensagem/MensagemUsuario"></div>
-<div layout:include="/mensagem/MensagemErro"></div>
+
 <form class="form-horizontal" method="POST" action="/transparenciactb/processos" th:object="${processo}">
+		<div layout:include="/mensagem/MensagemUsuario"></div>
+       <div layout:include="/mensagem/MensagemErro"></div>
 		<div class="panel panel-default">
 		<div class="panel-heading">
 			<div class="clearfix">

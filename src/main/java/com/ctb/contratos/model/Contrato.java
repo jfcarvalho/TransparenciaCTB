@@ -53,12 +53,14 @@ public class Contrato {
 	private Date ultima_atualizacao;
 	private Integer duracao_meses;
 	private Integer meses_vencimento;
-	private Integer vencimento_garantia;
-	@DecimalMin(value = "0.01", message = "Valor não pode ser menor que 0,01")
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern= "dd/MM/yyyy")
+	private Date vencimento_garantia;
+	@DecimalMin(value = "0.00", message = "Valor não pode ser menor que 0,00")
 	@DecimalMax(value = "9999999.99", message = "Valor não pode ser maior que 9.999.999,99")
    @NumberFormat(pattern = "#,##0.00")
 	private float saldo_contrato;
-	@DecimalMin(value = "0.01", message = "Valor não pode ser menor que 0,01")
+	@DecimalMin(value = "0.00", message = "Valor não pode ser menor que 0,00")
 	@DecimalMax(value = "9999999.99", message = "Valor não pode ser maior que 9.999.999,99")
    @NumberFormat(pattern = "#,##0.00")
 	private float valor_contrato;
@@ -178,12 +180,12 @@ public class Contrato {
 		this.duracao_meses = duracao_meses;
 	}
 	
-	public Integer getVencimento_garantia()
+	public Date getVencimento_garantia()
 	{
 		return this.vencimento_garantia;
 	}
 	
-	public void setVencimento_garantia(Integer vencimento_garantia)
+	public void setVencimento_garantia(Date vencimento_garantia)
 	{
 		this.vencimento_garantia= vencimento_garantia;
 	}
