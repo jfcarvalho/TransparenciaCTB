@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ctb.contratos.model.Contrato;
+import com.ctb.contratos.model.Grupo;
 import com.ctb.contratos.model.Lancamento;
 import com.ctb.contratos.model.Usuario;
 import com.ctb.contratos.repository.Contratos;
@@ -36,6 +37,8 @@ public class UsuarioController {
 	
 	@Autowired
 	private Grupos grupos;
+	
+	
 	
 	@RequestMapping("/novo")
 	public ModelAndView novo()
@@ -154,6 +157,12 @@ public class UsuarioController {
 	@ModelAttribute("permissao")
 	public boolean temPermissao() {
 		return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_USUARIO");
+	}
+	
+	@ModelAttribute("grupos")
+	public List<Grupo> grupos()
+	{
+		return grupos.findAll();
 	}
 	
 }

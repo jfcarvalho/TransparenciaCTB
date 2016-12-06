@@ -30,7 +30,6 @@ public class Usuario {
 	@OneToMany(mappedBy="fiscal")
 	private List<Contrato> contratosFiscalizados;
 	
-	@Size(min = 1, message = "Selecione pelo menos um grupo")
 	@ManyToMany
 	@JoinTable(name = "usuario_grupo", joinColumns = @JoinColumn(name = "codigo_usuario")
 				, inverseJoinColumns = @JoinColumn(name = "codigo_grupo"))	
