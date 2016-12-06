@@ -56,6 +56,8 @@ import org.hibernate.Session;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Months;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.transaction.annotation.Transactional;
@@ -477,6 +479,12 @@ public class ContratoController {
 		Date dataAtual = new Date();
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		dateFormat.format(dataAtual);
+		
+		DateTime inicio = new DateTime();
+		DateTime fim = new DateTime(contrato.getData_vencimento());
+		Months m = Months.monthsBetween(inicio, fim);
+		contrato.setMeses_vencimento(m.getMonths());
+
 		
 		
 		//date = dateFormat.format(date);
