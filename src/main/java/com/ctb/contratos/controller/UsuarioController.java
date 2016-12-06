@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
@@ -49,6 +50,8 @@ public class UsuarioController {
 	public String salvar(@Validated Usuario usuario, RedirectAttributes attributes)
 	{
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		usuario.setPassword(encoder.encode(usuario.getPassword()));
 		usuarios.save(usuario);		
 		attributes.addFlashAttribute("mensagem", "Usuário salvo com sucesso!");	
 		return "redirect:/transparenciactb/usuarios/novo";

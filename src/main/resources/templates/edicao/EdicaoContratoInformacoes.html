@@ -33,9 +33,11 @@
 		
 		<!--   <div layout:include="/mensagem/MensagemErro"></div> -->
 	
-	<form class="form-horizontal" method="POST" action="/transparenciactb/{id_contrato}/salvar1" th:object="${contrato}">
+	<form class="form-horizontal" method="POST" action="/transparenciactb/contratos/{id_contrato}/salvar1" th:object="${contrato}">
 	<div layout:include="/mensagem/MensagemUsuario"></div>
 	<div layout:include="/mensagem/MensagemErro"></div>
+	
+	<input type="hidden" th:field="*{id_contrato}" />
 	
 		<div class="panel panel-default">
 		<div class="panel-heading">

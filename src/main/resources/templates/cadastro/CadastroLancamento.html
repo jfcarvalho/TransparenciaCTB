@@ -11,9 +11,10 @@
 </head>
 
 <section layout:fragment="conteudo">
-<div layout:include="/mensagem/MensagemUsuario"></div>
 
 <form class="form-horizontal" method="POST" action="/transparenciactb/lancamentos/" th:object="${lancamento}">
+		<div layout:include="/mensagem/MensagemUsuario"></div>
+		
 		<div class="panel panel-default">
 		<div class="panel-heading">
 			<div class="clearfix">
