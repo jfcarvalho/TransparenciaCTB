@@ -59,7 +59,7 @@
 					<td class="text-center" th:text=" |R$ ${{lancamento.valor}}|"></td>
 					<td class="text-center" th:text="${lancamento.aditivo_n}"></td>
 					<td class="text-center" th:text="${lancamento.observacao}"></td>
-						<!-- <td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/lancamentos/{id_contrato}/{id_lancamento}(id_lancamento=${lancamento.id_lancamento}, id_contrato=${contrato.id_contrato})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:href="@{/transparenciactb/lancamentos/remove/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> Remover</span></a></td> -->
+						 <td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/lancamentos/{id_contrato}/{id_lancamento}(id_lancamento=${lancamento.id_lancamento}, id_contrato=${contrato.id_contrato})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:href="@{/transparenciactb/lancamentos/remove/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> Remover</span></a></td> 
 					
 				</tr>
 				

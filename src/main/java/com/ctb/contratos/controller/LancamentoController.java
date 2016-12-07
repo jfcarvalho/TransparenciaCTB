@@ -169,7 +169,7 @@ public class LancamentoController {
 	public String excluir(@PathVariable Integer id_lancamento, RedirectAttributes attributes)
 	{
 		Lancamento lancamento = lancamentos.findOne(id_lancamento);
-		attributes.addFlashAttribute("mensagem", "Contrato excluído com sucesso com sucesso!");	
+		//attributes.addFlashAttribute("mensagem", "Contrato excluído com sucesso com sucesso!");	
 		Contrato c = contratos.findOne(lancamento.getContrato().getId_contrato());
 		c.setSaldo_contrato(c.getSaldo_contrato() + lancamento.getValor());
 		if(lancamento.getPossui_aditivo() == true)
@@ -179,7 +179,7 @@ public class LancamentoController {
 		}
 		contratos.save(c);
 		//usuarios.delete(id_usuario);
-		desvincularLancamento(lancamento);
+		//desvincularLancamento(lancamento);
 		lancamentos.delete(id_lancamento);
 		return "redirect:/transparenciactb/lancamentos/pesquisar/"+ lancamento.getContrato().getId_contrato();	
 	
