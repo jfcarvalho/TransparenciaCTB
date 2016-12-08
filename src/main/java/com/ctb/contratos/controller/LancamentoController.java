@@ -47,6 +47,7 @@ public class LancamentoController {
 
 	private static final String CADASTRO_VIEW = "/cadastro/CadastroLancamento"; 
 	private static final String LANCAMENTOS_VIEW = "/pesquisa/PesquisaLancamentos";
+	private static final String PAGAMENTO_VIEW="/cadastro/Pagamento";
 	
 	@PersistenceContext
 	private EntityManager manager;
@@ -68,20 +69,54 @@ public class LancamentoController {
 		mv.addObject("contrato", c);
 		return mv;
 	}
+	@RequestMapping("/gerar_pagamento/{id_lancamento}")
+	public ModelAndView gerar_pagamento(@PathVariable("id_lancamento")Integer Id_lancamento)
+	{
+		ModelAndView mv = new ModelAndView(PAGAMENTO_VIEW);
+	   mv.addObject("lancamento", lancamentos.findOne(Id_lancamento));
+	   return mv;
+	}
+	
+	@RequestMapping(value= "/pagar/{id_lancamento}", method=RequestMethod.POST)
+	public ModelAndView pagar(Lancamento lancamento, @RequestParam("lancamento_id_processo" )Integer Id_processo)
+	{
+		ModelAndView mv = new ModelAndView(PAGAMENTO_VIEW);
+		Lancamento lancamentobd = lancamentos.findOne(lancamento.getId_lancamento());
+		//mv.addObject("lancamento", lancamentobd);
+		lancamento.setAditivo_n(lancamentobd.getAditivo_n());
+		lancamento.setContrato(lancamentobd.getContrato());
+		lancamento.setData(lancamentobd.getData());
+		lancamento.setMeses_prorrogacao(lancamentobd.getMeses_prorrogacao());
+		lancamento.setNumero_nota_fiscal(lancamentobd.getNumero_nota_fiscal());
+	lancamento.setObservacao(lancamentobd.getObservacao());
+	lancamento.setPossui_aditivo(lancamentobd.getPossui_aditivo());
+	lancamento.setSaldo_contrato(lancamentobd.getSaldo_contrato());
+	lancamento.setTipoAditivo(lancamentobd.getTipoAditivo());
+	lancamento.setValor(lancamentobd.getValor());
+	lancamento.setValor_aditivo(lancamentobd.getValor_aditivo());
+	lancamento.setProcesso(processos.findOne(Id_processo));
+	lancamento.setLiquidado(true);
+
+		lancamentos.save(lancamento);
+		mv.addObject("mensagem", "Pagamento registrado com sucesso!");
+		return mv;
+	}
 	
 
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public String salvar(Lancamento lancamento, @RequestParam Integer lancamento_id_processo, @RequestParam Integer lancamento_id_contrato, RedirectAttributes attributes)
+	public String salvar(Lancamento lancamento, @RequestParam Integer lancamento_id_contrato, RedirectAttributes attributes)
 	{
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
 		Contrato c = contratos.findOne(lancamento_id_contrato);
-		
+		lancamento.setLiquidado(false);
+		/*
 		if(lancamento_id_processo != null)
 		{
 			Processo processo = processos.findOne(lancamento_id_processo);
 			lancamento.setProcesso(processo);
 		}
+		*/
 		//System.out.println(lancamento_id_contrato);
 	
 		if(lancamento_id_contrato != null)
@@ -110,7 +145,7 @@ public class LancamentoController {
 		contratos.save(c);
 		lancamentos.save(lancamento);		
 		attributes.addFlashAttribute("mensagem", "Lancamento salvo com sucesso!");	
-		return "redirect:/transparenciactb/contratos";
+		return "redirect:/transparenciactb/lancamentos/pesquisar/" + lancamento.getContrato().getId_contrato();
 	}
 
 	
@@ -131,6 +166,7 @@ public class LancamentoController {
 		int paginaAtual = pageable.getPageNumber();
 		int totalRegistrosPorPagina = pageable.getPageSize();
 		int primeiroRegistro = paginaAtual * totalRegistrosPorPagina;
+		
 		
 		criteria.setFirstResult(primeiroRegistro);
         criteria.setMaxResults(totalRegistrosPorPagina);

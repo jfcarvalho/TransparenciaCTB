@@ -397,8 +397,8 @@ public class ContratoController {
 		
 		float valorTotal = calcularValorTotal(c.getLancamentos());
 		if(totalAditivos == 0) {
-			totalAditivosPorcentagem = c.getSaldo_contrato();
-		} else {totalAditivosPorcentagem = totalAditivos;}
+			totalAditivosPorcentagem = c.getValor_contrato();
+		} else {totalAditivosPorcentagem = totalAditivos+c.getValor_contrato();}
 		float porcentagemConcluida = (valorTotal/(totalAditivosPorcentagem)*100);
 		
 		DateTime inicio = new DateTime();

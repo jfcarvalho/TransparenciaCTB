@@ -32,7 +32,7 @@ public class Contrato {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id_contrato;
-	@Size(min=2, max=30, message="Tamanho do campo numero deve ser entre 1 e 30")
+	@Size(min=2, max=100, message="Tamanho do campo numero deve ser entre 1 e 30")
 	private String numero;
 	@DateTimeFormat(pattern= "dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
@@ -40,7 +40,6 @@ public class Contrato {
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern= "dd/MM/yyyy")
 	private Date data_vencimento;
-	@Size(min=2, max=30, message="Tamanho do campo objeto deve ser entre 1 e 50")
 	private String objeto;
 	@Enumerated(EnumType.STRING)
 	private Uso uso;

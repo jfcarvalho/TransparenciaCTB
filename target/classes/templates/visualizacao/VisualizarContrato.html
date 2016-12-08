@@ -218,28 +218,31 @@
 				<!--  <th class="text-center col-md-2">ID de Impressão</th> -->
 				<th class="text-center col-md-1">Data de abertura do processo</th>
 				<th class="text-center col-md-1">Valor</th>
+				<th class="text-center col-md-1">Saldo do contrato</th>
 				<th class="text-center col-md-1">Número do aditivo</th>
 				<th class="text-center col-md-1">Valor do aditivo</th>				
 				<th class="text-center col-md-1">Objeto ou Observação</th>
-				<th class="text-center col-md-1">Pago</th>
+				<th class="text-center col-md-1">Pago via processo</th>
+				<th class="text-center col-md-1">Liquidação da nota</th>
 				
 				</tr>
 				
 </thead>
 <tbody>
 				<tr th:each="lancamento : ${contrato.lancamentos}">
-					<td class="text-center" th:text="${#dates.format(lancamento.data, 'dd/MM/yyyy')}"></td>
+					<td class="text-center" th:text="${lancamento.data} ? ${#dates.format(lancamento.data, 'dd/MM/yyyy')} : 'Não informado'"></td>
 					<!--   <td class="text-center" th:text="${computador.arquitetura.arquitetura}"></td> -->
 					<td class="text-center" th:text="${lancamento.numero_nota_fiscal}"></td>
-					<td class="text-center" th:text="${lancamento.processo.numero_processo}"></td>
-					<td class="text-center" th:text="${#dates.format(lancamento.processo.data_abertura, 'dd/MM/yyyy')}"></td>
+					<td class="text-center" th:text="${lancamento.processo} ? ${lancamento.processo.numero_processo} : 'Processo inexistente'"></td>
+					<td class="text-center" th:text="${lancamento.processo} ? ${#dates.format(lancamento.processo.data_abertura, 'dd/MM/yyyy')} : 'Processo inexistente'"></td>
 					<td class="text-center" th:text=" 'R$' + ${#numbers.formatDecimal(lancamento.valor, 0, 'POINT', 2, 'COMMA')}"></td>
+					<td class="text-center" th:text=" 'R$' + ${#numbers.formatDecimal(lancamento.saldo_contrato, 0, 'POINT', 2, 'COMMA')}"></td>
 					<td class="text-center" th:text="${lancamento.aditivo_n}"></td>
 					<td class="text-center" th:text=" ${lancamento.valor_aditivo}  ? ${#numbers.formatDecimal(lancamento.valor_aditivo, 0, 'POINT', 2, 'COMMA')} : 'Não informado'"></td>
 					<td class="text-center" th:text="${lancamento.observacao}"></td>
 					<!--<td class="text-center" th:text="${lancamento.processo.pago}"></td> -->
-					<td class="text-center"><div th:switch="${lancamento.processo.pago}" ><span class="label label-success" th:text="'Pago'" th:case="true" ></span><span class="label label-warning" th:text="'Não pago'" th:case="false" ></span></div> </td>
-				
+					<td class="text-center"><div th:switch="${lancamento.processo} ? ${lancamento.processo.pago}" ><span class="label label-success" th:text="'Pago'" th:case="true" ></span><span class="label label-warning" th:text="'Não pago'" th:case="null" ></span></div> </td>
+					<td class="text-center"><div th:switch="${lancamento.liquidado}" ><span class="label label-success" th:text="'Nota Liquidada'" th:case="true" ></span><span class="label label-warning" th:text="'Nota não liquidada'" th:case="false" ></span></div> </td>
 				</tr>
 				
 			<tr>

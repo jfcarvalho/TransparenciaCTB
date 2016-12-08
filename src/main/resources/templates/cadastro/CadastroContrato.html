@@ -101,21 +101,7 @@
 		<div class="form-group">
 			<label for="cnpj" class="col-sm-2 control-label">Duração(em meses):</label>
 			<div class="col-sm-4">
-				<select class="form-control" name="duracao_meses">
- 						 	<option th:value="12">12</option>
-  						 	<option th:value="11">11</option>
- 						 	<option th:value="10">10</option>
- 						 	<option th:value="09">09</option>
- 						 	<option th:value="08">08</option>
- 						 	<option th:value="07">07</option>
-  						 	<option th:value="06">06</option>
- 						 	<option th:value="05">05</option>
- 						 	<option th:value="04">04</option>
- 						 	<option th:value="03">03</option>
- 						 	<option th:value="02">02</option>
- 						 	<option th:value="01">01</option>
- 						 	
-</select>
+			<input type="text" class="form-control" id="duracao_meses" name="duracao_meses" th:field="*{duracao_meses}" />
 			</div>
 		</div>
 		<!--
