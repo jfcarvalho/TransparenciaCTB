@@ -3,6 +3,7 @@ package com.ctb.contratos.controller;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -170,14 +171,21 @@ public class LancamentoController {
 		
 		criteria.setFirstResult(primeiroRegistro);
         criteria.setMaxResults(totalRegistrosPorPagina);
-		criteria.add(Restrictions.eq("contrato", c));
+        Comparator<Lancamento> cmp = new Comparator<Lancamento>() {
+	        public int compare(Lancamento l1, Lancamento l2) {
+	          return l2.getData().compareTo(l1.getData());
+	        }
+	    };
+List<Lancamento> lancamentosOrdenados = criteria.list();
+lancamentosOrdenados.sort(cmp);
+		//criteria.add(Restrictions.eq("contrato", c));
 		
 		List<Lancamento> lanc= c.getLancamentos();
-	//	Page<Lancamento> pags = new PageImpl<Lancamento>(criteria.list(), pageable, total(criteria));
+		Page<Lancamento> pags = new PageImpl<Lancamento>(lancamentosOrdenados, pageable, lanc.size());
 		//Page<Lancamento> lancamentos = criteria.list();
 		System.out.println(criteria);
 		//c.getLancamentos();
-		mv.addObject("todosLancamentos", lanc);
+		mv.addObject("todosLancamentos",pags);
 		mv.addObject("contrato", c);
 	
 	return mv;
