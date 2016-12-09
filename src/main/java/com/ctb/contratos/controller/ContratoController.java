@@ -1,5 +1,7 @@
 package com.ctb.contratos.controller;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -123,8 +125,8 @@ public class ContratoController {
 	{
 		ModelAndView mv = new ModelAndView(GERARRESUMOCONSIGNADO_VIEW);	
 		Map<String, String> contratosEValores = new HashMap<String, String>();
-		float acumuladoValor;
-		float acumuladoAditivo;
+		BigDecimal acumuladoValor;
+		BigDecimal acumuladoAditivo;
 		
 		
 		List<Contrato> todosContratos = contratos.findAll();
@@ -132,8 +134,8 @@ public class ContratoController {
 		
 		while(it.hasNext())
 		{
-			acumuladoValor = 0;
-			acumuladoAditivo = 0;
+			acumuladoValor = new BigDecimal("0.0");
+			acumuladoAditivo = new BigDecimal("0.0");
 		
 			Contrato obj = (Contrato) it.next();
 			List<Lancamento> cl = obj.getLancamentos();
@@ -141,8 +143,8 @@ public class ContratoController {
 			while(it2.hasNext())
 			{
 				Lancamento lanc = (Lancamento) it2.next();
-				acumuladoValor += lanc.getValor();
-				acumuladoAditivo += lanc.getValor_aditivo();
+				acumuladoValor.add(lanc.getValor());
+				acumuladoAditivo.add(lanc.getValor_aditivo());
 		
 			}
 			contratosEValores.put(obj.getId_contrato().toString(), String.valueOf(acumuladoValor));
@@ -186,18 +188,24 @@ public class ContratoController {
 		Queue<Integer> meses = new LinkedList();
 		int i, indiceElemento;
 		String periodoAComparar;
-		float acumuladorValor;
-		float acumuladorAditivo = 0;
-		float acumuladorSaldo = 0;
+		BigDecimal acumuladorValor = new BigDecimal("0");
+		BigDecimal acumuladorAditivo = new BigDecimal("0");
 		
-		float acumuladorValorGeral = 0;
-		float acumuladorSaldoGeral = 0;
-		float acumuladorAditivoGeral = 0;
 		
-		float [] mesesSaldo = new float[13];
-		float [] mesesValores = new float[13];
-		float [] mesesAditivos = new float[13];
+		BigDecimal acumuladorValorGeral = new BigDecimal("0");
+		BigDecimal acumuladorSaldoGeral = new BigDecimal("0");
+		BigDecimal acumuladorAditivoGeral = new BigDecimal("0");
+		
+		BigDecimal [] mesesSaldo = new BigDecimal[13];
+		BigDecimal [] mesesValores = new BigDecimal[13];
+		BigDecimal [] mesesAditivos = new BigDecimal[13];
 		List<String> periodosComparados = new ArrayList<String>();
+		for(int y=0; y <13; y++)
+		{
+			mesesSaldo[y] = new BigDecimal("0.0");
+		//	mesesValores[y] = new BigDecimal("0");
+			mesesAditivos[y] = new BigDecimal("0.0");
+		}
 		int flagmes = 0;
 		int flagoffset = 0;
 		
@@ -214,8 +222,8 @@ public class ContratoController {
 	for(i=1; i < 13; i++)
 	{
 		flagmes = 0;
-		acumuladorValor =0;
-		acumuladorSaldo = 0;
+		acumuladorValor =new BigDecimal("0.0");
+	
 		if(i > 0 && i < 10) {
 			periodoAComparar = ano+ "-0"+ Integer.toString(i);
 		}else {periodoAComparar = ano+ "-"+ Integer.toString(i);}
@@ -228,13 +236,13 @@ public class ContratoController {
 			if(obj.getData().toString().contains(periodoAComparar))
 			{ 
 				flagmes = 1;
-				acumuladorValor += obj.getValor();
-				acumuladorValorGeral += acumuladorValor;
+				acumuladorValor = acumuladorValor.add(obj.getValor());
+				acumuladorValorGeral = acumuladorValorGeral.add(acumuladorValor);
 				//acumuladorSaldo += obj.getSaldo_contrato();
 				if(obj.getPossui_aditivo())
 				{
-					acumuladorAditivo += obj.getValor_aditivo();
-					acumuladorAditivoGeral += acumuladorAditivo;
+					acumuladorAditivo = acumuladorAditivo.add(obj.getValor_aditivo()) ;
+					acumuladorAditivoGeral = acumuladorAditivoGeral.add(acumuladorAditivo);
 					
 				}				
 			}	
@@ -300,7 +308,7 @@ public class ContratoController {
 					System.out.println(obj.getSaldo_contrato());
 					System.out.println(mesesAditivos[mes]);	
 					mesesSaldo[mes] = obj.getSaldo_contrato() /*+ mesesAditivos[mes] */;
-					acumuladorSaldoGeral += obj.getSaldo_contrato(); 
+					acumuladorSaldoGeral.add(obj.getSaldo_contrato()) ; 
 					break;
 						//}
 					}
@@ -392,14 +400,31 @@ public class ContratoController {
 		
 		ModelAndView mv = new ModelAndView(VISUALIZAR_VIEW);
 		Contrato c = contratos.findOne(Id_contrato);
-		float totalAditivosPorcentagem;
-		float totalAditivos = calcularAditivos(c.getLancamentos());
+		List<Lancamento> lancamentos = c.getLancamentos();
 		
-		float valorTotal = calcularValorTotal(c.getLancamentos());
-		if(totalAditivos == 0) {
-			totalAditivosPorcentagem = c.getValor_contrato();
-		} else {totalAditivosPorcentagem = totalAditivos+c.getValor_contrato();}
-		float porcentagemConcluida = (valorTotal/(totalAditivosPorcentagem)*100);
+	    
+	    mv.addObject("lancamentosOrdenados", lancamentos);
+		BigDecimal totalAditivosPorcentagem;
+		BigDecimal totalAditivos = calcularAditivos(c.getLancamentos());
+		
+		BigDecimal valorTotal = calcularValorTotal(c.getLancamentos());
+		Comparator<Lancamento> cmp = new Comparator<Lancamento>() {
+	        public int compare(Lancamento l1, Lancamento l2) {
+	          return l2.getData().compareTo(l1.getData());
+	        }
+	    };
+	    Collections.sort(lancamentos, cmp);
+		if(totalAditivos.equals(new BigDecimal("0"))) {
+			totalAditivosPorcentagem = new BigDecimal(c.getValor_contrato().toString());
+		} else {
+			BigDecimal result = totalAditivos.add(c.getValor_contrato());
+			totalAditivosPorcentagem = new BigDecimal(result.toString());
+			}
+		
+		BigDecimal cem = new BigDecimal("100");
+		BigDecimal multiplicacao = totalAditivosPorcentagem.multiply(cem);
+		BigDecimal divisao = valorTotal.divide(multiplicacao, RoundingMode.HALF_UP);
+		BigDecimal porcentagemConcluida = new BigDecimal(divisao.toString());
 		
 		DateTime inicio = new DateTime();
 		DateTime fim = new DateTime(c.getData_vencimento());
@@ -415,10 +440,12 @@ public class ContratoController {
 		mv.addObject("contrato", c);
 		mv.addObject("total_aditivos", totalAditivos);
 		mv.addObject("total", valorTotal);
-		mv.addObject("totalcomaditivos", c.getValor_contrato() + totalAditivos);
+		mv.addObject("totalcomaditivos", c.getValor_contrato().add( totalAditivos));
 		mv.addObject("saldo_contrato", c.getSaldo_contrato());
 		mv.addObject("porcentagem_concluida", porcentagemConcluida);
-		mv.addObject("porcentagem_a_concluir", 100 - porcentagemConcluida);
+		BigDecimal cembigd = new BigDecimal(100);
+		BigDecimal result2 = new BigDecimal(porcentagemConcluida.toString());
+		mv.addObject("porcentagem_a_concluir", cembigd.subtract(result2));
 		//	mv.addObject(new Contrato());
 		//numero_contrato
 		//mv.addObject("todosNiveisUsuario", Nivel.values());
@@ -426,9 +453,9 @@ public class ContratoController {
 	}
 
 
-	public float calcularAditivos(List<Lancamento> lancamentos)
+	public BigDecimal calcularAditivos(List<Lancamento> lancamentos)
 	{
-		float acumulador = 0;
+		BigDecimal acumulador =  BigDecimal.ZERO;
 		Iterator it = lancamentos.iterator();
 		
 		while(it.hasNext())
@@ -436,16 +463,16 @@ public class ContratoController {
 			Lancamento obj = (Lancamento) it.next();
 			if(obj.getPossui_aditivo())
 			{
-				acumulador += obj.getValor_aditivo(); 
+				acumulador = acumulador.add(obj.getValor_aditivo()); 
 			}
 			
 		}
 		return acumulador;
 	}
 	
-	public float calcularAditivos(List<Lancamento> lancamentos, String periodo)
+	public BigDecimal calcularAditivos(List<Lancamento> lancamentos, String periodo)
 	{
-		float acumulador = 0;
+		BigDecimal acumulador =  BigDecimal.ZERO;
 		Iterator it = lancamentos.iterator();
 		
 		while(it.hasNext())
@@ -453,7 +480,7 @@ public class ContratoController {
 			Lancamento obj = (Lancamento) it.next();
 			if(obj.getPossui_aditivo() && obj.getData().toString().contains(periodo))
 			{
-				acumulador += obj.getValor_aditivo(); 
+				acumulador = acumulador.add(obj.getValor_aditivo()); 
 			}
 			
 		}
@@ -461,16 +488,16 @@ public class ContratoController {
 	}
 	
 	
-	public float calcularValorTotal(List<Lancamento> lancamentos)
+	public BigDecimal calcularValorTotal(List<Lancamento> lancamentos)
 	{
-		float acumulador = 0;
+		BigDecimal acumulador =  BigDecimal.ZERO;
 		Iterator it = lancamentos.iterator();
 		
 		while(it.hasNext())
 		{
 			Lancamento obj = (Lancamento) it.next();
 		//	System.out.println(obj.getValor());
-			acumulador += obj.getValor(); 
+			acumulador = acumulador.add(obj.getValor()); 
 			
 			
 		}

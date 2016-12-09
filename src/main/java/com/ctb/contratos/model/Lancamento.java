@@ -1,5 +1,6 @@
 package com.ctb.contratos.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -38,11 +39,11 @@ public class Lancamento {
 
 	@DecimalMax(value = "9999999.99", message = "Valor não pode ser maior que 9.999.999,99")
    @NumberFormat(pattern = "#,##0.00")
-	private float valor;
+	private BigDecimal valor;
 	private Integer aditivo_n;
 	@DecimalMax(value = "9999999.99", message = "Valor não pode ser maior que 9.999.999,99")
 	 @NumberFormat(pattern = "#,##0.00")
-	private float valor_aditivo;
+	private BigDecimal valor_aditivo;
 	private String observacao;
 	private boolean possui_aditivo;
 	@Enumerated(EnumType.STRING)
@@ -64,7 +65,7 @@ public class Lancamento {
 	@ManyToOne
 	@JoinColumn(name= "lancamento_id_contrato")
 	private Contrato contrato;
-	private float saldo_contrato;
+	private BigDecimal saldo_contrato;
 	
 	
 	
@@ -99,20 +100,20 @@ public class Lancamento {
 	
 	
 	
-	public float getValor()
+	public BigDecimal getValor()
 	{
 		return this.valor;
 	}
-	public void setValor(float valor)
+	public void setValor(BigDecimal valor)
 	{
 		this.valor = valor;
 	}
 	
-	public float getValor_aditivo()
+	public BigDecimal getValor_aditivo()
 	{
 		return this.valor_aditivo;
 	}
-	public void setValor_aditivo(float valor_aditivo)
+	public void setValor_aditivo(BigDecimal valor_aditivo)
 	{
 		this.valor_aditivo = valor_aditivo;
 	}
@@ -184,10 +185,10 @@ public class Lancamento {
 	public void setMeses_prorrogacao(Integer meses_prorrogacao) {
 		this.meses_prorrogacao = meses_prorrogacao;
 	}
-	public float getSaldo_contrato() {
+	public BigDecimal getSaldo_contrato() {
 		return saldo_contrato;
 	}
-	public void setSaldo_contrato(float saldo_contrato) {
-		this.saldo_contrato = saldo_contrato;
+	public void setSaldo_contrato(BigDecimal d) {
+		this.saldo_contrato = d;
 	}
 }

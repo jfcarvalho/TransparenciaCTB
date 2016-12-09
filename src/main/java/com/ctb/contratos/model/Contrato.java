@@ -1,5 +1,6 @@
 package com.ctb.contratos.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -58,11 +59,11 @@ public class Contrato {
 	@DecimalMin(value = "0.00", message = "Valor não pode ser menor que 0,00")
 	@DecimalMax(value = "9999999.99", message = "Valor não pode ser maior que 9.999.999,99")
    @NumberFormat(pattern = "#,##0.00")
-	private float saldo_contrato;
+	private BigDecimal saldo_contrato;
 	@DecimalMin(value = "0.00", message = "Valor não pode ser menor que 0,00")
 	@DecimalMax(value = "9999999.99", message = "Valor não pode ser maior que 9.999.999,99")
    @NumberFormat(pattern = "#,##0.00")
-	private float valor_contrato;
+	private BigDecimal valor_contrato;
 	@ManyToOne(fetch=FetchType.LAZY, cascade = {CascadeType.PERSIST})
 	@JoinColumn(name="contrato_id_contrato")
 	private Contratado contratado;
@@ -189,14 +190,14 @@ public class Contrato {
 		this.vencimento_garantia= vencimento_garantia;
 	}
 	
-	public Float getSaldo_contrato()
+	public BigDecimal getSaldo_contrato()
 	{
 		return this.saldo_contrato;
 	}
 	
-	public void setSaldo_contrato(Float saldo_contrato)
+	public void setSaldo_contrato(BigDecimal bigDecimal)
 	{
-		this.saldo_contrato= saldo_contrato;
+		this.saldo_contrato= bigDecimal;
 	}
 	
 	public Integer getMeses_vencimento()
@@ -260,10 +261,10 @@ public class Contrato {
 	public void setCpfResponsavel(String cpfResponsavel) {
 		this.cpfResponsavel = cpfResponsavel;
 	}
-	public float getValor_contrato() {
+	public BigDecimal getValor_contrato() {
 		return valor_contrato;
 	}
-	public void setValor_contrato(float valor_contrato) {
+	public void setValor_contrato(BigDecimal valor_contrato) {
 		this.valor_contrato = valor_contrato;
 	}
 	

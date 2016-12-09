@@ -1,5 +1,6 @@
 package com.ctb.contratos.controller;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -127,7 +128,7 @@ public class LancamentoController {
 			lancamento.setContrato(contrato);
 			contratos.save(contrato);
 		}
-		if(lancamento.getPossui_aditivo() && lancamento.getMeses_prorrogacao() != 0)
+		if(lancamento.getPossui_aditivo() && lancamento.getMeses_prorrogacao() != null)
 		{
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(lancamento.getContrato().getData_vencimento());
@@ -140,8 +141,17 @@ public class LancamentoController {
 			c.setData_vencimento(cal.getTime());
 			
 		}
-		lancamento.setSaldo_contrato(c.getSaldo_contrato() + lancamento.getValor_aditivo() - lancamento.getValor());
-		c.setSaldo_contrato(c.getSaldo_contrato() + lancamento.getValor_aditivo() - lancamento.getValor() );
+		BigDecimal resultop1 = new BigDecimal(c.getSaldo_contrato().toString());
+		BigDecimal resultop2 = new BigDecimal("0");
+		if(lancamento.getValor_aditivo() != null)
+		{
+			resultop2 = new BigDecimal(lancamento.getValor_aditivo().toString());
+		}
+		BigDecimal resultop3 = new BigDecimal(lancamento.getValor().toString());
+		BigDecimal  resultop4 = resultop1.add(resultop2);
+		BigDecimal resultop5 = resultop4.subtract(resultop3);
+		lancamento.setSaldo_contrato(resultop5);
+		c.setSaldo_contrato(resultop5 );
 		
 		contratos.save(c);
 		lancamentos.save(lancamento);		
@@ -159,7 +169,7 @@ public class LancamentoController {
 	
 	
 	@RequestMapping(value="/pesquisar/{id_contrato}")
-	public ModelAndView pesquisar(@PathVariable("id_contrato") Integer Id_contrato, String busca, String nome, String setor, @PageableDefault(size=10) Pageable pageable) throws ParseException
+	public ModelAndView pesquisar(@PathVariable("id_contrato") Integer Id_contrato, String busca, String nome, String setor, @PageableDefault(size=15) Pageable pageable) throws ParseException
 	{
 		ModelAndView mv = new ModelAndView("/pesquisa/PesquisaLancamentos");
 		Contrato c = contratos.findOne(Id_contrato);
@@ -215,10 +225,15 @@ lancamentosOrdenados.sort(cmp);
 		Lancamento lancamento = lancamentos.findOne(id_lancamento);
 		//attributes.addFlashAttribute("mensagem", "Contrato excluído com sucesso com sucesso!");	
 		Contrato c = contratos.findOne(lancamento.getContrato().getId_contrato());
-		c.setSaldo_contrato(c.getSaldo_contrato() + lancamento.getValor());
+		BigDecimal resultop1 = new BigDecimal(c.getSaldo_contrato().toString());
+		BigDecimal resultop2 = new BigDecimal(lancamento.getValor().toString());
+		BigDecimal resultop3 = new BigDecimal(lancamento.getValor_aditivo().toString());
+		c.setSaldo_contrato(resultop1.add(resultop2));
 		if(lancamento.getPossui_aditivo() == true)
 		{
-			c.setSaldo_contrato(c.getSaldo_contrato() - lancamento.getValor_aditivo());
+			
+			c.setSaldo_contrato(resultop1.subtract(resultop3));
+			//c.setSaldo_contrato(c.getSaldo_contrato() - lancamento.getValor_aditivo());
 			
 		}
 		contratos.save(c);

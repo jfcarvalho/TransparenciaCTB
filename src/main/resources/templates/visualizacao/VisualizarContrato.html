@@ -229,7 +229,7 @@
 				
 </thead>
 <tbody>
-				<tr th:each="lancamento : ${contrato.lancamentos}">
+				<tr th:each="lancamento : ${lancamentosOrdenados}">
 					<td class="text-center" th:text="${lancamento.data} ? ${#dates.format(lancamento.data, 'dd/MM/yyyy')} : 'Não informado'"></td>
 					<!--   <td class="text-center" th:text="${computador.arquitetura.arquitetura}"></td> -->
 					<td class="text-center" th:text="${lancamento.numero_nota_fiscal}"></td>
