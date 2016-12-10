@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+<head>
+
+<title>Seja bem vindo ao Sistema de Gestão de Contratos da CTB</title>
+ 	   <link rel="stylesheet" type="text/css" href="/layout/stylesheets/bootstrap-datepicker.standalone.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/bootstrap.min.css"/>
+ 	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/vendors.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/algaworks.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/application.css"/>
+	
+</head>
+
+<body>
+<div class="aw-layout-page">
+
+<div layout:include="/cabecalho/Cabecalho"></div>
+
+<div layout:include="/cabecalho/DashBoard"></div>
+
+<section class="aw-layout-content  js-content">
+
+
+<div class="page-header">
+	<div class="container-fluid">
+		<h2>
+			Seja bem vindo senhor(a) gestor(a)<span th:text="${gestor.nome}"></span>
+		</h2>
+	</div>
+</div>
+
+<div class="container-fluid">
+		<h4>Você é gestor de <span th:text="${n_contratosgeridos}"></span> contrato(s)</h4>
+		<table class="table  table-hover">
+		
+			<thead>
+				<tr>
+				<th class="text-center col-md-2">Numero</th>
+				<th class="text-center col-md-2">Empresa</th>
+				<th class="text-center col-md-2">Valor</th>
+				<th class="text-center col-md-2">Saldo</th>
+				<th class="text-center col-md-2">Data de vencimento</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="contrato : ${contratosgeridos}">
+					<td class="text-center" th:text="${contrato} ? ${contrato.numero} : 'Nãoo informado'"></td>
+					<td class="text-center" th:text="${contrato.contratado} ? ${contrato.contratado.nome} : 'Não informado'"></td>
+						<td class="text-center" th:text="${contrato} ? ${contrato.valor_contrato} : 'Não informado'"></td>
+						<td class="text-center" th:text="${contrato} ? ${contrato.saldo_contrato} : 'Não informado'"></td>
+						<td class="text-center" th:text="${contrato} ? ${#dates.format(contrato.data_vencimento, 'dd/MM/yyyy')}  : 'Não informado'"></td>
+				</tr>
+				
+			<tr>
+				<td colspan="6" th:if="${#lists.isEmpty(contratosgeridos)}">Nenhum contrato encontrado</td>
+			</tr>
+			</tbody>
+		
+		</table>
+		<h4>Seus últimos lancamentos:</h4>
+		
+		
+		<table class="table  table-hover">
+		
+			<thead>
+				<tr>
+				<th class="text-center col-md-2">Contrato</th>
+				<th class="text-center col-md-2">Empresa</th>
+				<th class="text-center col-md-2">Valor</th>
+				<th class="text-center col-md-2">Data de lancamento</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="lancamento : ${ultimoslancamentos}">
+					<td class="text-center" th:text="${lancamento.contrato} ? ${lancamento.contrato.numero} : 'Nãoo informado'"></td>
+					<td class="text-center" th:text="${lancamento.contrato.contratado} ? ${lancamento.contrato.contratado.nome} : 'Não informado'"></td>
+						<td class="text-center" th:text="${lancamento} ? |R$ ${{lancamento.valor}}| : 'Não informado'"></td>
+						<td class="text-center" th:text="${lancamento} ? ${#dates.format(lancamento.data, 'dd/MM/yyyy')} : 'Não informado'"></td>
+						
+				</tr>
+				
+			<tr>
+				<td colspan="6" th:if="${#lists.isEmpty(ultimoslancamentos)}">Nenhum contrato encontrado</td>
+			</tr>
+			</tbody>
+		
+		</table>
+		
+		<h3>Contratos com vencimento em 90 dias:</h3>
+		<!--   <div layout:include="/mensagem/MensagemErro"></div> -->
+	
+
+</div>
+
+<script>
+function excluir() {
+	swal({
+		title: "Tem certeza?",
+		text: "Você não poderá recuperar o produto após a exclusão.",
+		type: "warning",
+		showCancelButton: true,
+		confirmButtonColor: "#DD6B55",
+		confirmButtonText: "Sim, exclua agora!",
+		closeOnConfirm: false,
+		showLoaderOnConfirm: true
+	}, function() {
+		setTimeout(function() {
+			swal("Excluído!", "O produto foi excluído com sucesso.", "success");
+		}, 2000);
+	});
+}
+</script>
+
+	</section>
+	<footer class="aw-layout-footer  js-content">
+		<div class="container-fluid">
+			<span class="aw-footer-disclaimer">Companhia de Transportes do Estado da Bahia . Todos os direitos reservados.</span>
+		</div>
+	</footer>
+	
+	
+</div>
+
+<!--  <script src="/layout/javascripts/bootstrap.min.js"></script> -->
+<script src="/layout/javascripts/vendors.min.js"></script>
+<script src="/layout/javascripts/algaworks.min.js"></script>
+
+
+<script src="/layout/javascripts/bootstrap-datepicker.min.js"></script>
+ <script src="/layout/javascripts/bootstrap-datepicker.pt-BR.min.js"></script>
+<script src="/layout/javascripts/bootstrap.min.js"></script>
+<script src="/layout/javascripts/jquery-2.2.0.min.js"></script>
+<script src="/layout/javascripts/jquery.maskMoney.min.js"></script>
+<script src="/layout/javascripts/jquery.maskMoney.js"></script>
+
+<script src="/layout/javascripts/ctb.js"></script>
+
+</body>
+</html>

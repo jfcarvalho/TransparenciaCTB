@@ -423,7 +423,7 @@ public class ContratoController {
 		
 		BigDecimal cem = new BigDecimal("100");
 		BigDecimal multiplicacao = totalAditivosPorcentagem.multiply(cem);
-		BigDecimal divisao = valorTotal.divide(multiplicacao, RoundingMode.HALF_UP);
+		BigDecimal divisao = valorTotal.divide(multiplicacao, RoundingMode.HALF_DOWN);
 		BigDecimal porcentagemConcluida = new BigDecimal(divisao.toString());
 		
 		DateTime inicio = new DateTime();

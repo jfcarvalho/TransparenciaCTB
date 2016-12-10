@@ -22,7 +22,7 @@
 <table>
  <tr>
   <td>
-  Número do contrato:
+  Nº contrato:
   </td>
   <td>
   <div th:text="${contrato.numero}"></div>
@@ -30,7 +30,7 @@
  </tr>
  <tr>
   <td>
-  Data de assinatura:
+  Assinado:
   </td>
   <td>
   <div th:text="${#dates.format(contrato.data_assinatura, 'dd/MM/yyyy')}"></div>
@@ -41,7 +41,7 @@
   Empresa:
   </td>
   <td>
-  <!-- <div th:text="${contrato.contratado} ? ${contrato.contratado.nome}: 'Sem nome'" ></div> -->
+  <div th:text="${contrato.contratado} ? ${contrato.contratado.nome}: 'Sem nome'" ></div> 
   </td>
  </tr>
  <tr>
