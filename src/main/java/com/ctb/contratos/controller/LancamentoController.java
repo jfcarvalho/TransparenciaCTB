@@ -181,6 +181,8 @@ public class LancamentoController {
 		
 		criteria.setFirstResult(primeiroRegistro);
         criteria.setMaxResults(totalRegistrosPorPagina);
+    	criteria.add(Restrictions.eq("contrato", c));
+        
         Comparator<Lancamento> cmp = new Comparator<Lancamento>() {
 	        public int compare(Lancamento l1, Lancamento l2) {
 	          return l2.getData().compareTo(l1.getData());

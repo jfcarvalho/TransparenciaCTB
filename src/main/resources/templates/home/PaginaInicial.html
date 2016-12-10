@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
 <head>
 
-<title>Seja bem vindo ao Sistema de Gestão de Contratos da CTB</title>
+<title>Seja bem vindo ao Sistema de Gestão Administrativa da CTB</title>
  	   <link rel="stylesheet" type="text/css" href="/layout/stylesheets/bootstrap-datepicker.standalone.min.css"/>
 	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/bootstrap.min.css"/>
  	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/vendors.min.css"/>
@@ -23,14 +23,17 @@
 
 <div class="page-header">
 	<div class="container-fluid">
-		<h2>
-			Seja bem vindo senhor(a) gestor(a)<span th:text="${gestor.nome}"></span>
-		</h2>
+		<h3>
+			Seja bem vindo(a) senhor(a) gestor(a) <i><span style="color:blue" th:text="${gestor.nome}"></span></i>
+		</h3>
 	</div>
 </div>
 
 <div class="container-fluid">
-		<h4>Você é gestor de <span th:text="${n_contratosgeridos}"></span> contrato(s)</h4>
+		<br/>
+		<br/>
+		
+		Você é gestor de <span th:text="${n_contratosgeridos}"></span> contrato(s)
 		<table class="table  table-hover">
 		
 			<thead>
@@ -46,9 +49,40 @@
 				<tr th:each="contrato : ${contratosgeridos}">
 					<td class="text-center" th:text="${contrato} ? ${contrato.numero} : 'Nãoo informado'"></td>
 					<td class="text-center" th:text="${contrato.contratado} ? ${contrato.contratado.nome} : 'Não informado'"></td>
-						<td class="text-center" th:text="${contrato} ? ${contrato.valor_contrato} : 'Não informado'"></td>
-						<td class="text-center" th:text="${contrato} ? ${contrato.saldo_contrato} : 'Não informado'"></td>
+						<td class="text-center" th:text="${contrato} ? |R$ ${{contrato.valor_contrato}} |: 'Não informado'"></td>
+						<td class="text-center" th:text="${contrato} ? |R$ ${{contrato.saldo_contrato}}| : 'Não informado'"></td>
 						<td class="text-center" th:text="${contrato} ? ${#dates.format(contrato.data_vencimento, 'dd/MM/yyyy')}  : 'Não informado'"></td>
+						
+				</tr>
+				
+			<tr>
+				<td colspan="6" th:if="${#lists.isEmpty(contratosgeridos)}">Nenhum contrato encontrado</td>
+			</tr>
+			</tbody>
+		
+		
+		</table>
+		<br/>
+		<br/>
+		<br/>
+		
+		<div style="color:red">
+		Contratos com vencimento em 90 dias ou menos:
+			<table class="table  table-hover">
+		
+			<thead>
+				<tr>
+				<th class="text-center col-md-2">Numero</th>
+				<th class="text-center col-md-2">Empresa</th>
+				<th class="text-center col-md-2">Data de vencimento</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="contrato : ${vencimento90dias}">
+					<td class="text-center" th:text="${contrato} ? ${contrato.numero} : 'Nãoo informado'"></td>
+					<td class="text-center" th:text="${contrato.contratado} ? ${contrato.contratado.nome} : 'Não informado'"></td>
+					<td class="text-center" th:text="${contrato} ? ${#dates.format(contrato.data_vencimento, 'dd/MM/yyyy')}  : 'Não informado'"></td>
+				
 				</tr>
 				
 			<tr>
@@ -57,7 +91,13 @@
 			</tbody>
 		
 		</table>
-		<h4>Seus últimos lancamentos:</h4>
+		<br/>
+		<br/>
+		<br/>
+		
+		</div>
+		
+		Seus 10 últimos lancamentos:
 		
 		
 		<table class="table  table-hover">
@@ -68,6 +108,8 @@
 				<th class="text-center col-md-2">Empresa</th>
 				<th class="text-center col-md-2">Valor</th>
 				<th class="text-center col-md-2">Data de lancamento</th>
+				<th class="text-center col-md-2">Pagamento via processo</th>
+				<th class="text-center col-md-2">Liquidação da nota</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -76,7 +118,8 @@
 					<td class="text-center" th:text="${lancamento.contrato.contratado} ? ${lancamento.contrato.contratado.nome} : 'Não informado'"></td>
 						<td class="text-center" th:text="${lancamento} ? |R$ ${{lancamento.valor}}| : 'Não informado'"></td>
 						<td class="text-center" th:text="${lancamento} ? ${#dates.format(lancamento.data, 'dd/MM/yyyy')} : 'Não informado'"></td>
-						
+						<td class="text-center"><div th:switch="${lancamento.processo} ? ${lancamento.processo.pago}" ><span class="label label-success" th:text="'Pago'" th:case="true" ></span><span class="label label-warning" th:text="'Não pago'" th:case="null" ></span></div> </td>
+					<td class="text-center"><div th:switch="${lancamento.liquidado}" ><span class="label label-success" th:text="'Nota Liquidada'" th:case="true" ></span><span class="label label-warning" th:text="'Nota não liquidada'" th:case="false" ></span></div> </td>
 				</tr>
 				
 			<tr>
@@ -85,11 +128,47 @@
 			</tbody>
 		
 		</table>
+		<br/>
+		<br/>
+		<br/>
 		
-		<h3>Contratos com vencimento em 90 dias:</h3>
-		<!--   <div layout:include="/mensagem/MensagemErro"></div> -->
+		<div  class="col-sm-6">
+			<div  data-target="#graficoContratos"></div>
+				<div id="graficoContratos"  th:attr="data-valor=${valorjaneiro} + ',' + ${valorfevereiro} + ',' + ${valormarco} + ',' + ${valorabril} + ',' + ${valormaio} + ',' + ${valorjunho} + ',' + ${valorjulho} + ',' + ${valoragosto} + ',' + ${valorsetembro} + ',' + ${valoroutubro} + ',' + ${valornovembro} + ',' + ${valordezembro}" class="aw-graph-box">
+					<div class="aw-graph-box__header">
+						<h2 class="aw-graph-box__title">Vendas por origem <small>últimos 6 meses</small></h2>
+					</div>
+					<div class="aw-graph-box__content">
+						<div class="aw-graph-box__no-data">
+							<!--   <i class="fa  fa-line-chart  fa-2x"></i>
+							<span>Não há dados</span> -->
+						</div>
+						<div>
+							<canvas id="graficoValorTotal" height="160"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
 	
-
+	<div  class="col-sm-6">
+			<div  data-target="#graficoPagamento"></div>
+				<div id="graficoPagamento"  th:attr="data-pg= ${lancamentospagos} + ',' + ${lancamentosnpagos}" class="aw-graph-box">
+					<div class="aw-graph-box__header">
+						<h2 class="aw-graph-box__title">Vendas por origem <small>últimos 6 meses</small></h2>
+					</div>
+					<div class="aw-graph-box__content">
+						<div class="aw-graph-box__no-data">
+							<!--   <i class="fa  fa-line-chart  fa-2x"></i>
+							<span>Não há dados</span> -->
+						</div>
+						<div>
+							<canvas id="graficoDePagamentos" height="160"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+	
+		
 </div>
 
 <script>
@@ -132,7 +211,7 @@ function excluir() {
 <script src="/layout/javascripts/jquery-2.2.0.min.js"></script>
 <script src="/layout/javascripts/jquery.maskMoney.min.js"></script>
 <script src="/layout/javascripts/jquery.maskMoney.js"></script>
-
+<script src="/layout/javascripts/Chart.min.js"></script>
 <script src="/layout/javascripts/ctb.js"></script>
 
 </body>
