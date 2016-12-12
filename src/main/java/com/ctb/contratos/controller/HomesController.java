@@ -19,10 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ctb.contratos.model.Contratado;
 import com.ctb.contratos.model.Contrato;
 import com.ctb.contratos.model.Lancamento;
 import com.ctb.contratos.model.Usuario;
+import com.ctb.contratos.repository.Contratados;
 import com.ctb.contratos.repository.Contratos;
+import com.ctb.contratos.repository.Lancamentos;
 import com.ctb.contratos.repository.Usuarios;
 import com.ctb.security.AppUserDetailsService;
 
@@ -36,6 +39,11 @@ public class HomesController {
 	
 	@Autowired
 	private Contratos contratos;
+	
+	@Autowired
+	private Lancamentos lancamentos;
+	@Autowired
+	private Contratados contratadas;
 	
 	@RequestMapping(method=RequestMethod.GET)
 	public ModelAndView index()
@@ -139,11 +147,21 @@ public class HomesController {
 		mv.addObject("valoroutubro", acumuladoValorOutubro);
 		mv.addObject("valornovembro", acumuladoValorNovembro);
 		mv.addObject("valordezembro", acumuladoValorDezembro);
+		mv.addObject("ntotal_contratos", contratos.count());
+		mv.addObject("ntotal_empresas", contratadas.count());
+		mv.addObject("ntotal_gestores", usuarios.count());
+		mv.addObject("ntotal_lancamentos", lancamentos.count());
+		mv.addObject("teste", contratos.findOne(1));
 		return mv;
 }	
 	@ModelAttribute("permissao")
 	public boolean temPermissao() {
 		return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
+	}
+	
+	@ModelAttribute("home_gestor_contratos")
+	public boolean homeGestor() {
+		return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_HOME_GESTOR_CONTRATOS");
 	}
 	
 	@ModelAttribute("contratosgeridos")
@@ -214,6 +232,35 @@ public class HomesController {
 	}
 	
 	
+	@ModelAttribute("ultimoslancamentos_todos_contratos")
+	public List<Lancamento> ultimosLancamentosTodosContratos()
+	{
+		List<Lancamento> todos = lancamentos.findAll();
+		Comparator<Lancamento> cmp = new Comparator<Lancamento>() {
+	        public int compare(Lancamento l1, Lancamento l2) {
+	          return l2.getData().compareTo(l1.getData());
+	        }
+	    
+		};
+		Collections.sort(todos, cmp);
+		
+		List<Lancamento> novaListaLimitada = new ArrayList<Lancamento>();
+		int contador = 0; 
+		for (Lancamento l : todos)
+		{
+			if(contador < 15 ) {
+				novaListaLimitada.add(l);
+				contador++;
+			}
+			else {break;}
+		}
+		
+		
+		return novaListaLimitada;
+	
+	}
+	
+	
 	@ModelAttribute("n_contratosgeridos")
 	public int ncontratosGeridos()
 	{
@@ -240,10 +287,31 @@ public class HomesController {
 		 Usuario gestor = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
 		 return gestor;
 	}
+	
 	@ModelAttribute("vencimento90dias")
 	public List<Contrato> vencimento90()
 	{
 		List<Contrato> contratosgeridos = contratosGeridos();
+		List<Contrato> contratosavencer = new ArrayList<Contrato>();
+		Iterator it = contratosgeridos.iterator();
+		while(it.hasNext())
+		{
+			Contrato obj = (Contrato) it.next();
+			DateTime inicio = new DateTime();
+			DateTime fim = new DateTime(obj.getData_vencimento());
+			Days d = Days.daysBetween(inicio, fim);
+			if(d.getDays() <= 90 && d.getDays() >0)
+			{
+				contratosavencer.add(obj);
+			}
+		}
+		return contratosavencer;
+	}
+	
+	@ModelAttribute("vencimento90dias_todos")
+	public List<Contrato> vencimento90_todos()
+	{
+		List<Contrato> contratosgeridos = contratos.findAll();
 		List<Contrato> contratosavencer = new ArrayList<Contrato>();
 		Iterator it = contratosgeridos.iterator();
 		while(it.hasNext())
@@ -309,7 +377,7 @@ public class HomesController {
 		}
 		return acumuladoValorAditivo;
 	}
-	
+	//Otimizar isso aqui!!! muita função duplicada q pode se transformar em uma fnção só com flag
 	@ModelAttribute("lancamentospagos")
 	public BigDecimal Lancamentospagos()
 	{
@@ -362,6 +430,20 @@ public class HomesController {
 		
 		}
 		return acumuladoNaoPago;
+	}
+	
+	@ModelAttribute("nomes_empresas")
+	public List<String> pegarNomeEmpresas()
+	{
+		List<Contratado> empresas = contratadas.findAll();
+		List<String> nomes = new ArrayList<String>();
+		Iterator it = empresas.iterator();
+		while (it.hasNext())
+		{
+			Contratado c = (Contratado) it.next();
+			nomes.add(c.getNome());
+		}
+		return nomes;
 	}
 	
 }

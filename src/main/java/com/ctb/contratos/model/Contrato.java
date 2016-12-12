@@ -61,7 +61,7 @@ public class Contrato {
    @NumberFormat(pattern = "#,##0.00")
 	private BigDecimal saldo_contrato;
 	@DecimalMin(value = "0.00", message = "Valor não pode ser menor que 0,00")
-	@DecimalMax(value = "9999999.99", message = "Valor não pode ser maior que 9.999.999,99")
+	@DecimalMax(value = "9999999999999.99", message = "Valor não pode ser maior que 9.999.999,99")
    @NumberFormat(pattern = "#,##0.00")
 	private BigDecimal valor_contrato;
 	@ManyToOne(fetch=FetchType.LAZY, cascade = {CascadeType.PERSIST})

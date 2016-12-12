@@ -8,6 +8,8 @@ $(function() {
 	$('.js-currency').maskMoney({decimal: ',', thousands: '.', allowZero: true});
 	 dados = $('#graficoContratos').attr('data-valor'); //d.data('teste')
 	dadosPGTO = $('#graficoPagamento').attr('data-pg');
+	teste = $('#graficoPagamento').attr('data-teste');
+	console.log(teste);
 });
 
 var contratos = contratos || {};

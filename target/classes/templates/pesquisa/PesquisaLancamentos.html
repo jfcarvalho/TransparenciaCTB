@@ -47,6 +47,7 @@
 				<th class="text-center col-md-2">Data de lançamento</th>
 				<th class="text-center col-md-2">Valor</th>
 				<th class="text-center col-md-2">Número de aditivo</th>
+				<th class="text-center col-md-2">Valor do aditivo</th>
 				<th class="text-center col-md-2">Observação</th>
 			 	<th class="text-center col-md-2">Ação</th> 
 				</tr>
@@ -58,8 +59,9 @@
 					<td class="text-center" th:text="${lancamento.data} ? ${#dates.format(lancamento.data, 'dd/MM/yyyy')} : 'Não informado'"></td>
 					<td class="text-center" th:text=" |R$ ${{lancamento.valor}}|"></td>
 					<td class="text-center" th:text="${lancamento.aditivo_n}"></td>
+					<td class="text-center" th:text="${lancamento.valor_aditivo} ? ${lancamento.valor_aditivo} : 'Não informado'"></td>
 					<td class="text-center" th:text="${lancamento.observacao}"></td>
-						 <td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/lancamentos/{id_contrato}/{id_lancamento}(id_lancamento=${lancamento.id_lancamento}, id_contrato=${contrato.id_contrato})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:href="@{/transparenciactb/lancamentos/remove/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> Remover</span></a> <a  target="_blank" th:href="@{/transparenciactb/lancamentos/gerar_pagamento/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-usd"> Pagar</span></a></td> 
+						 <td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/lancamentos/{id_contrato}/{id_lancamento}(id_lancamento=${lancamento.id_lancamento}, id_contrato=${contrato.id_contrato})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:if="${permissao}" th:href="@{/transparenciactb/lancamentos/remove/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> Remover</span></a> <a  target="_blank" th:if="${permissao}" th:href="@{/transparenciactb/lancamentos/gerar_pagamento/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-usd"> Registrar Pagamento</span></a></td> 
 					
 				</tr>
 				

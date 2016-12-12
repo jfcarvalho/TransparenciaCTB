@@ -408,6 +408,7 @@ public class ContratoController {
 		BigDecimal totalAditivos = calcularAditivos(c.getLancamentos());
 		
 		BigDecimal valorTotal = calcularValorTotal(c.getLancamentos());
+		
 		Comparator<Lancamento> cmp = new Comparator<Lancamento>() {
 	        public int compare(Lancamento l1, Lancamento l2) {
 	          return l2.getData().compareTo(l1.getData());
@@ -422,8 +423,11 @@ public class ContratoController {
 			}
 		
 		BigDecimal cem = new BigDecimal("100");
-		BigDecimal multiplicacao = totalAditivosPorcentagem.multiply(cem);
-		BigDecimal divisao = valorTotal.divide(multiplicacao, RoundingMode.HALF_DOWN);
+		BigDecimal multiplicacao = valorTotal.multiply(cem);
+		System.out.println(multiplicacao);
+		System.out.println(totalAditivosPorcentagem);
+		System.out.println(valorTotal);
+		BigDecimal divisao = multiplicacao.divide(totalAditivosPorcentagem, RoundingMode.HALF_DOWN);
 		BigDecimal porcentagemConcluida = new BigDecimal(divisao.toString());
 		
 		DateTime inicio = new DateTime();
@@ -845,5 +849,6 @@ public class ContratoController {
 	public boolean temPermissao() {
 		return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
 	}
+	
 	
 }

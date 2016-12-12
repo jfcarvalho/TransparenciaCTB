@@ -32,7 +32,31 @@
 <div class="container-fluid">
 		<br/>
 		<br/>
+		<div th:if="${home_gestor_contratos}">
+				Informações gerais
+		<table class="table  table-hover">
 		
+			<thead>
+				<tr>
+				<th class="text-center col-md-2">Numero de contratos</th>
+				<th class="text-center col-md-2">Numero de Empresas</th>
+				<th class="text-center col-md-2">Numero de Gestores</th>
+				<th class="text-center col-md-2">Número de lançamentos</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="text-center" th:text="${ntotal_contratos}"></td>
+					<td class="text-center" th:text="${ntotal_empresas}"></td>
+					<td class="text-center" th:text="${ntotal_gestores}"></td>
+					<td class="text-center" th:text="${ntotal_lancamentos}"></td>
+				
+				</tr>
+			</tbody>
+		
+		</table>
+		</div>
+		<div th:if="${home_gestor_contratos} == false">
 		Você é gestor de <span th:text="${n_contratosgeridos}"></span> contrato(s)
 		<table class="table  table-hover">
 		
@@ -56,17 +80,18 @@
 				</tr>
 				
 			<tr>
-				<td colspan="6" th:if="${#lists.isEmpty(contratosgeridos)}">Nenhum contrato encontrado</td>
+				<td colspan="6" th:if="${#lists.isEmpty(contratosgeridos)}"><div style="text-align:center">Nenhum contrato encontrado</div></td>
 			</tr>
 			</tbody>
 		
 		
 		</table>
+		</div>
 		<br/>
 		<br/>
 		<br/>
 		
-		<div style="color:red">
+		<div style="color:red" th:if="${home_gestor_contratos} == false">
 		Contratos com vencimento em 90 dias ou menos:
 			<table class="table  table-hover">
 		
@@ -86,7 +111,7 @@
 				</tr>
 				
 			<tr>
-				<td colspan="6" th:if="${#lists.isEmpty(contratosgeridos)}">Nenhum contrato encontrado</td>
+				<td colspan="6" th:if="${#lists.isEmpty(contratosgeridos)}"><div style="text-align:center">Nenhum contrato com vencimento em 90 dias ou menos encontrado</div></td>
 			</tr>
 			</tbody>
 		
@@ -97,9 +122,46 @@
 		
 		</div>
 		
-		Seus 10 últimos lancamentos:
+		
+			<div style="color:red" th:if="${home_gestor_contratos}">
+		Contratos com vencimento em 90 dias ou menos:
+			<table class="table  table-hover">
+		
+			<thead>
+				<tr>
+				<th class="text-center col-md-2">Numero</th>
+				<th class="text-center col-md-2">Empresa</th>
+				<th class="text-center col-md-2">Gestor</th>
+				<th class="text-center col-md-2">Data de vencimento</th>
+				
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="contrato : ${vencimento90dias_todos}">
+					<td class="text-center" th:text="${contrato} ? ${contrato.numero} : 'Nãoo informado'"></td>
+					<td class="text-center" th:text="${contrato.contratado} ? ${contrato.contratado.nome} : 'Não informado'"></td>
+					<td class="text-center" th:text="${contrato.gestor} ? ${contrato.gestor.nome} : 'Não informado'"></td>
+					<td class="text-center" th:text="${contrato} ? ${#dates.format(contrato.data_vencimento, 'dd/MM/yyyy')}  : 'Não informado'"></td>
+				
+				</tr>
+				
+			<tr>
+				<td colspan="6" th:if="${#lists.isEmpty(vencimento90dias_todos)}"><div style="text-align:center">Nenhum contrato encontrado</div></td>
+			</tr>
+			</tbody>
+		
+		</table>
+		<br/>
+		<br/>
+		<br/>
+		
+		</div>
 		
 		
+	
+		
+		<div th:if="${home_gestor_contratos} == false">
+			Últimos laçamentos(até 10) 
 		<table class="table  table-hover">
 		
 			<thead>
@@ -123,7 +185,44 @@
 				</tr>
 				
 			<tr>
-				<td colspan="6" th:if="${#lists.isEmpty(ultimoslancamentos)}">Nenhum contrato encontrado</td>
+				<td colspan="6" th:if="${#lists.isEmpty(ultimoslancamentos)}"><div style="text-align:center">Nenhum lançamento encontrado</div></td>
+			</tr>
+			</tbody>
+		
+		</table>
+			<br/>
+		<br/>
+		<br/>
+		</div>
+	
+		
+		<div th:if="${home_gestor_contratos}">
+		Últimos laçamentos(até 15) 
+		<table  class="table  table-hover">
+		
+			<thead>
+				<tr>
+				<th class="text-center col-md-2">Contrato</th>
+				<th class="text-center col-md-2">Empresa</th>
+				<th class="text-center col-md-2">Gestor</th>
+				<th class="text-center col-md-2">Valor</th>
+				<th class="text-center col-md-2">Data de lancamento</th>
+				<th class="text-center col-md-2">Pagamento</th>
+			
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="lancamento : ${ultimoslancamentos_todos_contratos}">
+					<td class="text-center" th:text="${lancamento.contrato} ? ${lancamento.contrato.numero} : 'Nãoo informado'"></td>
+					<td class="text-center" th:text="${lancamento.contrato.contratado} ? ${lancamento.contrato.contratado.nome} : 'Não informado'"></td>
+						<td class="text-center" th:text="${lancamento.contrato.gestor} ? ${lancamento.contrato.gestor.nome} : 'Não informado'"></td>
+						<td class="text-center" th:text="${lancamento} ? |R$ ${{lancamento.valor}}| : 'Não informado'"></td>
+						<td class="text-center" th:text="${lancamento} ? ${#dates.format(lancamento.data, 'dd/MM/yyyy')} : 'Não informado'"></td>
+						<td class="text-center"><div th:switch="${lancamento.processo} ? ${lancamento.processo.pago}" ><span class="label label-success" th:text="'Pago'" th:case="true" ></span><a  target="_blank" th:href="@{/transparenciactb/lancamentos/gerar_pagamento/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" class="btn btn-link btn-xs" th:case="null" ><span class="glyphicon glyphicon-usd">Registrar Pagamento</span></a></div> </td>
+				</tr>
+				
+			<tr>
+				<td colspan="6" th:if="${#lists.isEmpty(ultimoslancamentos_todos_contratos)}"><div style="text-align:center">Nenhum lançamento encontrado</div></td>
 			</tr>
 			</tbody>
 		
@@ -131,8 +230,11 @@
 		<br/>
 		<br/>
 		<br/>
+		</div>
 		
-		<div  class="col-sm-6">
+		
+		
+		<div  class="col-sm-6" th:if="${home_gestor_contratos} == false">
 			<div  data-target="#graficoContratos"></div>
 				<div id="graficoContratos"  th:attr="data-valor=${valorjaneiro} + ',' + ${valorfevereiro} + ',' + ${valormarco} + ',' + ${valorabril} + ',' + ${valormaio} + ',' + ${valorjunho} + ',' + ${valorjulho} + ',' + ${valoragosto} + ',' + ${valorsetembro} + ',' + ${valoroutubro} + ',' + ${valornovembro} + ',' + ${valordezembro}" class="aw-graph-box">
 					<div class="aw-graph-box__header">
@@ -150,9 +252,9 @@
 				</div>
 			</div>
 	
-	<div  class="col-sm-6">
+	<div  class="col-sm-6" th:if="${home_gestor_contratos} == false">
 			<div  data-target="#graficoPagamento"></div>
-				<div id="graficoPagamento"  th:attr="data-pg= ${lancamentospagos} + ',' + ${lancamentosnpagos}" class="aw-graph-box">
+				<div id="graficoPagamento"  th:attr="data-pg= ${lancamentospagos} + ',' + ${lancamentosnpagos}, data-teste=${teste}" class="aw-graph-box">
 					<div class="aw-graph-box__header">
 						<h2 class="aw-graph-box__title">Vendas por origem <small>últimos 6 meses</small></h2>
 					</div>
