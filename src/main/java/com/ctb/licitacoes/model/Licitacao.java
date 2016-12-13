@@ -12,6 +12,7 @@ public class Licitacao {
 	private float valor;
 	private String observacao;
 	private String objeto;
+	
 	public String getNumeroLicitacao() {
 		return numeroLicitacao;
 	}

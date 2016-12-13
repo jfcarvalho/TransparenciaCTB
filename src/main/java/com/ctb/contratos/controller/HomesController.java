@@ -151,7 +151,7 @@ public class HomesController {
 		mv.addObject("ntotal_empresas", contratadas.count());
 		mv.addObject("ntotal_gestores", usuarios.count());
 		mv.addObject("ntotal_lancamentos", lancamentos.count());
-		mv.addObject("teste", contratos.findOne(1));
+	
 		return mv;
 }	
 	@ModelAttribute("permissao")

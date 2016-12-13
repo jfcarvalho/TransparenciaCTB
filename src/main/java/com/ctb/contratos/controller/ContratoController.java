@@ -223,7 +223,7 @@ public class ContratoController {
 	{
 		flagmes = 0;
 		acumuladorValor =new BigDecimal("0.0");
-	
+		acumuladorAditivo = new BigDecimal("0.0");
 		if(i > 0 && i < 10) {
 			periodoAComparar = ano+ "-0"+ Integer.toString(i);
 		}else {periodoAComparar = ano+ "-"+ Integer.toString(i);}

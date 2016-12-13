@@ -15,7 +15,7 @@ public class SegurancaController {
 	public String login(@AuthenticationPrincipal User user) {
 		System.out.println(user);
 		if (user != null) {
-			return "redirect:/transparenciactb/contratos";
+			return "redirect:/transparenciactb/";
 		}
 		
 		return "login";
