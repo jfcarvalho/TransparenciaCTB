@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -51,6 +52,7 @@ public class HomesController {
 		ModelAndView mv = new ModelAndView(HOME_VIEW);		
 		mv.addObject(new HomesController());
 		List<Contrato> contratosgeridos = contratosGeridos();
+		HashMap<String,String> teste = new HashMap<String,String>();
 		Iterator it = contratosgeridos.iterator();
 		BigDecimal acumuladoValorJaneiro = new BigDecimal("0");
 		BigDecimal acumuladoValorFevereiro = new BigDecimal("0");
@@ -69,6 +71,9 @@ public class HomesController {
 		String ano = new String();
 		DateTime date = new DateTime();
 		ano = Integer.toString(date.getYear());
+		teste = contratosVSvalores();
+	
+
 		
 		while(it.hasNext())
 		{
@@ -151,9 +156,36 @@ public class HomesController {
 		mv.addObject("ntotal_empresas", contratadas.count());
 		mv.addObject("ntotal_gestores", usuarios.count());
 		mv.addObject("ntotal_lancamentos", lancamentos.count());
-	
+		//System.out.println(teste.toString());
+		mv.addObject("empresas", teste.toString());
 		return mv;
 }	
+	
+	public HashMap<String, String> contratosVSvalores()
+	{
+		List<Contrato> listaContratos = contratos.findAll();
+		Iterator it = listaContratos.iterator();
+		BigDecimal acumuladoValor = new BigDecimal("0"); 
+		HashMap<String,String> contratosEvalores = new HashMap<String,String>();
+		
+		while(it.hasNext())
+		{
+			Contrato obj = (Contrato) it.next();
+			List<Lancamento> lancamentos = obj.getLancamentos();
+			acumuladoValor = new BigDecimal("0"); 
+			Iterator it2 = lancamentos.iterator();
+			
+			while(it2.hasNext())
+			{
+				Lancamento l = (Lancamento) it2.next();
+				acumuladoValor = acumuladoValor.add(l.getValor());
+			}
+			contratosEvalores.put(obj.getContratado().getNome(), acumuladoValor.toString());
+		
+		}
+			return contratosEvalores;
+	}
+	
 	@ModelAttribute("permissao")
 	public boolean temPermissao() {
 		return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");

@@ -254,7 +254,7 @@
 	
 	<div  class="col-sm-6" th:if="${home_gestor_contratos} == false">
 			<div  data-target="#graficoPagamento"></div>
-				<div id="graficoPagamento"  th:attr="data-pg= ${lancamentospagos} + ',' + ${lancamentosnpagos}, data-teste=${teste}" class="aw-graph-box">
+				<div id="graficoPagamento"  th:attr="data-pg= ${lancamentospagos} + ',' + ${lancamentosnpagos}" class="aw-graph-box">
 					<div class="aw-graph-box__header">
 						<h2 class="aw-graph-box__title">Vendas por origem <small>últimos 6 meses</small></h2>
 					</div>
@@ -270,6 +270,23 @@
 				</div>
 			</div>
 	
+	<div  class="col-sm-6" th:if="${home_gestor_contratos}">
+			<div  data-target="#graficoEmpresas"></div>
+				<div id="graficoEmpresas"  th:attr="data-empresas= ${empresas}">
+					<div class="aw-graph-box__header">
+						<h2 class="aw-graph-box__title">Vendas por origem <small>últimos 6 meses</small></h2>
+					</div>
+					<div class="aw-graph-box__content">
+						<div class="aw-graph-box__no-data">
+							<!--   <i class="fa  fa-line-chart  fa-2x"></i>
+							<span>Não há dados</span> -->
+						</div>
+						<div>
+							<canvas id="graficoValorEmpresas" height="180" ></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
 		
 </div>
 
