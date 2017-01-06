@@ -41,6 +41,7 @@ import com.ctb.contratos.repository.Contratados;
 import com.ctb.contratos.repository.Contratos;
 import com.ctb.contratos.repository.Lancamentos;
 import com.ctb.contratos.repository.Processos;
+import com.ctb.security.AppUserDetailsService;
 
 @Controller
 @RequestMapping("/transparenciactb/lancamentos")
@@ -115,14 +116,7 @@ public class LancamentoController {
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
 		Contrato c = contratos.findOne(lancamento_id_contrato);
 		lancamento.setLiquidado(false);
-		/*
-		if(lancamento_id_processo != null)
-		{
-			Processo processo = processos.findOne(lancamento_id_processo);
-			lancamento.setProcesso(processo);
-		}
-		*/
-		//System.out.println(lancamento_id_contrato);
+		
 	
 		if(lancamento_id_contrato != null)
 		{
@@ -188,22 +182,29 @@ public class LancamentoController {
         
         Comparator<Lancamento> cmp = new Comparator<Lancamento>() {
 	        public int compare(Lancamento l1, Lancamento l2) {
-	          return l2.getData().compareTo(l1.getData());
+	          return l1.getData().compareTo(l2.getData());
 	        }
 	    };
-List<Lancamento> lancamentosOrdenados = criteria.list();
-lancamentosOrdenados.sort(cmp);
+	    /*
+    	Comparator<Lancamento> cmp = new Comparator<Lancamento>() {
+	        public int compare(Lancamento l1, Lancamento l2) {
+	          return l2.getId_lancamento().compareTo(l1.getId_lancamento());
+	        }
+	    };
+	    */
+	    List<Lancamento> lancamentosOrdenados = criteria.list();
+	    lancamentosOrdenados.sort(cmp);
 		//criteria.add(Restrictions.eq("contrato", c));
 		
 		List<Lancamento> lanc= c.getLancamentos();
 		Page<Lancamento> pags = new PageImpl<Lancamento>(lancamentosOrdenados, pageable, lanc.size());
+	
 		//Page<Lancamento> lancamentos = criteria.list();
 		System.out.println(criteria);
 		//c.getLancamentos();
 		mv.addObject("todosLancamentos",pags);
 		mv.addObject("contrato", c);
-	
-	return mv;
+		return mv;
 	}
 	
 	@RequestMapping("/gerar_edicao_lancamento/{id_lancamento}")
@@ -228,8 +229,8 @@ lancamentosOrdenados.sort(cmp);
 		ModelAndView mv = new ModelAndView(EDICAO_VIEW);
 		Contrato c = contratos.findOne(lancamento_id_contrato);
 		lancamento.setContrato(c);
-		Lancamento lancamentoAntigo = lancamentos.findOne(lancamento.getId_lancamento());
-		BigDecimal novoValor = c.getSaldo_contrato();
+		//Lancamento lancamentoAntigo = lancamentos.findOne(lancamento.getId_lancamento());
+	/*	BigDecimal novoValor = c.getSaldo_contrato();
 		novoValor = novoValor.add(lancamentoAntigo.getValor());
 		novoValor = novoValor.subtract(lancamento.getValor());
 		c.setSaldo_contrato(novoValor);
@@ -253,7 +254,7 @@ lancamentosOrdenados.sort(cmp);
 			novoValorAditivo.subtract(lancamento.getValor_aditivo());
 			c.setSaldo_contrato(novoValorAditivo);
 		}
-		
+		*/
 		lancamentos.save(lancamento);
 		recalcularSaldos(lancamento.getContrato());
 		mv.addObject("mensagem", "Lançamento editado com sucesso");
@@ -277,55 +278,40 @@ lancamentosOrdenados.sort(cmp);
 		BigDecimal zero = new BigDecimal("0");
 		Iterator it = lanc.iterator();
 		BigDecimal acumuladorValor = new BigDecimal("0");
-		BigDecimal valorAditivo = new BigDecimal("0");
+		BigDecimal acumuladorAditivo = new BigDecimal("0");
 		BigDecimal saldoCalculado = new BigDecimal("0");
+		
 		Comparator<Lancamento> cmp = new Comparator<Lancamento>() {
 	        public int compare(Lancamento l1, Lancamento l2) {
-	          return l1.getData().compareTo(l2.getData());
+	          return l1.getId_lancamento().compareTo(l2.getId_lancamento());
 	        }
 	    };
 	    Collections.sort(lanc, cmp);
-	
-		//Zerando o saldo de todos os lancamentos
 		while(it.hasNext())
 		{
 			Lancamento obj = (Lancamento) it.next();
 			obj.setSaldo_contrato(zero);
 		}
-		//recalculando o saldo
 		Iterator it2 = lanc.iterator();
+		c.setSaldo_contrato(c.getValor_contrato());
 		while(it2.hasNext())
 		{
 			Lancamento obj = (Lancamento) it2.next();
 			acumuladorValor = acumuladorValor.add(obj.getValor());
-			if(lanc.indexOf(obj) == 0)
-			{
-				BigDecimal saldo = c.getValor_contrato();
-				saldo = saldo.subtract(obj.getValor());
 				if(obj.getPossui_aditivo() == true) {
-					 valorAditivo = obj.getValor_aditivo();
-					 //valorAditivo = valorAditivo.subtract(obj.getValor());
-					//obj.setSaldo_contrato(valorAditivo);
-					 saldo = saldo.add(valorAditivo);
+					 acumuladorAditivo = acumuladorAditivo.add(obj.getValor_aditivo());
 				}
-				obj.setSaldo_contrato(saldo);
-			}
-			else {
-				BigDecimal saldo = c.getValor_contrato();
-				BigDecimal op = new BigDecimal("0");
-				
+				saldoCalculado = saldoCalculado.add(c.getValor_contrato());
+				saldoCalculado = saldoCalculado.subtract(acumuladorValor);
+				saldoCalculado = saldoCalculado.add(acumuladorAditivo);
+				obj.setSaldo_contrato(saldoCalculado);
+				saldoCalculado = c.getSaldo_contrato();
+				saldoCalculado = saldoCalculado.subtract(obj.getValor());
 				if(obj.getPossui_aditivo() == true) {
-					 valorAditivo = obj.getValor_aditivo();
-			//		 valorAditivo = valorAditivo.subtract(obj.getValor());	 
-				}
-				op = op.add(saldo);
-				op = op.subtract(acumuladorValor);
-				op = op.add(valorAditivo);
-				obj.setSaldo_contrato(op);
-				
+					saldoCalculado = saldoCalculado.add(obj.getValor_aditivo());
 			}
+				c.setSaldo_contrato(saldoCalculado);
 		}
-		//c.setLancamentos(lanc);
 		lancamentos.save(lanc);
 		contratos.save(c);
 		
@@ -414,6 +400,11 @@ public List<TipoAditivo> todosAditivos() {
 private Long total(Criteria criteria) {
 	criteria.setProjection(Projections.rowCount());
 	return (Long) criteria.uniqueResult();
+}
+
+@ModelAttribute("permissao")
+public boolean temPermissao() {
+	return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
 }
 
 }

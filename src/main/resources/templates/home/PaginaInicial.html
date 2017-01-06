@@ -331,7 +331,7 @@ function excluir() {
 <script src="/layout/javascripts/jquery.maskMoney.min.js"></script>
 <script src="/layout/javascripts/jquery.maskMoney.js"></script>
 <script src="/layout/javascripts/Chart.min.js"></script>
-<script src="/layout/javascripts/ctb.js"></script>
-
+<script th:if="!${permissao}" src="/layout/javascripts/ctb.js"></script>
+<script th:if="${permissao}" src="/layout/javascripts/ctb_home_gestor.js"></script>
 </body>
 </html>

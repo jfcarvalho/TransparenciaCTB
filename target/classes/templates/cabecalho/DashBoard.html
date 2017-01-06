@@ -15,7 +15,7 @@
       <ul class="aw-menu__list">
 
         <li class="aw-menu__item">
-          <a href="dashboard.html"><i class="fa  fa-fw  fa-home"></i><span>Home</span></a>
+          <a href="/transparenciactb/"><i class="fa  fa-fw  fa-home"></i><span>Home</span></a>
         </li>
 
         <li class="aw-menu__item">
@@ -36,19 +36,21 @@
           </ul>
         </li>
         
-    	 <li class="aw-menu__item">
+        
+    	 <li class="aw-menu__item" >
           <a href="#">
             <i class="fa  fa-fw  fa-file-text"></i><span>Processos</span>
             <i class="aw-menu__navigation-icon  fa"></i>
           </a>
       
           <ul class="aw-menu__list  aw-menu__list--sublist">
-            <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/processos/novo">Cadastro de processos</a></li>
+            <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/processos/novo" th:if="${permissao}">Cadastro de processos</a></li>
            <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/processos/">Pesquisa de processos</a></li>
           </ul>
         </li>
         
-         <li class="aw-menu__item">
+        
+         <li class="aw-menu__item" th:if="${permissao}">
           <a href="#">
             <i class="fa  fa-fw  fa-file-text"></i><span>Licitações</span>
             <i class="aw-menu__navigation-icon  fa"></i>
@@ -61,7 +63,7 @@
           </ul>
         </li>
         
-           <li class="aw-menu__item">
+           <li class="aw-menu__item" th:if="${permissao}">
           <a href="#">
             <i class="fa  fa-fw  fa-file-text"></i><span>Despesas e Transferências</span>
             <i class="aw-menu__navigation-icon  fa"></i>

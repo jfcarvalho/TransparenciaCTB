@@ -54,7 +54,7 @@ public class ContratadoController {
 			return mv;
 		}
 		contratados.save(contratado);		
-		attributes.addFlashAttribute("mensagem", "Empresa contratada salva com sucesso!");	
+		mv.addObject("mensagem", "Empresa contratada salva com sucesso!");	
 		return mv;
 	}
 	

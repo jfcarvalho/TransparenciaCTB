@@ -75,6 +75,7 @@ public class ContratoController {
 	private static final String VISUALIZAR_VIEW = "/visualizacao/VisualizarContrato";
 	private static final String RESUMO_VIEW = "/visualizacao/ResumoContrato";
 	private static final String GERARRESUMO_VIEW = "/visualizacao/GerarResumoContrato";
+	private static final String RELATORIOTCE_VIEW = "/visualizacao/RelatorioTCE";
 	private static final String GERARRESUMOCONSIGNADO_VIEW = "/visualizacao/GerarResumoConsignadoContrato";
 	private static final String RESUMOCONSIGNADO_VIEW = "/visualizacao/ResumoConsignadoContrato";
 	private static final String EDICAOINFORMACOES_VIEW = "/edicao/EdicaoContratoInformacoes";
@@ -117,6 +118,13 @@ public class ContratoController {
 		ModelAndView mv = new ModelAndView(GERARRESUMO_VIEW);
 		Contrato c = contratos.findOne(Id_contrato);
 		mv.addObject("contrato", c);
+		return mv;
+	}
+	
+	@RequestMapping("/relatorio_tce")
+	public ModelAndView gerarTCE()
+	{
+		ModelAndView mv = new ModelAndView(RELATORIOTCE_VIEW);
 		return mv;
 	}
 	
@@ -622,6 +630,7 @@ public class ContratoController {
 		//Usuario usuario = usuarios.findOne(id_usuario);
 		
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
+		
 		mv.addObject("su", contrato);
 		mv.addObject(contrato);
 		return mv;
@@ -685,6 +694,7 @@ public class ContratoController {
 		contratobd.setObjeto(contratoform.getObjeto());
 		contratobd.setRecurso(contratoform.getRecurso());
 		contratobd.setValor_contrato(contratoform.getValor_contrato());
+		contratobd.setSaldo_contrato(contratoform.getValor_contrato());
 		contratobd.setUso(contratoform.getUso());
 		contratobd.setDuracao_meses(contratoform.getDuracao_meses());
 		contratobd.setVencimento_garantia(contratoform.getVencimento_garantia());
@@ -692,8 +702,12 @@ public class ContratoController {
 		contratobd.setData_vencimento(contratoform.getData_vencimento());
 		contratobd.setNomeResponsavel(contratoform.getNomeResponsavel());
 		contratobd.setCpfResponsavel(contratoform.getCpfResponsavel());
+	
 		
 		contratos.save(contratobd);
+		LancamentoController c = new LancamentoController();
+		c.recalcularSaldos(contratobd);
+		
 		attributes.addFlashAttribute("mensagem", "Contrato salvo com sucesso!");	
 		return "redirect:/transparenciactb/contratos/novo";
 		
