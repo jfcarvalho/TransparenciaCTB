@@ -81,6 +81,10 @@ public class Contrato {
 	private String nomeResponsavel;
 	@Size(min=2, max=30, message="Tamanho do campo objeto deve ser entre 1 e 50")
 	private String cpfResponsavel;
+	private boolean [] avisos_dias;
+	@OneToOne
+	@JoinColumn(name="contrato_id_processo")
+	private Processo processo; //Processo de renovação
 		
 	
 	public Integer getId_contrato()
@@ -267,5 +271,19 @@ public class Contrato {
 	public void setValor_contrato(BigDecimal valor_contrato) {
 		this.valor_contrato = valor_contrato;
 	}
+	public boolean [] getAvisos_dias() {
+		return avisos_dias;
+	}
+	public void setAvisos_dias(boolean [] avisos_dias) {
+		this.avisos_dias = avisos_dias;
+	}
+	public Processo getProcesso() {
+		return processo;
+	}
+	public void setProcesso(Processo processo) {
+		this.processo = processo;
+	}
+	
+	
 	
 }

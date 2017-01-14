@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+
+
+<body>
+
+<i><h4>Senhor(a) Gestor(a), o(s) seguinte(s) contrato(s) está(ão) para vencer daqui a 90 dias</h4></i>
+
+<table style="width: 100%; border-collapse: collapse;  margin: 20px 0">
+	<thead>
+				<tr>
+				<th class="text-center col-md-2">Numero</th>
+				<th class="text-center col-md-2">Empresa</th>
+				<th class="text-center col-md-2">Data de vencimento</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="contrato : ${vencimento90dias}">
+					<td class="text-center" th:text="${contrato} ? ${contrato.numero} : 'Nãoo informado'"></td>
+				  	<td class="text-center" th:text="${contrato.contratado} ? ${contrato.contratado.nome} : 'Não informado'"></td> 
+					<td class="text-center" th:text="${contrato} ? ${#dates.format(contrato.data_vencimento, 'dd/MM/yyyy')}  : 'Não informado'"></td>
+				
+				</tr>
+				
+			<tr>
+				<td colspan="6" th:if="${#lists.isEmpty(vencimento90dias)}"><div style="text-align:center">Nenhum contrato com vencimento em 90 dias ou menos encontrado</div></td>
+			</tr>
+			</tbody>
+			
+	<!--  	<th:block>
+			<tr style="border-bottom: 1px solid #ccc; border-top: 1px solid #ccc">
+				<td style="vertical-align: top; padding-bottom: 10px; padding-top: 10px">
+					<div style="display: block; font-weight: bold; font-size: 16px">000x/201x - Nome da Empresa</div>
+					<div style="color: #8e8e8e">Objeto do Contrato</div>
+					<div style="color: #8e8e8e">Saldo: R$1.000,90</div>
+					<div style="color: #8e8e8e">Valor total: R$1.000,90</div>
+				</td>
+				<td style="vertical-align: top; text-align: right; padding-bottom: 10px; padding-top: 10px">
+					<span style="display: block; font-weight: bold; font-size: 16px">Data de vencimento: 20/04/2017</span>
+				</td>
+			</tr>
+			
+			<th:block th:if="${false}">
+				<tr style="border-bottom: 1px solid #ccc; border-top: 1px solid #ccc">
+					<td style="width: 50px; padding-bottom: 10px; padding-top: 10px">
+						<img style="width: 40px" src="../../static/images/cerveja-mock.png" />
+					</td>
+					<td style="vertical-align: top; padding-bottom: 10px; padding-top: 10px">
+						<div style="display: block; font-weight: bold; font-size: 16px">Heineken</div>
+						<div style="color: #8e8e8e">Internacional</div>
+						<div style="color: #8e8e8e">450 x R$3,93</div>
+					</td>
+					<td style="vertical-align: top; text-align: right; padding-bottom: 10px; padding-top: 10px">
+						<span style="display: block; font-weight: bold; font-size: 16px">R$1.768,50</span>
+					</td>
+				</tr>
+			</th:block>
+		</th:block>
+		-->
+</table>
+
+<h5>Favor entrar com processo</h5>
+
+</body>
+
+</html>

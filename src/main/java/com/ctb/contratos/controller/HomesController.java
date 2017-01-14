@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ctb.Mailer;
 import com.ctb.contratos.model.Contratado;
 import com.ctb.contratos.model.Contrato;
 import com.ctb.contratos.model.Lancamento;
@@ -32,6 +33,8 @@ import com.ctb.security.AppUserDetailsService;
 
 @Controller
 @RequestMapping("/transparenciactb/")
+
+
 public class HomesController {
 	private String HOME_VIEW = "/home/PaginaInicial";
 	
@@ -45,6 +48,8 @@ public class HomesController {
 	private Lancamentos lancamentos;
 	@Autowired
 	private Contratados contratadas;
+	@Autowired
+	private Mailer mailer;
 	
 	@RequestMapping(method=RequestMethod.GET)
 	public ModelAndView index()
@@ -73,7 +78,10 @@ public class HomesController {
 		ano = Integer.toString(date.getYear());
 		teste = contratosVSvalores();
 	
-
+		//mailer.enviar_vencimento_gestor(vencimento90_todos());
+		//mailer.pegarContrato();
+		
+		
 		
 		while(it.hasNext())
 		{
@@ -186,6 +194,61 @@ public class HomesController {
 			return contratosEvalores;
 	}
 	
+	public Integer checarVetorAvisos(Contrato c)
+	{
+		int i=0;
+		while  (i < c.getAvisos_dias().length)
+		{
+			if(c.getAvisos_dias()[i] == true)
+			{
+				return i;
+			}
+			i++;
+		}
+		return i;
+	}
+	
+	public void checarAvisosContratos(List<Contrato> ct)
+	{
+		for(Contrato aux: ct)
+		{
+			if(aux.getProcesso() == null) //Ou seja, se o processo de renovação ou para elaboração de uma nova licitação não for aberto ainda
+			{
+				Integer dias = checarVetorAvisos(aux);
+				switch (dias)
+				{
+					case 0:
+							//Enviar mensagem com 90 dias
+					break;
+					
+					case 1:
+						//Enviar mensagem com 85 dias
+					break;
+					
+					case 2:
+						//Enviar mensagem com 80 dias
+					break;
+					
+					case 3:
+						//Enviar mensagem com 75 dias
+					break;
+					
+					case 4:
+						//Enviar mensagem com 70
+					break;
+					
+					case 5:
+						//Enviar mensagem com 65 dias
+					break;
+					
+					case 6:
+						//Enviar mensagem com 60 dias
+					break;
+				}
+			}
+		}
+	}
+	
 	@ModelAttribute("permissao")
 	public boolean temPermissao() {
 		return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
@@ -217,6 +280,8 @@ public class HomesController {
 		return contratosGeridos;
 	
 	}
+	
+	
 	
 	@ModelAttribute("ultimoslancamentos")
 	public List<Lancamento> ultimosLancamentos()
@@ -478,4 +543,5 @@ public class HomesController {
 		return nomes;
 	}
 	
+		
 }
