@@ -535,6 +535,7 @@ public class ContratoController {
 		contrato.setFiscal(fiscal);
 		contrato.setGestor(gestor);
 		contrato.setSaldo_contrato(contrato.getValor_contrato());
+		contrato.setAvisos_dias(criar_vetor_booleano());
 		
 		Date dataAtual = new Date();
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -862,6 +863,19 @@ public class ContratoController {
 	@ModelAttribute("permissao")
 	public boolean temPermissao() {
 		return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
+	}
+
+
+	public boolean[] criar_vetor_booleano()
+	{
+		boolean[] novo_vetor = new boolean[7];
+		for(int i=0; i < novo_vetor.length; i++)
+		{
+			novo_vetor[i] = false;
+		}
+		
+		return novo_vetor;
+	
 	}
 	
 	

@@ -4,7 +4,7 @@
 
 <body>
 
-<i><h4>Senhor(a) Gestor(a), o(s) seguinte(s) contrato(s) está(ão) para vencer daqui a 90 dias</h4></i>
+<i><h4>Senhor(a) Gestor(a), o(s) seguinte(s) contrato(s) está(ão) para vencer daqui a <span th:text="${dias}"></span> dias</h4></i>
 
 <table style="width: 100%; border-collapse: collapse;  margin: 20px 0">
 	<thead>
@@ -15,7 +15,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="contrato : ${vencimento90dias}">
+				<tr th:each="contrato : ${vencimentoXdias}">
 					<td class="text-center" th:text="${contrato} ? ${contrato.numero} : 'Nãoo informado'"></td>
 				  	<td class="text-center" th:text="${contrato.contratado} ? ${contrato.contratado.nome} : 'Não informado'"></td> 
 					<td class="text-center" th:text="${contrato} ? ${#dates.format(contrato.data_vencimento, 'dd/MM/yyyy')}  : 'Não informado'"></td>
@@ -23,7 +23,7 @@
 				</tr>
 				
 			<tr>
-				<td colspan="6" th:if="${#lists.isEmpty(vencimento90dias)}"><div style="text-align:center">Nenhum contrato com vencimento em 90 dias ou menos encontrado</div></td>
+				<td colspan="6" th:if="${#lists.isEmpty(vencimentoXdias)}"><div style="text-align:center">Nenhum contrato com vencimento em 90 dias ou menos encontrado</div></td>
 			</tr>
 			</tbody>
 			

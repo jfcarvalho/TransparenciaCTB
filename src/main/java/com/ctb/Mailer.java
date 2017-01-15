@@ -46,12 +46,13 @@ public class Mailer {
 	private Contratados contratados;
 	
 	@Async
-	public void enviar_vencimento_gestor(List<Contrato> lc)
+	public void enviar_vencimento_gestor(List<Contrato> lc, String Email, Integer dias)
 	{
 		
 		
 		Context context = new Context();
-		context.setVariable("vencimento90dias", lc);
+		context.setVariable("vencimentoXdias", lc);
+		context.setVariable("dias", dias);
 		String email = thymeleaf.process("mail/ContratosAVencer", context);
 		try {
 			MimeMessage mimeMessage = mailSender.createMimeMessage();

@@ -5,5 +5,5 @@ import java.util.List;
 import com.ctb.contratos.model.Contrato;
 
 public interface ContratosInterface {
-	public List<Contrato> vencimento90_todos();
+	public boolean[] criar_vetor_booleano();
 }
