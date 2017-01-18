@@ -180,7 +180,17 @@
 					<option th:each="contratado : ${todosContratados}" th:value="${contratado.id_contratado}" th:text="${contratado.nome}" th:selected="${contrato.contratado} ? ${contratado.id_contratado} == ${contrato.contratado.id_contratado}"></option>
 				</select>
 			</div>
+		</div>
+		
+		<div class="form-group">
+			<label for="arquitetura" class="col-sm-2 control-label">Licitacao:</label>
+			<div class="col-sm-4">
+				<select class="form-control" name="contrato_id_licitacao">
+					<option th:each="licitacao : ${todasLicitacoes}" th:value="${licitacao.id_licitacao}" th:text="${licitacao.numero}" ></option>
+				</select>
+			</div>
 		</div>	    
+			    
 		
 		<div class="form-group" th:classappend="${#fields.hasErrors('nomeResponsavel')} ? has-error">
 			<label for="cnpj" class="col-sm-2 control-label">Nome do responsável:</label>
@@ -195,6 +205,7 @@
 				<input type="text" class="form-control" id="cpfResponsavel" name="cpfResponsavel" th:field="*{cpfResponsavel}" />
 			</div>
 		</div>
+		
 			<div class="form-group">
      		<div class="col-sm-offset-2 col-sm-10">
 				<button type="submit" class="btn btn-primary">Cadastrar</button>

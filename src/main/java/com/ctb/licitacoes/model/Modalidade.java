@@ -10,11 +10,19 @@ public enum Modalidade {
 	TomadaDePreco("Tomada de Preço"),
 	Leilao("Leilão");
 	
-	private String modalidade;
+	private String descricao;
 	
-	Modalidade(String modalidade)
+	Modalidade(String descricao)
 	{
-		this.modalidade = modalidade;
+		this.setDescricao(descricao);
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 	
 }

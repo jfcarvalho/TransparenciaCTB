@@ -55,7 +55,7 @@ public class HomesController {
 	public ModelAndView index()
 	{
 		ModelAndView mv = new ModelAndView(HOME_VIEW);		
-		checarAvisosContratos(contratos.findAll());
+		//checarAvisosContratos(contratos.findAll());
 		mv.addObject(new HomesController());
 		List<Contrato> contratosgeridos = contratosGeridos();
 		HashMap<String,String> teste = new HashMap<String,String>();
@@ -226,100 +226,143 @@ public class HomesController {
 		return i;
 	}
 	
-	public void checarAvisosContratos(List<Contrato> ct)
+	public void checarAvisosContratos(List<Usuario> users)
 	{
-		for(Contrato aux: ct)
-		{
-			if(aux.getProcesso() == null && dias_vencimento(aux) <= 90) //Ou seja, se o processo de renovação ou para elaboração de uma nova licitação não for aberto ainda
+		for(Usuario user: users) {
+			List<Contrato> cts = user.getContratosGeridos();
+			List<Contrato> ct_xvencimento90 = new ArrayList<Contrato>();
+			List<Contrato> ct_xvencimento85 = new ArrayList<Contrato>();
+			List<Contrato> ct_xvencimento80 = new ArrayList<Contrato>();
+			List<Contrato> ct_xvencimento75 = new ArrayList<Contrato>();
+			List<Contrato> ct_xvencimento70 = new ArrayList<Contrato>();
+			List<Contrato> ct_xvencimento65 = new ArrayList<Contrato>();
+			List<Contrato> ct_xvencimento60 = new ArrayList<Contrato>();
+			if(ct_xvencimento90.size() > 0)
 			{
-				Integer dias = checarVetorAvisos(aux);
-			//	boolean [] avisos_dias = criar_vetor_booleano();
-				switch (dias)
-				{
-					
-					case 1:
-						//Enviar mensagem com 85 dias
-						List<Contrato> ct_xvencimento85 = vencimentoX(85, aux.getGestor().getId_usuario());
-						if(ct_xvencimento85.size() > 0 ) {
-							mailer.enviar_vencimento_gestor(ct_xvencimento85, aux.getGestor().getEmail(), 85);
-							avisos_dias[1] = true;
-							aux.setAvisos_dias(avisos_dias);
-							contratos.save(ct_xvencimento85);
-						}
-					break;
-					
-					case 2:
-						List<Contrato> ct_xvencimento80 = vencimentoX(80, aux.getGestor().getId_usuario());
-						if(ct_xvencimento80.size() > 0 ) {
-							mailer.enviar_vencimento_gestor(ct_xvencimento80, aux.getGestor().getEmail(), 80);
-							avisos_dias[2] = true;
-							aux.setAvisos_dias(avisos_dias);
-							contratos.save(ct_xvencimento80);
-						}
-						//Enviar mensagem com 80 dias
-					break;
-					
-					case 3:
-						//Enviar mensagem com 75 dias
-						List<Contrato> ct_xvencimento75 = vencimentoX(75, aux.getGestor().getId_usuario());
-						if(ct_xvencimento75.size() > 0 ) {
-							mailer.enviar_vencimento_gestor(ct_xvencimento75, aux.getGestor().getEmail(), 75);
-							avisos_dias[3] = true;
-							aux.setAvisos_dias(avisos_dias);
-							contratos.save(ct_xvencimento75);
-						}
-					break;
-					
-					case 4:
-						//Enviar mensagem com 70
-						List<Contrato> ct_xvencimento70 = vencimentoX(70, aux.getGestor().getId_usuario());
-						if(ct_xvencimento70.size() > 0 ) {
-							mailer.enviar_vencimento_gestor(ct_xvencimento70, aux.getGestor().getEmail(), 70);
-							avisos_dias[4] = true;
-							aux.setAvisos_dias(avisos_dias);
-							contratos.save(ct_xvencimento70);
-						}
-					break;
-					
-					case 5:
-						//Enviar mensagem com 65 dias
-						
-						List<Contrato> ct_xvencimento65 = vencimentoX(65, aux.getGestor().getId_usuario());
-						if(ct_xvencimento65.size() > 0 ) {
-							mailer.enviar_vencimento_gestor(ct_xvencimento65, aux.getGestor().getEmail(), 65);
-							avisos_dias[5] = true;
-							aux.setAvisos_dias(avisos_dias);
-							contratos.save(ct_xvencimento65);
-						}
-					break;
-					
-					case 6:
-						//Enviar mensagem com 60 dias
-						
-							List<Contrato> ct_xvencimento60 = vencimentoX(60, aux.getGestor().getId_usuario());
-							if(ct_xvencimento60.size() > 0 ) {
-								mailer.enviar_vencimento_gestor(ct_xvencimento60, aux.getGestor().getEmail(), 60);
-								avisos_dias[6] = true;
-								aux.setAvisos_dias(avisos_dias);
-								contratos.save(ct_xvencimento60);
-						}
-						break;
-					
-					case 7:
-						//Enviar mensagem com 90 dias
-						List<Contrato> ct_xvencimento90 = vencimentoX(90, aux.getGestor().getId_usuario());
-						if(ct_xvencimento90.size() > 0 ) {
-							mailer.enviar_vencimento_gestor(ct_xvencimento90, aux.getGestor().getEmail(), 90);
-							avisos_dias[0] = true;
-							aux.setAvisos_dias(avisos_dias);
-							contratos.save(ct_xvencimento90);
-						}
-						break;
-					}
+				
 			}
+			if(ct_xvencimento85.size() > 0)
+			{
+				
+			}
+			if(ct_xvencimento80.size() > 0)
+			{
+				
+			}
+			if(ct_xvencimento75.size() > 0)
+			{
+				
+			}
+			if(ct_xvencimento70.size() > 0)
+			{
+				
+			}
+			if(ct_xvencimento65.size() > 0)
+			{
+				
+			}
+			if(ct_xvencimento60.size() > 0)
+			{
+				
+			}
+			
+			for(Contrato aux: cts)
+			{
+				if(aux.getProcesso() == null && dias_vencimento(aux) <= 90) //Ou seja, se o processo de renovação ou para elaboração de uma nova licitação não for aberto ainda
+				{
+					Integer dias = checarVetorAvisos(aux);
+				//	boolean [] avisos_dias = criar_vetor_booleano();
+					switch (dias)
+					{
+						
+						case 1:
+							//Enviar mensagem com 85 dias
+					//		List<Contrato> ct_xvencimento85 = vencimentoX(85, aux.getGestor().getId_usuario());
+							ct_xvencimento85 = vencimentoX(85, aux.getGestor().getId_usuario());
+						//	if(ct_xvencimento85.size() > 0 ) {
+							//	mailer.enviar_vencimento_gestor(ct_xvencimento85, aux.getGestor().getEmail(), 85);
+							//	avisos_dias[1] = true;
+						//		aux.setAvisos_dias(avisos_dias);
+						//		contratos.save(ct_xvencimento85);
+						//	}
+						break;
+						
+						case 2:
+							ct_xvencimento80 = vencimentoX(80, aux.getGestor().getId_usuario());
+							/*if(ct_xvencimento80.size() > 0 ) {
+								mailer.enviar_vencimento_gestor(ct_xvencimento80, aux.getGestor().getEmail(), 80);
+								avisos_dias[2] = true;
+								aux.setAvisos_dias(avisos_dias);
+								contratos.save(ct_xvencimento80);
+							}*/
+							//Enviar mensagem com 80 dias
+						break;
+						
+						case 3:
+							//Enviar mensagem com 75 dias
+						    ct_xvencimento75 = vencimentoX(75, aux.getGestor().getId_usuario());
+							/*if(ct_xvencimento75.size() > 0 ) {
+								mailer.enviar_vencimento_gestor(ct_xvencimento75, aux.getGestor().getEmail(), 75);
+								avisos_dias[3] = true;
+								aux.setAvisos_dias(avisos_dias);
+								contratos.save(ct_xvencimento75);
+							}
+							*/
+						break;
+						
+						case 4:
+							//Enviar mensagem com 70
+							ct_xvencimento70 = vencimentoX(70, aux.getGestor().getId_usuario());
+							/*if(ct_xvencimento70.size() > 0 ) {
+								mailer.enviar_vencimento_gestor(ct_xvencimento70, aux.getGestor().getEmail(), 70);
+								avisos_dias[4] = true;
+								aux.setAvisos_dias(avisos_dias);
+								contratos.save(ct_xvencimento70);
+							}
+							*/
+						break;
+						
+						case 5:
+							//Enviar mensagem com 65 dias
+							
+							ct_xvencimento65 = vencimentoX(65, aux.getGestor().getId_usuario());
+							/*if(ct_xvencimento65.size() > 0 ) {
+								mailer.enviar_vencimento_gestor(ct_xvencimento65, aux.getGestor().getEmail(), 65);
+								avisos_dias[5] = true;
+								aux.setAvisos_dias(avisos_dias);
+								contratos.save(ct_xvencimento65);
+							}*/
+						break;
+						
+						case 6:
+							//Enviar mensagem com 60 dias
+							
+								ct_xvencimento60 = vencimentoX(60, aux.getGestor().getId_usuario());
+								/*if(ct_xvencimento60.size() > 0 ) {
+									mailer.enviar_vencimento_gestor(ct_xvencimento60, aux.getGestor().getEmail(), 60);
+									avisos_dias[6] = true;
+									aux.setAvisos_dias(avisos_dias);
+									contratos.save(ct_xvencimento60);
+							}
+							*/
+							break;
+						
+						case 7:
+							//Enviar mensagem com 90 dias
+							ct_xvencimento90 = vencimentoX(90, aux.getGestor().getId_usuario());
+							/*if(ct_xvencimento90.size() > 0 ) {
+								mailer.enviar_vencimento_gestor(ct_xvencimento90, aux.getGestor().getEmail(), 90);
+								avisos_dias[0] = true;
+								aux.setAvisos_dias(avisos_dias);
+								contratos.save(ct_xvencimento90);
+							}
+							*/
+							break;
+						}
+					}
+				}
 		}
-	}
-	
+}
 	public boolean[] criar_vetor_booleano()
 	{
 		boolean[] novo_vetor = new boolean[7];

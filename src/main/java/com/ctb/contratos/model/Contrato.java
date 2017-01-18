@@ -85,7 +85,11 @@ public class Contrato {
 	@OneToOne
 	@JoinColumn(name="contrato_id_processo")
 	private Processo processo; //Processo de renovação
-		
+	
+	@OneToOne
+	@JoinColumn(name="contrato_id_licitacao")
+	private Licitacao licitacao; //Processo de renovação
+	
 	
 	public Integer getId_contrato()
 	{
@@ -282,6 +286,16 @@ public class Contrato {
 	}
 	public void setProcesso(Processo processo) {
 		this.processo = processo;
+	}
+	
+	public Licitacao getLicitacao()
+	{
+		return this.licitacao;
+	}
+	
+	public void setLicitacao(Licitacao licitacao)
+	{
+		this.licitacao = licitacao;
 	}
 	
 	

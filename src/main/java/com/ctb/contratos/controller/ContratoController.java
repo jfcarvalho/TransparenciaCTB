@@ -45,8 +45,10 @@ import com.ctb.contratos.model.Usuario;
 import com.ctb.contratos.repository.Contratados;
 import com.ctb.contratos.repository.Contratos;
 import com.ctb.contratos.repository.Lancamentos;
+import com.ctb.contratos.repository.Licitacoes;
 import com.ctb.contratos.repository.Processos;
 import com.ctb.contratos.repository.Usuarios;
+import com.ctb.licitacoes.model.Licitacao;
 import com.ctb.security.UsuarioSistema;
 import com.ctb.security.AppUserDetailsService;
 
@@ -100,6 +102,9 @@ public class ContratoController {
 	
 	@Autowired
 	private Processos processos;
+	
+	@Autowired
+	private Licitacoes licitacoes;
 	
 	
 	@RequestMapping("/novo")
@@ -517,7 +522,7 @@ public class ContratoController {
 	}
 			
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView salvar(@Validated Contrato contrato, @RequestParam Integer contrato_id_gestor, @RequestParam Integer contrato_id_fiscal, @RequestParam Integer contrato_id_contrato, RedirectAttributes attributes, Errors errors)
+	public ModelAndView salvar(@Validated Contrato contrato, @RequestParam Integer contrato_id_gestor, @RequestParam Integer contrato_id_fiscal, @RequestParam Integer contrato_id_licitacao,@RequestParam Integer contrato_id_contrato, RedirectAttributes attributes, Errors errors)
 	{
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
 		if(errors.hasErrors())
@@ -528,6 +533,7 @@ public class ContratoController {
 		Contratado empresa = contratados.findOne(contrato_id_contrato);
 		Usuario gestor = usuarios.findOne(contrato_id_gestor);
 		Usuario fiscal = usuarios.findOne(contrato_id_fiscal);
+		Licitacao licitacao = licitacoes.findOne(contrato_id_licitacao);
 		
 		
 		System.out.println(contrato.getValor_contrato());
@@ -536,6 +542,7 @@ public class ContratoController {
 		contrato.setGestor(gestor);
 		contrato.setSaldo_contrato(contrato.getValor_contrato());
 		contrato.setAvisos_dias(criar_vetor_booleano());
+		contrato.setLicitacao(licitacao);
 		
 		Date dataAtual = new Date();
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -845,6 +852,12 @@ public class ContratoController {
 		return contratos.findAll();
 	}
 	
+	@ModelAttribute("todasLicitacoes")
+	public List<Licitacao> todasLicitacoes()
+	{
+		return licitacoes.findAll();
+	}
+	
 
 	@ModelAttribute("todosUsos")
 	public List<Uso> todosUsos() {
@@ -864,6 +877,8 @@ public class ContratoController {
 	public boolean temPermissao() {
 		return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
 	}
+	
+	
 
 
 	public boolean[] criar_vetor_booleano()
