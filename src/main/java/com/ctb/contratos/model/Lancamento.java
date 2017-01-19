@@ -66,6 +66,8 @@ public class Lancamento {
 	@JoinColumn(name= "lancamento_id_contrato")
 	private Contrato contrato;
 	private BigDecimal saldo_contrato;
+	private String hora;
+	
 	
 	
 	
@@ -190,5 +192,11 @@ public class Lancamento {
 	}
 	public void setSaldo_contrato(BigDecimal d) {
 		this.saldo_contrato = d;
+	}
+	public String getHora() {
+		return hora;
+	}
+	public void setHora(String hora) {
+		this.hora = hora;
 	}
 }

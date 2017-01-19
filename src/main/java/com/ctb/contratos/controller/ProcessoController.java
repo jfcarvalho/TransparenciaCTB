@@ -2,6 +2,7 @@ package com.ctb.contratos.controller;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -16,9 +17,11 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ctb.Processo;
+import com.ctb.TipoProcesso;
 import com.ctb.contratos.model.Contratado;
 import com.ctb.contratos.model.Contrato;
 import com.ctb.contratos.model.Lancamento;
+import com.ctb.contratos.model.Recurso;
 import com.ctb.contratos.model.Usuario;
 import com.ctb.contratos.repository.Contratados;
 import com.ctb.contratos.repository.Lancamentos;
@@ -120,5 +123,9 @@ public class ProcessoController {
 		return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
 	}
 	
+	@ModelAttribute("todosTiposProcessos")
+	public List<TipoProcesso> todosTiposProcessos() {
+		return Arrays.asList(TipoProcesso.values());
+}
 }
 

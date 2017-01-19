@@ -83,6 +83,7 @@ public class ContratoController {
 	private static final String EDICAOINFORMACOES_VIEW = "/edicao/EdicaoContratoInformacoes";
 	private static final String EDICAOGESTORES_VIEW = "/edicao/EditarContratoGestor";
 	private static final String EDICAO_VIEW = "/edicao/EdicaoContrato";
+	private static final String RENOVACAO_VIEW = "/cadastro/Renovacao";
 	public static Integer numero_contrato =0;
 	static final ArrayList<AditivoSetting> aditivos = new ArrayList();
 	private static final String DASHBOARD_VIEW = "/cabecalho/DashBoard";
@@ -750,6 +751,25 @@ public class ContratoController {
 		return mv;
 	}
 	
+	@RequestMapping("/gerar_renovacao/{id_contrato}")
+	public ModelAndView gerar_renovacao(@PathVariable("id_contrato")Integer Id_contrato)
+	{
+		ModelAndView mv = new ModelAndView(RENOVACAO_VIEW);
+	   mv.addObject("contrato", contratos.findOne(Id_contrato));
+	   return mv;
+	}
+	
+	@RequestMapping(value= "/renovar/{id_contrato}", method=RequestMethod.POST)
+	public ModelAndView renovar(Contrato contrato, @RequestParam("contrato_id_processo" )Integer Id_processo)
+	{
+		ModelAndView mv = new ModelAndView(RENOVACAO_VIEW);
+		Contrato contratobd = contratos.findOne(contrato.getId_contrato());
+		contratobd.setProcesso(processos.findOne(Id_processo));
+		contratos.save(contratobd);
+		mv.addObject("mensagem", "Processo registrado com sucesso!");
+		return mv;
+	}
+
 	
 	public void desvincularLancamentos(Contrato contrato)
 	{
@@ -836,6 +856,22 @@ public class ContratoController {
 	}
 	
 	
+	@ModelAttribute("todosProcessosRenovacao")
+	public List<Processo> todosProcessos()
+	{
+		List<Processo> processosRenovacao = new ArrayList<Processo>();
+		for(Processo p:processos.findAll())
+		{
+			if(p.getTipo_processo().getTipo().equals("Renovação") || p.getTipo_processo().getTipo().equals("Nova licitação") )
+			{
+				processosRenovacao.add(p);
+			}
+		}
+		
+		return processosRenovacao;
+	}
+	
+	
 	@ModelAttribute("todosFiscais")
 	public List<Usuario> todosFiscais()
 	{
@@ -892,6 +928,8 @@ public class ContratoController {
 		return novo_vetor;
 	
 	}
+	
+	
 	
 	
 }

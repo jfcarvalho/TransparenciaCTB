@@ -88,7 +88,7 @@ public class Contrato {
 	
 	@OneToOne
 	@JoinColumn(name="contrato_id_licitacao")
-	private Licitacao licitacao; //Processo de renovação
+	private Licitacao licitacao; //Liitação
 	
 	
 	public Integer getId_contrato()

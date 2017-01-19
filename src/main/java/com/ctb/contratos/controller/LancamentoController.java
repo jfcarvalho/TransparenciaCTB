@@ -2,10 +2,12 @@ package com.ctb.contratos.controller;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -149,6 +151,12 @@ public class LancamentoController {
 		BigDecimal resultop5 = resultop4.subtract(resultop3);
 		lancamento.setSaldo_contrato(resultop5);
 		c.setSaldo_contrato(resultop5 );
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+		Date hora = Calendar.getInstance().getTime(); // Ou qualquer outra forma que tem
+		String dataFormatada = sdf.format(hora);
+		lancamento.setHora(dataFormatada);
+		
 		
 		contratos.save(c);
 		lancamentos.save(lancamento);		
