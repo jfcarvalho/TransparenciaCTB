@@ -91,6 +91,8 @@ public class Contrato {
 	private Licitacao licitacao; //Liitação
 	
 	
+	
+	
 	public Integer getId_contrato()
 	{
 		return this.id_contrato;
@@ -297,6 +299,8 @@ public class Contrato {
 	{
 		this.licitacao = licitacao;
 	}
+	
+	
 	
 	
 	

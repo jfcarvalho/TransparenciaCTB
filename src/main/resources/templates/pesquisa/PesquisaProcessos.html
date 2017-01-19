@@ -52,8 +52,8 @@
 				<tr>
 				<th class="text-center col-md-2">Número do processo</th>
 				<th class="text-center col-md-2">Data de abertura</th>
-				<th class="text-center col-md-2">Data de pagamento</th>
-				<th class="text-center col-md-2">Pago</th>
+				<!--  <th class="text-center col-md-2">Data de pagamento</th> 
+				<th class="text-center col-md-2">Pago</th> -->
 				<th class="text-center col-md-2" th:if="${permissao}">Ação</th>
 				</tr>
 				
@@ -62,8 +62,6 @@
 				<tr th:each="processo : ${todosProcessos}">
 					<td class="text-center" th:text="${processo.numero_processo}"></td>
 					<td class="text-center" th:text="${#dates.format(processo.data_abertura, 'dd/MM/yyyy')}"></td>
-					<td class="text-center" th:text="${#dates.format(processo.data_pagamento, 'dd/MM/yyyy')}"></td>
-						<td class="text-center"><div th:switch="${processo} ? ${processo.pago}" ><span class="label label-success" th:text="'Pago'" th:case="true" ></span><span class="label label-warning" th:text="'Não pago'" th:case="false" ></span></div> </td>
 					<td class="text-center" th:if="${permissao}"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/processos/{id_processo}(id_processo=${processo.id_processo})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:href="@{/transparenciactb/processos/remove/{id_processo}(id_processo=${processo.id_processo})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> Remover</span></a></td>	
 				</tr>
 				

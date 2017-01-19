@@ -54,7 +54,7 @@ public class Lancamento {
 	private Date dataliquidacao;
 	
 	private Integer meses_prorrogacao;
-	
+	private String medicao;
 	
 	
 	
@@ -198,5 +198,11 @@ public class Lancamento {
 	}
 	public void setHora(String hora) {
 		this.hora = hora;
+	}
+	public String getMedicao() {
+		return medicao;
+	}
+	public void setMedicao(String medicao) {
+		this.medicao = medicao;
 	}
 }

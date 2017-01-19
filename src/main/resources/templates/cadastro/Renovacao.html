@@ -43,7 +43,7 @@
 	<input type="hidden" th:field="*{id_contrato}" />
 	<div class="panel-heading">
 	    <h5><b>Contrato referente:</b><span th:text="${contrato.numero}"></span></h5>
-	    <h5><b>Empresa:</b>:<span th:text="${contrato.contratado.nome} + '-' + ${contrato.contratado.cnpj}"></span></h5>
+	    <h5><b>Empresa:</b>:<span th:text="${contrato.contratado} ? ${contrato.contratado.nome} + '-' + ${contrato.contratado.cnpj}"></span></h5>
 	    <h5><b>Gestor</b>:<span th:text="${contrato.gestor.nome}"></span></h5>
 	    <h5><b>Data de assinatura</b>:<span th:text="${contrato.data_vencimento}"></span></h5>
 	    <h5><b>Valor:</b><span th:text="'R$' + ${#numbers.formatDecimal(contrato.valor_contrato, 0, 'POINT', 2, 'COMMA')}"></span></h5>

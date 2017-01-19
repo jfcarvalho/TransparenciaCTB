@@ -96,12 +96,15 @@ public class LancamentoController {
 		lancamento.setData(lancamentobd.getData());
 		lancamento.setMeses_prorrogacao(lancamentobd.getMeses_prorrogacao());
 		lancamento.setNumero_nota_fiscal(lancamentobd.getNumero_nota_fiscal());
-	lancamento.setObservacao(lancamentobd.getObservacao());
-	lancamento.setPossui_aditivo(lancamentobd.getPossui_aditivo());
-	lancamento.setSaldo_contrato(lancamentobd.getSaldo_contrato());
-	lancamento.setTipoAditivo(lancamentobd.getTipoAditivo());
-	lancamento.setValor(lancamentobd.getValor());
-	lancamento.setValor_aditivo(lancamentobd.getValor_aditivo());
+		lancamento.setObservacao(lancamentobd.getObservacao());
+		lancamento.setPossui_aditivo(lancamentobd.getPossui_aditivo());
+		lancamento.setSaldo_contrato(lancamentobd.getSaldo_contrato());
+		lancamento.setHora(lancamentobd.getHora());
+		lancamento.setMedicao(lancamentobd.getMedicao());
+		lancamento.setTipoAditivo(lancamentobd.getTipoAditivo());
+		lancamento.setValor(lancamentobd.getValor());
+		lancamento.setValor_aditivo(lancamentobd.getValor_aditivo());
+		
 	lancamento.setProcesso(processos.findOne(Id_processo));
 	lancamento.setLiquidado(true);
 
