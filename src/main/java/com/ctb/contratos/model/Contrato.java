@@ -90,6 +90,9 @@ public class Contrato {
 	@JoinColumn(name="contrato_id_licitacao")
 	private Licitacao licitacao; //Liitação
 	
+	private boolean riscofinanceiro;
+
+	
 	
 	
 	
@@ -299,8 +302,12 @@ public class Contrato {
 	{
 		this.licitacao = licitacao;
 	}
-	
-	
+	public boolean getRiscofinanceiro() {
+		return riscofinanceiro;
+	}
+	public void setRiscofinanceiro(boolean riscofinanceiro) {
+		this.riscofinanceiro = riscofinanceiro;
+	}
 	
 	
 	

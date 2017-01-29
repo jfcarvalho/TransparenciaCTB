@@ -71,7 +71,7 @@
 			</thead>
 			<tbody>
 				<tr th:each="contrato : ${contratosgeridos}">
-					<td class="text-center" th:text="${contrato} ? ${contrato.numero} : 'Nãoo informado'"></td>
+					<td class="text-center"><a th:href="@{/transparenciactb/contratos/visualizar/{id_contrato}(id_contrato=${contrato.id_contrato})}" th:text="${contrato.numero}"></a></td>
 					<td class="text-center" th:text="${contrato.contratado} ? ${contrato.contratado.nome} : 'Não informado'"></td>
 						<td class="text-center" th:text="${contrato} ? |R$ ${{contrato.valor_contrato}} |: 'Não informado'"></td>
 						<td class="text-center" th:text="${contrato} ? |R$ ${{contrato.saldo_contrato}}| : 'Não informado'"></td>
@@ -176,19 +176,19 @@
 				<!-- <th class="text-center col-md-2">Hora de lançamento</th> -->
 				<th class="text-center col-md-2">Liquidação da nota</th>
 				<th class="text-center col-md-2">Numero do processo</th>
-				<th class="text-center col-md-2">Data do processo de abertura</th>
+				<th class="text-center col-md-2">Data do processo</th>
 				
 				</tr>
 			</thead>
 			<tbody>
 				<tr th:each="lancamento : ${ultimoslancamentos}">
-					<td class="text-center" th:text="${lancamento.contrato} ? ${lancamento.contrato.numero} : 'Nãoo informado'"></td>
+					<td class="text-center"><a th:href="@{/transparenciactb/contratos/visualizar/{id_contrato}(id_contrato=${lancamento.contrato.id_contrato})}" th:text="${lancamento.contrato.numero}"></a></td>
 					<td class="text-center" th:text="${lancamento.contrato.contratado} ? ${lancamento.contrato.contratado.nome} : 'Não informado'"></td>
 						<td class="text-center" th:text="${lancamento} ? |R$ ${{lancamento.valor}}| : 'Não informado'"></td>
 						<td class="text-center" th:text="${lancamento} ? ${#dates.format(lancamento.data, 'dd/MM/yyyy')} + '-' + ${lancamento.hora} : 'Não informado'"></td>
-						<td class="text-center" th:text="${lancamento.dataliquidacao} ? ${lancamento.hora} : 'Nota não liquidada'"></td>
-						<td class="text-center"><div th:switch="${lancamento.processo} ? ${lancamento.processo.pago}" ><span class="label label-success" th:text="${lancamento.processo} ? ${lancamento.processo.numero_processo}" th:if="${lancamento.processo}" ></span><span class="label label-warning" th:text="'Não há processo'" th:case="null" ></span></div> </td>
-					<td class="text-center"><div th:switch="${lancamento.liquidado}" ><span class="label label-success" th:text="${lancamento.processo} ? ${#dates.format(lancamento.processo.data_abertura, 'dd/MM/yyyy')}"  ></span><span class="label label-warning" th:text="'Não há processo'" th:case="false" ></span></div> </td>
+						<td class="text-center" th:text="${lancamento.dataliquidacao} ? ${#dates.format(lancamento.dataliquidacao, 'dd/MM/yyyy')}  : 'Nota não liquidada'"></td>
+						<td class="text-center"><div th:switch="${lancamento.processo} ? ${lancamento.processo.pago}" ><span  th:text="${lancamento.processo} ? ${lancamento.processo.numero_processo}" th:if="${lancamento.processo}" ></span><span class="label label-warning" th:text="'Não há processo'" th:case="null" ></span></div> </td>
+					<td class="text-center"><div th:switch="${lancamento.liquidado}" ><span  th:text="${lancamento.processo} ? ${#dates.format(lancamento.processo.data_abertura, 'dd/MM/yyyy')}"  ></span><span class="label label-warning" th:text="'Não há processo'" th:case="false" ></span></div> </td>
 				</tr>
 				
 			<tr>

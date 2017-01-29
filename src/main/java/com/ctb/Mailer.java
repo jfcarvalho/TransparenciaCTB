@@ -25,6 +25,7 @@ import org.thymeleaf.context.Context;
 import com.ctb.contratos.controller.ContratosInterface;
 import com.ctb.contratos.model.Contratado;
 import com.ctb.contratos.model.Contrato;
+import com.ctb.contratos.model.Lancamento;
 import com.ctb.contratos.repository.Contratados;
 import com.ctb.contratos.repository.Contratos;
 import com.ctb.contratos.util.ContratosAVencer;
@@ -67,6 +68,31 @@ public class Mailer {
 		}
 		thymeleaf.process("mail/ContratosAVencer", context);
 	}
+	
+	@Async
+	public void enviar_lancamento_gestor(Lancamento lc, String Email)
+	{
+		
+		
+		Context context = new Context();
+		context.setVariable("lancamento", lc);
+		context.setVariable("contrato", lc.getContrato());
+		String email = thymeleaf.process("mail/AvisoLancamento", context);
+		try {
+			MimeMessage mimeMessage = mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+			helper.setFrom("suporte.ctb1210@ctb.ba.gov.br");
+			helper.setTo("jfcarvalho@ctb.ba.gov.br");
+			helper.setSubject("E-mail Teste Contratos");
+			helper.setText(email, true);
+			mailSender.send(mimeMessage);
+		} catch(MessagingException e) {
+			logger.error("Erro enviando e-mail", e);
+		}
+		thymeleaf.process("mail/AvisoLancamento", context);
+	}
+	
+	
 	
 public Days numeroDiasVencimentoContrato(Contrato c)
 {

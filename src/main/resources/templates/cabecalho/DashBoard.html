@@ -20,7 +20,7 @@
 
         <li class="aw-menu__item">
           <a href="#">
-            <i class="fa  fa-fw  fa-file-text"></i><span>Contratos</span>
+            <i class="glyphicon glyphicon-edit"></i><span>Contratos</span>
             <i class="aw-menu__navigation-icon  fa"></i>
           </a>
       
@@ -28,13 +28,36 @@
             <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/contratos/novo" th:if="${permissao}">Cadastro de Contrato</a></li>
             <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/contratos">Pesquisa de contratos</a></li>
        
-             <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/contratados/novo" th:if="${permissao}">Cadastro de Empresa Contratada</a></li>
-            <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/contratados/">Pesquisa de Empresas Contratadas</a></li>
-            <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/usuarios/novo" th:if="${permissao}">Cadastro de Usuário</a></li>
-            <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/usuarios">Pesquisa de Usuários</a></li>
+        
+            
                         
           </ul>
         </li>
+        
+        <li class="aw-menu__item">
+          <a href="#">
+            <i class="glyphicon glyphicon-user"></i><span>Usuários</span>
+            <i class="aw-menu__navigation-icon  fa"></i>
+          </a>
+          
+          <ul class="aw-menu__list  aw-menu__list--sublist">
+            <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/usuarios/novo" th:if="${permissao}">Cadastro de Usuário</a></li>
+            <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/usuarios">Pesquisa de Usuários</a></li>
+       </ul>
+      </li>
+      
+      <li class="aw-menu__item">
+          <a href="#">
+            <i class="glyphicon glyphicon-lock"></i><span>Empresas</span>
+            <i class="aw-menu__navigation-icon  fa"></i>
+          </a>
+      	
+      	<ul class="aw-menu__list  aw-menu__list--sublist">
+      		     <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/contratados/novo" th:if="${permissao}">Cadastro de Empresa Contratada</a></li>
+            <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/contratados/">Pesquisa de Empresas Contratadas</a></li>
+      	</ul>
+      </li>
+        
         
         
     	 <li class="aw-menu__item" >
@@ -57,26 +80,28 @@
           </a>
       
           <ul class="aw-menu__list  aw-menu__list--sublist">
-            <li class="aw-menu__item  aw-menu__item--link"><a href="cadastro-produto.html">Cadastro de produto</a></li>
+            <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/licitacoes/novo">Cadastrar licitação</a></li>
+            <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/licitacoes">Pesquisar Licitação</a></li>
            
             
           </ul>
         </li>
         
-           <li class="aw-menu__item" th:if="${permissao}">
+        
+       <li class="aw-menu__item" th:if="${permissao}">
           <a href="#">
-            <i class="fa  fa-fw  fa-file-text"></i><span>Despesas e Transferências</span>
+            <i class="glyphicon glyphicon-stats"></i><span>Relatórios</span>
             <i class="aw-menu__navigation-icon  fa"></i>
           </a>
       
           <ul class="aw-menu__list  aw-menu__list--sublist">
-            <li class="aw-menu__item  aw-menu__item--link"><a href="cadastro-produto.html">Cadastro de processos</a></li>
+            <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/contratos/relatorio_tce">Tribunal de CONTAS</a></li>
+            
            
+            
           </ul>
         </li>
-        
-
-       
+                 
 
       </ul>
     </nav>

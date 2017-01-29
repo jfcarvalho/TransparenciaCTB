@@ -19,6 +19,7 @@ import com.ctb.contratos.repository.Licitacoes;
 import com.ctb.contratos.repository.Usuarios;
 import com.ctb.licitacoes.model.Licitacao;
 import com.ctb.licitacoes.model.Modalidade;
+import com.ctb.security.AppUserDetailsService;
 
 @Controller
 @RequestMapping("/transparenciactb/licitacoes")
@@ -65,5 +66,11 @@ public class LicitacaoController {
 	public List<Modalidade> todasModalidades() {
 		return Arrays.asList(Modalidade.values());
 }
+	
+	@ModelAttribute("permissao")
+	public boolean temPermissao() {
+		return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
+	}
+	
 	
 }

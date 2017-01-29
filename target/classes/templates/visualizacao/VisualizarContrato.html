@@ -167,7 +167,8 @@
   Saldo contrato:
   </td>
   <td>
-  <div th:text="'R$' + ${#numbers.formatDecimal(saldo_contrato, 0, 'POINT', 2, 'COMMA')}"></div>
+  <div th:if="${risco}" style="color:red" th:text="'R$' + ${#numbers.formatDecimal(saldo_contrato, 0, 'POINT', 2, 'COMMA')}"></div>
+  <div  th:if="${risco} == false" th:text="'R$' + ${#numbers.formatDecimal(saldo_contrato, 0, 'POINT', 2, 'COMMA')}"></div>
   </td>
  </tr>
  

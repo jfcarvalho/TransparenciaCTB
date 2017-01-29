@@ -461,6 +461,7 @@ public class ContratoController {
 		mv.addObject("totalcomaditivos", c.getValor_contrato().add( totalAditivos));
 		mv.addObject("saldo_contrato", c.getSaldo_contrato());
 		mv.addObject("porcentagem_concluida", porcentagemConcluida);
+		mv.addObject("risco", c.getRiscofinanceiro());
 		BigDecimal cembigd = new BigDecimal(100);
 		BigDecimal result2 = new BigDecimal(porcentagemConcluida.toString());
 		mv.addObject("porcentagem_a_concluir", cembigd.subtract(result2));

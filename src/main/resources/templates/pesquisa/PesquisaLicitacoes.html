@@ -66,7 +66,7 @@
 					<td class="text-center" th:text="${licitacao.observacao}"></td>
 					<td class="text-center" th:text="${licitacao.objeto}"></td>
 					<td class="text-center" th:text="${#dates.format(licitacao.data_publicacao, 'dd/MM/yyyy')}"></td>
-					<td class="text-center" th:if="${permissao}"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/processos/{id_processo}(id_processo=${processo.id_processo})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:href="@{/transparenciactb/processos/remove/{id_processo}(id_processo=${processo.id_processo})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> Remover</span></a></td>	
+					<td class="text-center" th:if="${permissao}"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/licitacoes/{id_licitacao}(id_licitacao=${licitacao.id_licitacao})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:href="@{/transparenciactb/licitacoes/remove/{id_licitacao}(id_licitacao=${licitacao.id_licitacao})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> Remover</span></a></td>	
 				</tr>
 				
 			<tr>
