@@ -357,6 +357,7 @@ public class LancamentoController {
 		
 		}
 		lancamentos.save(lanc);
+		c.setSaldo_contrato(saldo_corrente);
 		contratos.save(c);
 	}
 	

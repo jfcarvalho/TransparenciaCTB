@@ -170,18 +170,7 @@ public class ContratoController {
 		}
 		return mv;
 	}
-	/*
-	@RequestMapping(value="/resumoconsignado/{id_usuario}", method= RequestMethod.GET)
-	public ModelAndView resumoConsignado(@PathVariable("Id_usuario") Integer Id_usuario)
-	{
-		
-		ModelAndView mv = new ModelAndView(RESUMOCONSIGNADO_VIEW);
-		//List<Contrato> contratosGestor = contratosGestores(Id_usuario);
-		mv.addObject("contratosGestor", contratosGestor);
-		return mv;
-		
-	}
-	*/
+
 	@RequestMapping("/editar_contrato/{id_contrato}")
 	public ModelAndView editar_contrato(@PathVariable("id_contrato") Integer Id_contrato)
 	{
@@ -704,6 +693,7 @@ public class ContratoController {
 		contratobd.setObjeto(contratoform.getObjeto());
 		contratobd.setRecurso(contratoform.getRecurso());
 		contratobd.setValor_contrato(contratoform.getValor_contrato());
+		
 		contratobd.setSaldo_contrato(contratoform.getValor_contrato());
 		contratobd.setUso(contratoform.getUso());
 		contratobd.setDuracao_meses(contratoform.getDuracao_meses());
@@ -712,12 +702,11 @@ public class ContratoController {
 		contratobd.setData_vencimento(contratoform.getData_vencimento());
 		contratobd.setNomeResponsavel(contratoform.getNomeResponsavel());
 		contratobd.setCpfResponsavel(contratoform.getCpfResponsavel());
-	
+		recalcularSaldos(contratobd);
 		
 		contratos.save(contratobd);
-		LancamentoController c = new LancamentoController();
-		c.recalcularSaldos(contratobd);
-		
+	
+	
 		attributes.addFlashAttribute("mensagem", "Contrato salvo com sucesso!");	
 		return "redirect:/transparenciactb/contratos/novo";
 		
@@ -915,7 +904,7 @@ public class ContratoController {
 		return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
 	}
 	
-	
+
 
 
 	public boolean[] criar_vetor_booleano()
@@ -928,6 +917,38 @@ public class ContratoController {
 		
 		return novo_vetor;
 	
+	}
+	public void zerarLancamentos(List<Lancamento> l)
+	{
+		Iterator it = l.iterator();
+		
+		while(it.hasNext())
+		{
+			Lancamento lanc = (Lancamento) it.next();
+			lanc.setSaldo_contrato(BigDecimal.ZERO);
+		}
+		lancamentos.save(l);
+	}
+	
+	public void recalcularSaldos(Contrato c)
+	{
+		List<Lancamento> lanc = c.getLancamentos();
+		zerarLancamentos(lanc);
+		c.setSaldo_contrato(c.getValor_contrato());
+		BigDecimal saldo_corrente = new BigDecimal(c.getValor_contrato().toString());
+		for(Lancamento aux:lanc)
+		{
+			saldo_corrente = saldo_corrente.subtract(aux.getValor());
+			if(aux.getPossui_aditivo())
+			{
+				saldo_corrente = saldo_corrente.add(aux.getValor_aditivo());
+			}
+			aux.setSaldo_contrato(saldo_corrente);
+		
+		}
+		lancamentos.save(lanc);
+		c.setSaldo_contrato(saldo_corrente);
+		contratos.save(c);
 	}
 	
 	

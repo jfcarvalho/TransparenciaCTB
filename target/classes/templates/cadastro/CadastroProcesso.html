@@ -46,6 +46,20 @@
 	
 	<div class="panel-body">
 	<input type="hidden" th:field="*{id_processo}" />
+		<div class="form-group">
+			<label for="cnpj" class="col-sm-2 control-label">Tipo de processo:</label>
+			<div class="col-sm-6">
+				<select class="form-control" name="tipo_processo">
+					<option th:each="tipo_processo : ${todosTiposProcessos}" th:value="${tipo_processo}" th:text="${tipo_processo.tipo}" ></option>
+				</select>
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="cnpj" class="col-sm-2 control-label">Número do processo:</label>
+			<div class="col-sm-6">
+				<input type="text" class="form-control" id="numero_processo" name="numero_processo" th:field="*{numero_processo}" />
+			</div>
+		</div>
 		
 			<div class="form-group" th:classappend="${#fields.hasErrors('data_abertura')} ? has-error">
 			<label for="data_compra" class="col-sm-2 control-label">Data de abertura do processo:</label>
@@ -57,35 +71,20 @@
 		<div class="form-group" th:classappend="${#fields.hasErrors('data_pagamento')} ? has-error">
 			<label for="data_compra" class="col-sm-2 control-label">Data de pagamento do processo:</label>
 			<div class="col-sm-6">
-				<input type="text" class="form-control" id="data_pagamento" name="data_pagamento" th:field="*{data_pagamento}" data-provide="datepicker" data-date-format="dd/mm/yyyy" data-date-language="pt-BR" data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom" value="teste"/>
+				<input type="text" class="form-control enable-data-processo-input" id="data_pagamento" name="data_pagamento" th:field="*{data_pagamento}" data-provide="datepicker" data-date-format="dd/mm/yyyy" data-date-language="pt-BR" data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom" value="teste"/>
 			</div>
-		</div>
-		
-		<div class="form-group">
-			<label for="cnpj" class="col-sm-2 control-label">Número do processo:</label>
-			<div class="col-sm-2">
-				<input type="text" class="form-control" id="numero_processo" name="numero_processo" th:field="*{numero_processo}" />
-			</div>
-		</div>
-		
-		<div class="form-group">
-			<label for="cnpj" class="col-sm-2 control-label">Tipo de processo:</label>
-			<div class="col-sm-4">
-				<select class="form-control" name="tipo_processo">
-					<option th:each="tipo_processo : ${todosTiposProcessos}" th:value="${tipo_processo}" th:text="${tipo_processo.tipo}" ></option>
-				</select>
+			<div class="input-group">
+				        <input  class="enable-data-processo-botao" type="checkbox" name="pago" id="pago" th:checked="${processo.pago}"/> Pago	
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="cnpj" class="col-sm-2 control-label">Número da CI:</label>
-			<div class="col-sm-2">
+			<div class="col-sm-6">
 				<input type="text" class="form-control" id="numero_ci" name="numero_ci" th:field="*{numero_ci}" />
 			</div>
 		</div>
-			<div class="input-group">
-				        <input type="checkbox" name="pago" id="pago" th:checked="${processo.pago}"/> Pago	
-			</div>
+			
 				    
 			<div class="form-group">
      		<div class="col-sm-offset-2 col-sm-10">
@@ -137,6 +136,7 @@ function excluir() {
  <script src="/layout/javascripts/bootstrap-datepicker.pt-BR.min.js"></script>
 <script src="/layout/javascripts/bootstrap.min.js"></script>
 <script src="/layout/javascripts/jquery-2.2.0.min.js"></script>
+<script src="/layout/javascripts/formulario.js"></script>
 
 </body>
 </html>
