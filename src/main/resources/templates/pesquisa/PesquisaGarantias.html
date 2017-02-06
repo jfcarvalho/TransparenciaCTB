@@ -64,11 +64,11 @@
 					<td class="text-center" th:if="${permissao}"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/garantias/{id_garantia}(id_garantia=${garantia.id_garantia})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:href="@{/transparenciactb/garantias/remove/{id_garantia}(id_garantia=${garantia.id_garantia})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> remover</span></a></td>
 				</tr>
 				
-			<tr>
-				<td colspan="6" th:if="${#lists.isEmpty(tadasGarantias)}">Nenhuma garantia encontrado(a)</td>
+		<tr>
+				<td colspan="6" th:if="${#lists.isEmpty(todasGarantias)}">Nenhuma garantia encontrado(a)</td>
 			</tr>
 			</tbody>
-		
+			
 		</table>
 		</div>
 		</div>

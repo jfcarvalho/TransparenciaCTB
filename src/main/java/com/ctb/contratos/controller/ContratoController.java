@@ -526,8 +526,6 @@ public class ContratoController {
 		Usuario fiscal = usuarios.findOne(contrato_id_fiscal);
 		Licitacao licitacao = licitacoes.findOne(contrato_id_licitacao);
 		
-		
-		System.out.println(contrato.getValor_contrato());
 		contrato.setContratado(empresa);
 		contrato.setFiscal(fiscal);
 		contrato.setGestor(gestor);

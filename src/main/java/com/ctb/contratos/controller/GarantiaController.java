@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -114,13 +115,17 @@ public class GarantiaController {
 		return mv;
 	}
 	
-	@RequestMapping(method = RequestMethod.POST)
-	public String salvar(@Validated Garantia garantia, RedirectAttributes attributes)
+	@RequestMapping(value="/salvar/{id_lancamento}", method = RequestMethod.POST)
+	public String salvar(Garantia garantia, @PathVariable("id_lancamento")Integer Id_lancamento, RedirectAttributes attributes)
 	{
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
+		if(Id_lancamento != null) {
+			Lancamento l = lancamentos.findOne(Id_lancamento);
+			garantia.setLancamento(l);
+		}
 		garantias.save(garantia);		
 		attributes.addFlashAttribute("mensagem", "Garantia salva com sucesso!");	
-		return "redirect:/transparenciactb/garantias/novo";
+		return "redirect:/transparenciactb/garantias/pesquisar/" +garantia.getLancamento().getId_lancamento();
 	}
 	
 	@ModelAttribute("todasGarantias")
