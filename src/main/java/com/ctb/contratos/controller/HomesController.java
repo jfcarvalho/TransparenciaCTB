@@ -1,9 +1,15 @@
 package com.ctb.contratos.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -21,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ctb.Mailer;
+import com.ctb.Processo;
+import com.ctb.TipoProcesso;
 import com.ctb.contratos.model.Contratado;
 import com.ctb.contratos.model.Contrato;
 import com.ctb.contratos.model.Lancamento;
@@ -28,8 +36,14 @@ import com.ctb.contratos.model.Usuario;
 import com.ctb.contratos.repository.Contratados;
 import com.ctb.contratos.repository.Contratos;
 import com.ctb.contratos.repository.Lancamentos;
+import com.ctb.contratos.repository.Processos;
 import com.ctb.contratos.repository.Usuarios;
 import com.ctb.security.AppUserDetailsService;
+
+import jxl.Cell;
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.read.biff.BiffException;
 
 @Controller
 @RequestMapping("/transparenciactb/")
@@ -42,6 +56,9 @@ public class HomesController {
 	private Usuarios usuarios;
 	
 	@Autowired
+	private Processos processos;
+	
+	@Autowired
 	private Contratos contratos;
 	
 	@Autowired
@@ -50,13 +67,14 @@ public class HomesController {
 	private Contratados contratadas;
 	@Autowired
 	private Mailer mailer;
+	ModelAndView mv = new ModelAndView(HOME_VIEW);	
 	
 	@RequestMapping(method=RequestMethod.GET)
-	public ModelAndView index()
+	public ModelAndView index() throws BiffException, IOException, ParseException
 	{
-		ModelAndView mv = new ModelAndView(HOME_VIEW);		
-	//	zerarAvisos(contratos.findAll());
-	//	checarAvisosContratos(usuarios.findAll());
+			
+		//zerarAvisos(contratos.findAll());
+		//checarAvisosContratos(usuarios.findAll());
 		mv.addObject(new HomesController());
 		List<Contrato> contratosgeridos = contratosGeridos();
 		HashMap<String,String> teste = new HashMap<String,String>();
@@ -80,7 +98,7 @@ public class HomesController {
 		DateTime date = new DateTime();
 		ano = Integer.toString(date.getYear());
 		teste = contratosVSvalores();
-	
+		alimentarSistema();
 		//mailer.enviar_vencimento_gestor(vencimento90_todos());
 		//mailer.pegarContrato();
 		
@@ -171,6 +189,171 @@ public class HomesController {
 		mv.addObject("empresas", teste.toString());
 		return mv;
 }	
+	
+	public void alimentarSistema() throws  IOException, BiffException, ParseException
+	{
+		
+		List<Lancamento> lanc = new ArrayList<Lancamento>();
+		Workbook workbook = Workbook.getWorkbook(new File("C:\\Users\\nessk\\Downloads\\PRODEB.xls"));
+		Sheet sheet = workbook.getSheet(0);
+		Integer linhas = sheet.getRows();
+		Integer linhaAtual = 14;
+		Cell c1 = sheet.getCell(0, 14);
+		Integer ano = Integer.parseInt(c1.getContents());
+		Integer [] diasMeses = gerarVetorDias();
+		String dataLancamento = new String();
+		int id_inicial =1;
+		int id_proc = 4;
+		Contrato c = contratos.findOne(7);
+		while(linhaAtual < 55)
+		{
+			Cell clinha = sheet.getCell(2, linhaAtual);
+			Cell anoAtual = sheet.getCell(0, linhaAtual);
+			Cell n_nota_fiscal = sheet.getCell(3, linhaAtual);
+			Cell valorContrato = sheet.getCell(6,linhaAtual);
+			Cell numeroAditivo = sheet.getCell(8, linhaAtual);
+			Cell valorAditivo = sheet.getCell(9, linhaAtual);
+			Cell observacaoContrato = sheet.getCell(10, linhaAtual);
+			Cell saldoContrato = sheet.getCell(7, linhaAtual);
+			Cell numeroProcesso = sheet.getCell(4, linhaAtual);
+			Cell dataProcesso = sheet.getCell(5, linhaAtual);
+			if(Integer.parseInt(anoAtual.getContents()) != ano)
+			{
+				diasMeses = gerarVetorDias();
+				ano = Integer.parseInt(anoAtual.getContents());
+			}
+			switch(clinha.getContents())
+			{
+				case "Janeiro":
+					diasMeses[1] = diasMeses[1]+1;
+					dataLancamento = ano.toString() +"-01-0"+diasMeses[1].toString();
+					//System.out.println(dataLancamento);
+				break;
+				case "Fevereiro":
+					diasMeses[2] = diasMeses[2]+1;
+					dataLancamento = ano.toString() +"-02-0"+diasMeses[2].toString();
+					//System.out.println(dataLancamento);
+				break;
+				case "Março":
+					diasMeses[3] = diasMeses[3]+1;
+					dataLancamento = ano.toString() +"-03-0"+diasMeses[3].toString();
+					//System.out.println(dataLancamento);
+				break;
+				case "Abril":
+					diasMeses[4] = diasMeses[4]+1;
+					dataLancamento = ano.toString() +"-04-0"+diasMeses[4].toString();
+					//System.out.println(dataLancamento);
+				break;
+				case "Maio":
+					diasMeses[5] = diasMeses[5]+1;
+					dataLancamento = ano.toString() +"-05-0"+diasMeses[5].toString();
+					//System.out.println(dataLancamento);
+				break;
+				case "Junho":
+					diasMeses[6] = diasMeses[6]+1;
+					dataLancamento = ano.toString() +"-06-0"+diasMeses[6].toString();
+					//System.out.println(dataLancamento);
+				break;
+				case "Julho":
+					diasMeses[7] = diasMeses[7]+1;
+					dataLancamento = ano.toString() +"-07-0"+diasMeses[7].toString();
+					//System.out.println(dataLancamento);
+				break;
+				case "Agosto":
+					diasMeses[8] = diasMeses[8]+1;
+					dataLancamento = ano.toString() +"-08-0"+diasMeses[8].toString();
+					//System.out.println(dataLancamento);
+				break;
+				case "Setembro":
+					diasMeses[9] = diasMeses[9]+1;
+					dataLancamento = ano.toString() +"-09-0"+diasMeses[9].toString();
+					//System.out.println(dataLancamento);
+				break;
+				case "Outubro":
+					diasMeses[10] = diasMeses[10]+1;
+					dataLancamento = ano.toString() +"-10-0"+diasMeses[10].toString();
+					//System.out.println(dataLancamento);
+				break;
+				case "Novembro":
+					diasMeses[11] = diasMeses[11]+1;
+					dataLancamento = ano.toString() +"-11-0"+diasMeses[11].toString();
+					//System.out.println(dataLancamento);
+				break;
+				case "Dezembro":
+					diasMeses[12] = diasMeses[12]+1;
+					dataLancamento = ano.toString() +"-12-0"+diasMeses[12].toString();
+					//System.out.println(dataLancamento);
+				break;
+			}
+			Lancamento l = new Lancamento();
+			l.setId_lancamento(id_inicial);
+			id_inicial++;
+			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = (Date)formatter.parse(dataLancamento);
+			l.setData(date);
+			l.setDataliquidacao(null);
+			l.setLiquidado(false);
+			l.setMeses_prorrogacao(0);
+			l.setHora("00:00");
+			l.setDoe_aditivo(null);
+			if(!n_nota_fiscal.getContents().equals(""))
+			{
+				l.setNumero_nota_fiscal(n_nota_fiscal.getContents());
+			}
+				float v = Float.parseFloat(valorContrato.getContents().replaceAll(",", "."));
+				BigDecimal valor = new BigDecimal(Float.toString(v)); //problema aqui
+				l.setValor(valor);
+				float s = Float.parseFloat(saldoContrato.getContents().replaceAll(",", "."));
+				BigDecimal saldo = new BigDecimal(Float.toString(s)); //problema aqui
+				l.setSaldo_contrato(saldo);
+			
+			l.setObservacao(observacaoContrato.getContents());
+			if(!valorAditivo.getContents().equals("") || !numeroAditivo.getContents().equals(""))
+			{
+				if(!numeroAditivo.getContents().equals("")) {
+					l.setAditivo_n(Integer.parseInt(numeroAditivo.getContents()));
+				}
+				float a = Float.parseFloat(valorAditivo.getContents().replaceAll(",", "."));
+				BigDecimal aditivo = new BigDecimal(Float.toString(a));
+				l.setValor_aditivo(aditivo);
+				l.setPossui_aditivo(true);
+			}
+			else {
+				l.setPossui_aditivo(false);
+			}
+			
+		if(!numeroProcesso.getContents().equals("") || !dataProcesso.getContents().equals("")) 
+		{
+			Processo p = new Processo();
+			p.setId_processo(id_proc);
+			id_proc++;
+			p.setNumero_ci("000000");
+			p.setPago(true);
+			p.setTipo_processo(TipoProcesso.Pagamento);
+			p.setNumero_processo(numeroProcesso.getContents());
+			Date data = (Date)formatter.parse(dataProcesso.getContents());
+			p.setData_abertura(data);
+			p.setData_pagamento(data);
+			p.setPago(true);
+			l.setProcesso(p);
+			processos.save(p);
+		}
+			linhaAtual++;
+			l.setContrato(c);
+			lancamentos.save(l);
+		}
+		
+	}
+	
+	public Integer [] gerarVetorDias()
+	{
+		Integer [] diasMeses = new Integer[13];
+		for(int i=0; i < 13; i++) //Setar todos os dias como 0
+		{
+			diasMeses[i] = 0;
+		}
+		return diasMeses;
+	}
 
 	public HashMap<String, String> contratosVSvalores()
 	{

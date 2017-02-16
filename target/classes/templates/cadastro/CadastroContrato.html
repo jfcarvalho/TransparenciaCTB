@@ -49,38 +49,44 @@
 		<div class="panel-body">
 		<div class="form-group" th:classappend="${#fields.hasErrors('numero')} ? has-error">
 			<label for="nome" class="col-sm-2 control-label" >Número do contrato:</label>
-			<div class="col-sm-4">
+			<div class="col-sm-2">
 				<input type="text" class="form-control" id="numero" name="numero" th:field="*{numero}"/>
 			</div>
-		</div>
+			
 			<div class="form-group">
 			<label for="cnpj" class="col-sm-2 control-label">Fonte:</label>
-			<div class="col-sm-4">
+			<div class="col-sm-2">
 				<select class="form-control" name="fonte">
 					<option th:each="fonte : ${todasFontes}" th:value="${fonte}" th:text="${fonte.fonte}" th:selected="${su} ? ${su.fonte.fonte} == ${fonte.fonte}"></option>
 				</select>
 			</div>
 		</div>
-		
+	
+	
+		</div>
+				
 		<div class="form-group" th:classappend="${#fields.hasErrors('objeto')} ? has-error">
 			<label for="cnpj" class="col-sm-2 control-label">Objeto:</label>
-			<div class="col-sm-4">
+			<div class="col-sm-2">
 				<input type="text" class="form-control" id="objeto" name="objeto" th:field="*{objeto}" />
 			</div>
-		</div>
 			
 			<div class="form-group">
 			<label for="cnpj" class="col-sm-2 control-label">Recurso:</label>
-			<div class="col-sm-4">
+			<div class="col-sm-2">
 				<select class="form-control" name="recurso">
 					<option th:each="recurso : ${todosRecursos}" th:value="${recurso}" th:text="${recurso.recurso}" th:selected="${su} ? ${su.recurso.recurso} == ${recurso.recurso}"></option>
 				</select>
 			</div>
 		</div>
 		
+		</div>
+			
+			
+		
 			
 			<label for="cnpj" class="col-sm-2 control-label" th:classappend="${#fields.hasErrors('valor_contrato')} ? has-error">Valor do contrato:</label>
-			<div class="col-sm-4">
+			<div class="col-sm-2">
 				<input type="text" class="form-control js-currency" id="valor_contrato" name="valor_contrato" th:field="*{valor_contrato}" />
 			</div>
 	
@@ -89,21 +95,13 @@
 		
 		<div class="form-group" >
 			<label for="cnpj" class="col-sm-2 control-label">Uso:</label>
-			<div class="col-sm-4">
+			<div class="col-sm-2">
 				<select class="form-control" name="uso">
 					<option th:each="uso : ${todosUsos}" th:value="${uso}" th:text="${uso.uso}" th:selected="${su} ? ${su.uso.uso} == ${uso.uso}"></option>
 				</select>
 			</div>
 		</div>
 		
-		
-		
-		<div class="form-group">
-			<label for="cnpj" class="col-sm-2 control-label">Duração(em meses):</label>
-			<div class="col-sm-4">
-			<input type="text" class="form-control" id="duracao_meses" name="duracao_meses" th:field="*{duracao_meses}" />
-			</div>
-		</div>
 		<!--
 		<div class="form-group">
 			<label for="cnpj" class="col-sm-2 control-label">Meses para o vencimento:</label>
@@ -127,25 +125,41 @@
 		</div>
 				-->
 		 
-			<label for="cnpj" class="col-sm-2 control-label">Vencimento Garantia:</label>
-			<div class="col-sm-4">
-				<input type="text" class="form-control" id="vencimento_garantia" name="vencimento_garantia" th:field="*{vencimento_garantia}" data-provide="datepicker" data-date-format="dd/mm/yyyy" data-date-language="pt-BR" data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom" value="teste"/>
-			</div>
-
-		
+			
 		<div class="form-group" >
 			<label for="data_compra" class="col-sm-2 control-label">Data assinatura</label>
-			<div class="col-sm-4">
+			<div class="col-sm-2">
 				<input type="text" class="form-control" id="data_assinatura" name="data_assinatura" th:field="*{data_assinatura}" data-provide="datepicker" data-date-format="dd/mm/yyyy" data-date-language="pt-BR" data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom" value="teste"/>
 			</div>
+			
+			<div class="form-group" >
+			<label for="data_compra" class="col-sm-2 control-label">D.O.E</label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control" id="doe" name="doe" th:field="*{doe}" data-provide="datepicker" data-date-format="dd/mm/yyyy" data-date-language="pt-BR" data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom" value="teste"/>
+			</div>
+		</div>
+		
 		</div>
 		
 		<div class="form-group" >
 			<label for="data_compra" class="col-sm-2 control-label">Data vencimento</label>
-			<div class="col-sm-4">
+			<div class="col-sm-2">
 				<input type="text" class="form-control" id="data_vencimento" name="data_vencimento" th:field="*{data_vencimento}" data-provide="datepicker" data-date-format="dd/mm/yyyy" data-date-language="pt-BR" data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom" value="teste"/>
 			</div>
+			
+			<div class="form-group">
+			<label for="arquitetura" class="col-sm-2 control-label">Empresa contratada:</label>
+			<div class="col-sm-2">
+				<select class="form-control" name="contrato_id_contrato">
+					<option th:each="contratado : ${todosContratados}" th:value="${contratado.id_contratado}" th:text="${contratado.nome}" th:selected="${contrato.contratado} ? ${contratado.id_contratado} == ${contrato.contratado.id_contratado}"></option>
+				</select>
+			</div>
 		</div>
+		
+		
+		</div>
+		
+		
 		<!--  
 		<div class="form-group" >
 			<label for="data_compra" class="col-sm-2 control-label">Ultima atualização</label>
@@ -157,55 +171,48 @@
 		
 		<div class="form-group">
 			<label for="arquitetura" class="col-sm-2 control-label">Gestor:</label>
-			<div class="col-sm-4">
+			<div class="col-sm-2">
 				<select class="form-control" name="contrato_id_gestor">
 					<option th:each="gestor : ${todosGestores}" th:value="${gestor.id_usuario}" th:text="${gestor.nome}" th:selected="${contrato.gestor} ? ${contrato.gestor.id_usuario} == ${gestor.id_usuario}"></option>
 				</select>
 			</div>
-		</div>	
 		
-		<div class="form-group">
-			<label for="arquitetura" class="col-sm-2 control-label">Fiscal:</label>
-			<div class="col-sm-4">
-				<select class="form-control" name="contrato_id_fiscal">
-					<option th:each="fiscal : ${todosFiscais}" th:value="${fiscal.id_usuario}" th:text="${fiscal.nome}" th:selected="${contrato.fiscal} ? ${contrato.fiscal.id_usuario} == ${fiscal.id_usuario}"></option>
-				</select>
-			</div>
-		</div>	 
-		
-		<div class="form-group">
-			<label for="arquitetura" class="col-sm-2 control-label">Empresa contratada:</label>
-			<div class="col-sm-4">
-				<select class="form-control" name="contrato_id_contrato">
-					<option th:each="contratado : ${todosContratados}" th:value="${contratado.id_contratado}" th:text="${contratado.nome}" th:selected="${contrato.contratado} ? ${contratado.id_contratado} == ${contrato.contratado.id_contratado}"></option>
-				</select>
-			</div>
-		</div>
-		
-		<div class="form-group">
+			<div class="form-group">
 			<label for="arquitetura" class="col-sm-2 control-label">Licitacao:</label>
-			<div class="col-sm-4">
+			<div class="col-sm-2">
 				<select class="form-control" name="contrato_id_licitacao">
 					<option th:each="licitacao : ${todasLicitacoes}" th:value="${licitacao.id_licitacao}" th:text="${licitacao.numero}" ></option>
 				</select>
 			</div>
 		</div>	    
-			    
 		
-		<div class="form-group" th:classappend="${#fields.hasErrors('nomeResponsavel')} ? has-error">
+		
+		</div>	
+		
+		<div class="form-group">
+			<label for="arquitetura" class="col-sm-2 control-label">Fiscal:</label>
+			<div class="col-sm-2">
+				<select class="form-control" name="contrato_id_fiscal">
+					<option th:each="fiscal : ${todosFiscais}" th:value="${fiscal.id_usuario}" th:text="${fiscal.nome}" th:selected="${contrato.fiscal} ? ${contrato.fiscal.id_usuario} == ${fiscal.id_usuario}"></option>
+				</select>
+			</div>
+		
+			<div class="form-group" th:classappend="${#fields.hasErrors('nomeResponsavel')} ? has-error">
 			<label for="cnpj" class="col-sm-2 control-label">Nome do responsável:</label>
-			<div class="col-sm-4">
+			<div class="col-sm-2">
 				<input type="text" class="form-control" id="nomeResponsavel" name="nomeResponsavel" th:field="*{nomeResponsavel}" />
 			</div>
 		</div>
 		
+			
+		</div>	 
+		
 		<div class="form-group" th:classappend="${#fields.hasErrors('cpfResponsavel')} ? has-error">
 			<label for="cnpj" class="col-sm-2 control-label">Cpf responsável:</label>
-			<div class="col-sm-4">
+			<div class="col-sm-2">
 				<input type="text" class="form-control" id="cpfResponsavel" name="cpfResponsavel" th:field="*{cpfResponsavel}" />
 			</div>
 		</div>
-		
 		
 			<div class="form-group">
      		<div class="col-sm-offset-2 col-sm-10">

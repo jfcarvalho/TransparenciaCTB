@@ -48,8 +48,8 @@ public class Garantia {
 	private Date fim_vigencia;
 	private String susep;
 	@OneToOne
-	@JoinColumn(name="lancamento")
-	private Lancamento lancamento;
+	@JoinColumn(name="contrato")
+	private Contrato contrato;
 	
 	public Integer getId_garantia() {
 		return id_garantia;
@@ -137,14 +137,14 @@ public class Garantia {
 		this.susep = susep;
 	}
 	
-	public Lancamento getLancamento()
+	public Contrato getContrato()
 	{
-		return this.lancamento;
+		return this.contrato;
 	}
 	
-	public void setLancamento(Lancamento lancamento)
+	public void setContrato(Contrato contrato)
 	{
-		this.lancamento = lancamento;
+		this.contrato = contrato;
 	}
 
 }

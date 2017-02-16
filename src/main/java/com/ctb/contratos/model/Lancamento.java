@@ -55,7 +55,10 @@ public class Lancamento {
 	
 	private Integer meses_prorrogacao;
 	private String medicao;
-	
+	@DateTimeFormat(pattern= "dd/MM/yyyy")
+	@Temporal(TemporalType.DATE)
+	private Date doe_aditivo;
+
 	
 	
 	@OneToOne
@@ -68,6 +71,15 @@ public class Lancamento {
 	private BigDecimal saldo_contrato;
 	private String hora;
 	
+	public Date getDoe_aditivo()
+	{
+		return this.doe_aditivo;
+	}
+	
+	public void setDoe_aditivo(Date doe_aditivo)
+	{
+		this.doe_aditivo = doe_aditivo;
+	}
 	
 	
 	

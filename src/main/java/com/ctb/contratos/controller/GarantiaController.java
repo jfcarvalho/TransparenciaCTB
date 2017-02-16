@@ -37,6 +37,7 @@ import com.ctb.contratos.model.Lancamento;
 import com.ctb.contratos.model.Recurso;
 import com.ctb.contratos.model.Usuario;
 import com.ctb.contratos.repository.Contratados;
+import com.ctb.contratos.repository.Contratos;
 import com.ctb.contratos.repository.Garantias;
 import com.ctb.contratos.repository.Lancamentos;
 import com.ctb.contratos.repository.Processos;
@@ -51,81 +52,41 @@ public class GarantiaController {
 	private Garantias garantias;
 	
 	@Autowired
-	private Lancamentos lancamentos;
+	private Contratos contratos;
 	
 	@PersistenceContext
 	private EntityManager manager;
 	
 	
 
-	@RequestMapping("/novo/{id_lancamento}")
-	public ModelAndView novo(@PathVariable("id_lancamento") Integer id_lancamento)
+	@RequestMapping("/novo")
+	public ModelAndView novo()
 	{
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
 		mv.addObject(new Garantia());
-		Lancamento l = lancamentos.findOne(id_lancamento);
-		mv.addObject("lancamento", l);
 		//mv.addObject("todosNiveisUsuario", Nivel.values());
 		return mv;
 	}
 	
-	/*
 	@RequestMapping(method= RequestMethod.GET)
 	public ModelAndView pesquisar(String busca, String nome, String setor) throws ParseException
 	{
 		ModelAndView mv = new ModelAndView("/pesquisa/PesquisaGarantias");
-		//mv.addObject("usuarios", todosUsuarios);
-    
-	return mv;
-	}
-	*/
-	@RequestMapping(value="/pesquisar/{id_lancamento}")
-	public ModelAndView pesquisar(@PathVariable("id_lancamento") Integer Id_lancamento, String busca, String nome, String setor, @PageableDefault(size=15) Pageable pageable) throws ParseException
-	{
-		ModelAndView mv = new ModelAndView("/pesquisa/PesquisaGarantias");
-		Lancamento l = lancamentos.findOne(Id_lancamento);
-		Criteria criteria = manager.unwrap(Session.class).createCriteria(Garantia.class);
-		int paginaAtual = pageable.getPageNumber();
-		int totalRegistrosPorPagina = pageable.getPageSize();
-		int primeiroRegistro = paginaAtual * totalRegistrosPorPagina;
-		
-		
-		criteria.setFirstResult(primeiroRegistro);
-        criteria.setMaxResults(totalRegistrosPorPagina);
-    	criteria.add(Restrictions.eq("lancamento", l));
-        
-        Comparator<Garantia> cmp = new Comparator<Garantia>() {
-	        public int compare(Garantia g1, Garantia g2 ) {
-	          return g2.getId_garantia().compareTo(g1.getId_garantia());
-	        }
-	    };
-	   
-    	
-    	List<Garantia> garantiasOrdenadas = criteria.list();
-	    garantiasOrdenadas.sort(cmp);
-		//criteria.add(Restrictions.eq("contrato", c));
-		
-		//List<Garantia> garantia= c.getLancamentos();
-		Page<Garantia> pags = new PageImpl<Garantia>(garantiasOrdenadas, pageable, garantiasOrdenadas.size());
-	
-		//Page<Lancamento> lancamentos = criteria.list();
-		//c.getLancamentos();
-		mv.addObject("todosLancamentos",pags);
-		mv.addObject("lancamento", l);
+		mv.addObject("garantias", garantias.findAll());
 		return mv;
 	}
 	
-	@RequestMapping(value="/salvar/{id_lancamento}", method = RequestMethod.POST)
-	public String salvar(Garantia garantia, @PathVariable("id_lancamento")Integer Id_lancamento, RedirectAttributes attributes)
+	@RequestMapping(method = RequestMethod.POST)
+	public String salvar(Garantia garantia, @RequestParam("contrato") Integer Id_contrato, RedirectAttributes attributes)
 	{
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
-		if(Id_lancamento != null) {
-			Lancamento l = lancamentos.findOne(Id_lancamento);
-			garantia.setLancamento(l);
+		if(Id_contrato != null) {
+			Contrato c = contratos.findOne(Id_contrato);
+			garantia.setContrato(c);
 		}
 		garantias.save(garantia);		
 		attributes.addFlashAttribute("mensagem", "Garantia salva com sucesso!");	
-		return "redirect:/transparenciactb/garantias/pesquisar/" +garantia.getLancamento().getId_lancamento();
+		return "redirect:/transparenciactb/garantias";
 	}
 	
 	@ModelAttribute("todasGarantias")
@@ -148,6 +109,11 @@ public class GarantiaController {
 		@ModelAttribute("permissao")
 	public boolean temPermissao() {
 		return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
+	}
+		
+		@ModelAttribute("todosContratos")
+		public List<Contrato> todosContratos() {
+			return contratos.findAll();
 	}
 	
 }

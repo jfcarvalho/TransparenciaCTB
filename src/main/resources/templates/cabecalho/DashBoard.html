@@ -26,7 +26,9 @@
       
           <ul class="aw-menu__list  aw-menu__list--sublist">
             <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/contratos/novo" th:if="${permissao}">Cadastro de Contrato</a></li>
-            <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/contratos">Pesquisa de contratos</a></li>
+            <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/contratos">Pesquisa de Contratos</a></li>
+            <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/garantias/novo" th:if="${permissao}">Cadastro de Garantias</a></li>
+            <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/garantias">Pesquisa de Garantias</a></li>
        
         
             
@@ -67,20 +69,20 @@
           </a>
       
           <ul class="aw-menu__list  aw-menu__list--sublist">
-            <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/processos/novo" th:if="${permissao}">Cadastro de processos</a></li>
-           <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/processos/">Pesquisa de processos</a></li>
+            <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/processos/novo" th:if="${permissao}">Cadastro de Processos</a></li>
+           <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/processos/">Pesquisa de Processos</a></li>
           </ul>
         </li>
         
         
-         <li class="aw-menu__item" th:if="${permissao}">
+         <li class="aw-menu__item">
           <a href="#">
             <i class="fa  fa-fw  fa-file-text"></i><span>Licitações</span>
             <i class="aw-menu__navigation-icon  fa"></i>
           </a>
       
           <ul class="aw-menu__list  aw-menu__list--sublist">
-            <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/licitacoes/novo">Cadastrar licitação</a></li>
+            <li class="aw-menu__item  aw-menu__item--link" th:if="${permissao}" ><a href="/transparenciactb/licitacoes/novo">Cadastrar Licitação</a></li>
             <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/licitacoes">Pesquisar Licitação</a></li>
            
             

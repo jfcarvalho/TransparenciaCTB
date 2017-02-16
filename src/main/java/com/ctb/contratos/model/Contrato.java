@@ -91,7 +91,10 @@ public class Contrato {
 	private Licitacao licitacao; //Liitação
 	
 	private boolean riscofinanceiro;
-
+	
+	@DateTimeFormat(pattern= "dd/MM/yyyy")
+	@Temporal(TemporalType.DATE)
+	private Date doe;
 	
 	
 	
@@ -114,6 +117,17 @@ public class Contrato {
 	{
 		this.numero = numero;
 	}
+	
+	public Date getDoe()
+	{
+		return this.doe;
+	}
+	
+	public void setDoe(Date doe)
+	{
+		this.doe = doe;
+	}
+	
 	public Date getData_assinatura()
 	{
 		return this.data_assinatura;

@@ -8,6 +8,8 @@ public enum Modalidade {
 	PregaoE("Pregão Eletrônico"),
 	PregaoP("Pregão Presencial"),
 	TomadaDePreco("Tomada de Preço"),
+	Inexibilidade("Inexibildade"),
+	Dispensa("Dispensa"),
 	Leilao("Leilão");
 	
 	private String descricao;

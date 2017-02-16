@@ -153,6 +153,7 @@ public class LancamentoController {
 		lancamento.setTipoAditivo(lancamentobd.getTipoAditivo());
 		lancamento.setValor(lancamentobd.getValor());
 		lancamento.setValor_aditivo(lancamentobd.getValor_aditivo());
+		lancamento.setDoe_aditivo(lancamentobd.getDoe_aditivo());
 		
 	lancamento.setProcesso(processos.findOne(Id_processo));
 	lancamento.setLiquidado(true);
@@ -209,7 +210,7 @@ public class LancamentoController {
 		String dataFormatada = sdf.format(hora);
 		lancamento.setHora(dataFormatada);
 	//	System.out.println(gastoMedio(c));
-	//	mailer.enviar_lancamento_gestor(lancamento,"jfcarvalho@ctb.ba.gov.br");
+		mailer.enviar_lancamento_gestor(lancamento,"jfcarvalho@ctb.ba.gov.br");
 		checaGastoContrato(c, gastoMedio(c), lancamento.getValor());
 		contratos.save(c);
 		lancamentos.save(lancamento);		
@@ -246,7 +247,7 @@ public class LancamentoController {
 	
 	
 	@RequestMapping(value="/pesquisar/{id_contrato}")
-	public ModelAndView pesquisar(@PathVariable("id_contrato") Integer Id_contrato, String busca, String nome, String setor, @PageableDefault(size=15) Pageable pageable) throws ParseException
+	public ModelAndView pesquisar(@PathVariable("id_contrato") Integer Id_contrato, String busca, String nome, String setor, @PageableDefault(size=5) Pageable pageable) throws ParseException
 	{
 		ModelAndView mv = new ModelAndView("/pesquisa/PesquisaLancamentos");
 		Contrato c = contratos.findOne(Id_contrato);
@@ -262,7 +263,13 @@ public class LancamentoController {
         
         Comparator<Lancamento> cmp = new Comparator<Lancamento>() {
 	        public int compare(Lancamento l1, Lancamento l2) {
-	          return l1.getData().compareTo(l2.getData());
+	          return l2.getData().compareTo(l1.getData());
+	        }
+	    };
+	    
+	    Comparator<Lancamento> cmp2 = new Comparator<Lancamento>() {
+	        public int compare(Lancamento l1, Lancamento l2) {
+	          return l1.getId_lancamento().compareTo(l2.getId_lancamento());
 	        }
 	    };
 	    /*
@@ -273,11 +280,15 @@ public class LancamentoController {
 	    };
 	    */
 	    List<Lancamento> lancamentosOrdenados = criteria.list();
-	    lancamentosOrdenados.sort(cmp);
+	   // lancamentosOrdenados.sort(cmp2);
+	    //Collections.sort(lancamentosOrdenados);
+	    Collections.reverse(lancamentosOrdenados);
+	    //lancamentosOrdenados.sort(cmp);
+	   
 		//criteria.add(Restrictions.eq("contrato", c));
 		
-		List<Lancamento> lanc= c.getLancamentos();
-		Page<Lancamento> pags = new PageImpl<Lancamento>(lancamentosOrdenados, pageable, lanc.size());
+		//List<Lancamento> lanc= c.getLancamentos();
+		Page<Lancamento> pags = new PageImpl<Lancamento>(lancamentosOrdenados, pageable, lancamentosOrdenados.size());
 	
 		//Page<Lancamento> lancamentos = criteria.list();
 		//c.getLancamentos();
@@ -301,7 +312,7 @@ public class LancamentoController {
 	
 
 	@RequestMapping(value = "/editar_lancamento/{id_lancamento}", method=RequestMethod.POST)
-	public ModelAndView edicao(Lancamento lancamento, @RequestParam Integer lancamento_id_contrato)
+	public ModelAndView edicao(Lancamento lancamento, Contrato contrato)
 	{
 		ModelAndView mv = new ModelAndView(EDICAO_VIEW);
 		Lancamento lancbd = lancamentos.findOne(lancamento.getId_lancamento());
@@ -317,6 +328,7 @@ public class LancamentoController {
 		lancbd.setTipoAditivo(lancamento.getTipoAditivo());
 		lancbd.setValor_aditivo(lancamento.getValor_aditivo());
 		lancbd.setValor(lancamento.getValor());
+		lancbd.setDoe_aditivo(lancamento.getDoe_aditivo());
 		lancamentos.save(lancbd);
 		recalcularSaldos(lancbd.getContrato());
 		mv.addObject("mensagem", "Lançamento editado com sucesso");
