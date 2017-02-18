@@ -3,6 +3,7 @@ package com.ctb.contratos.controller;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,6 +44,7 @@ import com.ctb.security.AppUserDetailsService;
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
+import jxl.WorkbookSettings;
 import jxl.read.biff.BiffException;
 
 @Controller
@@ -51,7 +53,8 @@ import jxl.read.biff.BiffException;
 
 public class HomesController {
 	private String HOME_VIEW = "/home/PaginaInicial";
-	
+	static int id_inicial =0;
+	static int id_proc =0;
 	@Autowired
 	private Usuarios usuarios;
 	
@@ -98,7 +101,15 @@ public class HomesController {
 		DateTime date = new DateTime();
 		ano = Integer.toString(date.getYear());
 		teste = contratosVSvalores();
-		alimentarSistema();
+		
+	
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\BRASPE1.xls", 3, 59);
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\BRASPE2.xls", 1, 64);
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\PRODEB.xls", 7, 55);
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\AlberoniArruda.xls", 4, 23);
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\EGBA2.xls", 6, 36);
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\MJR2.xls", 2, 22);
+		
 		//mailer.enviar_vencimento_gestor(vencimento90_todos());
 		//mailer.pegarContrato();
 		
@@ -189,12 +200,14 @@ public class HomesController {
 		mv.addObject("empresas", teste.toString());
 		return mv;
 }	
-	
-	public void alimentarSistema() throws  IOException, BiffException, ParseException
+//	"C:\\Users\\nessk\\Downloads\\VIVO.xls";
+	public void alimentarSistema(String caminhoPlanilha, Integer id_contrato, Integer linhasALer) throws  IOException, BiffException, ParseException
 	{
 		
-		List<Lancamento> lanc = new ArrayList<Lancamento>();
-		Workbook workbook = Workbook.getWorkbook(new File("C:\\Users\\nessk\\Downloads\\PRODEB.xls"));
+		
+		  WorkbookSettings workbookSettings = new WorkbookSettings();
+		 workbookSettings.setEncoding( "ISO-8859-1" );
+		Workbook workbook = Workbook.getWorkbook(new File(caminhoPlanilha), workbookSettings);
 		Sheet sheet = workbook.getSheet(0);
 		Integer linhas = sheet.getRows();
 		Integer linhaAtual = 14;
@@ -202,10 +215,9 @@ public class HomesController {
 		Integer ano = Integer.parseInt(c1.getContents());
 		Integer [] diasMeses = gerarVetorDias();
 		String dataLancamento = new String();
-		int id_inicial =1;
-		int id_proc = 4;
-		Contrato c = contratos.findOne(7);
-		while(linhaAtual < 55)
+		
+		Contrato c = contratos.findOne(id_contrato);
+		while(linhaAtual < linhasALer)
 		{
 			Cell clinha = sheet.getCell(2, linhaAtual);
 			Cell anoAtual = sheet.getCell(0, linhaAtual);
@@ -286,8 +298,8 @@ public class HomesController {
 				break;
 			}
 			Lancamento l = new Lancamento();
-			l.setId_lancamento(id_inicial);
 			id_inicial++;
+			l.setId_lancamento(id_inicial);	
 			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = (Date)formatter.parse(dataLancamento);
 			l.setData(date);
@@ -300,11 +312,11 @@ public class HomesController {
 			{
 				l.setNumero_nota_fiscal(n_nota_fiscal.getContents());
 			}
-				float v = Float.parseFloat(valorContrato.getContents().replaceAll(",", "."));
-				BigDecimal valor = new BigDecimal(Float.toString(v)); //problema aqui
+				Double v1 = Double.parseDouble(valorContrato.getContents().replaceAll(",", "."));
+				BigDecimal valor = new BigDecimal(v1); //problema aqui
 				l.setValor(valor);
-				float s = Float.parseFloat(saldoContrato.getContents().replaceAll(",", "."));
-				BigDecimal saldo = new BigDecimal(Float.toString(s)); //problema aqui
+				Double s1 = Double.parseDouble(saldoContrato.getContents().replaceAll(",", "."));
+				BigDecimal saldo = new BigDecimal(s1); //problema aqui
 				l.setSaldo_contrato(saldo);
 			
 			l.setObservacao(observacaoContrato.getContents());
@@ -313,8 +325,8 @@ public class HomesController {
 				if(!numeroAditivo.getContents().equals("")) {
 					l.setAditivo_n(Integer.parseInt(numeroAditivo.getContents()));
 				}
-				float a = Float.parseFloat(valorAditivo.getContents().replaceAll(",", "."));
-				BigDecimal aditivo = new BigDecimal(Float.toString(a));
+				Double a = Double.parseDouble(valorAditivo.getContents().replaceAll(",", "."));
+				BigDecimal aditivo = new BigDecimal(a);
 				l.setValor_aditivo(aditivo);
 				l.setPossui_aditivo(true);
 			}
@@ -325,8 +337,9 @@ public class HomesController {
 		if(!numeroProcesso.getContents().equals("") || !dataProcesso.getContents().equals("")) 
 		{
 			Processo p = new Processo();
-			p.setId_processo(id_proc);
 			id_proc++;
+			p.setId_processo(id_proc);
+			
 			p.setNumero_ci("000000");
 			p.setPago(true);
 			p.setTipo_processo(TipoProcesso.Pagamento);
@@ -338,8 +351,24 @@ public class HomesController {
 			l.setProcesso(p);
 			processos.save(p);
 		}
+		else
+		{
+			Processo p = new Processo();
+			id_proc++;
+			p.setId_processo(id_proc);
+			p.setNumero_ci("000000");
+			p.setPago(true);
+			p.setTipo_processo(TipoProcesso.Pagamento);
+			p.setNumero_processo("Desconhecido");
+			Date data = (Date)formatter.parse(dataLancamento);
+			p.setData_abertura(data);
+			p.setData_pagamento(data);
+			l.setProcesso(p);
+			processos.save(p);
+		}
 			linhaAtual++;
 			l.setContrato(c);
+			l.setLiquidado(true);
 			lancamentos.save(l);
 		}
 		
