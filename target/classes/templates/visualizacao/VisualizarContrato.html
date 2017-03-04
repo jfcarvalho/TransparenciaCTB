@@ -25,7 +25,7 @@
   Nº contrato:
   </td>
   <td>
-  <div th:text="${contrato.numero}"></div>
+  <div th:text="${contrato.numero}" style="width: 300px"></div>
   </td>
  </tr>
  <tr>
@@ -41,7 +41,7 @@
   Empresa:
   </td>
   <td>
-  <div th:text="${contrato.contratado} ? ${contrato.contratado.nome}: 'Sem nome'" ></div> 
+  <div th:text="${contrato.contratado} ? ${contrato.contratado.nome}: 'Sem nome'" style="width: 300px" ></div> 
   </td>
  </tr>
  <tr>
@@ -49,7 +49,7 @@
   Gestor:
   </td>
   <td>
-  <div th:text="${contrato.gestor.nome}"></div>
+  <div th:text="${contrato.gestor.nome}" style="width: 300px"></div>
   </td>
  </tr>
  <tr>
@@ -57,7 +57,7 @@
   Setor:
   </td>
   <td>
-  <div th:text="${contrato.gestor.setor}"></div>
+  <div th:text="${contrato.gestor.setor}" style="width: 300px"></div>
   </td>
  </tr>
  <tr>
@@ -65,7 +65,7 @@
   Objeto:
   </td>
   <td>
- <div th:text="${contrato.objeto}"></div>
+ <div th:text="${contrato.objeto}" style="width: 300px"></div>
   </td>
  </tr>
  <tr>
@@ -136,7 +136,7 @@
 </div>
 
 <p></p>
-<div style="display: block; float:left; margin-left:300px; margin-top:20px;">
+<div style="display: block; float:left; margin-left:200px; margin-top:20px;">
 <table>
  <tr>
   <td>
