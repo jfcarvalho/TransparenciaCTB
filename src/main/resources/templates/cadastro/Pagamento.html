@@ -28,7 +28,7 @@
 
 <section layout:fragment="conteudo">
 
-<form class="form-horizontal" method="POST" action="/transparenciactb/lancamentos/pagar/{id_lancamento}"  th:object="${lancamento}">
+<form class="form-horizontal" method="POST" th:action="@{/transparenciactb/lancamentos/pagar/{id_lancamento}(id_lancamento = ${lancamento.id_lancamento})}"  th:object="${lancamento}">
 		<div layout:include="/mensagem/MensagemUsuario"></div>
 		
 		<div class="panel panel-default">

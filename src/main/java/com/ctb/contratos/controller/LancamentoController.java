@@ -159,9 +159,10 @@ public class LancamentoController {
 		lancamento.setProcesso(p);
 		p.setLancamento(lancamento);
 		processos.save(p);
-	lancamento.setLiquidado(true);
+		lancamento.setLiquidado(true);
 
 		lancamentos.save(lancamento);
+		mv.addObject(lancamento);
 		mv.addObject("mensagem", "Pagamento registrado com sucesso!");
 		return mv;
 	}
