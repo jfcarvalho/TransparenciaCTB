@@ -101,19 +101,53 @@ public class HomesController {
 		DateTime date = new DateTime();
 		ano = Integer.toString(date.getYear());
 		teste = contratosVSvalores();
+		/*
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\TRIVALE.xls", 41, 19);
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\DINAMO.xls", 33, 23);
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\EGBAVELHO.xls", 34, 106);
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\LAR.xls", 35, 16);
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\LRX.xls", 36, 18 );
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\PLUS.xls", 37, 50 );
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\PROJCONSULT.xls", 40, 22);
+	alimentarSistema("C:\\Users\\nessk\\Downloads\\ENGEVIX.xls", 11, 88);	
+	alimentarSistema("C:\\Users\\nessk\\Downloads\\BRASPE1.xls", 3, 59);
+	alimentarSistema("C:\\Users\\nessk\\Downloads\\BRASPE2.xls", 1, 64);
+	alimentarSistema("C:\\Users\\nessk\\Downloads\\PRODEB.xls", 7, 55);
+	alimentarSistema("C:\\Users\\nessk\\Downloads\\VIVO.xls", 8, 64);
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\DUCTOR.xls", 10, 165);
 		
-	
-		alimentarSistema("C:\\Users\\nessk\\Downloads\\BRASPE1.xls", 3, 59);
-		alimentarSistema("C:\\Users\\nessk\\Downloads\\BRASPE2.xls", 1, 64);
-		alimentarSistema("C:\\Users\\nessk\\Downloads\\PRODEB.xls", 7, 55);
-		alimentarSistema("C:\\Users\\nessk\\Downloads\\AlberoniArruda.xls", 4, 23);
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\ECT.xls", 23, 60);	
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\UNIMED.xls", 26, 36);
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\REALIZA.xls", 27, 50);
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\BATUR.xls", 28, 29);
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\IPSE.xls", 29, 16);
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\PROSSEGUR.xls", 30, 42);
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\SOFTCOM.xls", 31, 23);
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\SOS.xls", 32, 26);
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\TELEMARLD.xls", 24,40);
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\TELEMAREDE.xls", 25, 69);
+	alimentarSistema("C:\\Users\\nessk\\Downloads\\BASE.xls", 12, 28);
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\FF1.xls", 16, 23);
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\CALDAS.xls", 13, 45);
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\FF2.xls", 17, 16);
+
+	alimentarSistema("C:\\Users\\nessk\\Downloads\\PERFORMANCE.xls", 14, 16);
+	alimentarSistema("C:\\Users\\nessk\\Downloads\\ENTEL.xls", 18, 52);
+	alimentarSistema("C:\\Users\\nessk\\Downloads\\BMW.xls", 15, 16);
+	alimentarSistema("C:\\Users\\nessk\\Downloads\\GIBBOR.xls", 19, 33);
+	alimentarSistema("C:\\Users\\nessk\\Downloads\\IEL.xls", 20, 76);
+	alimentarSistema("C:\\Users\\nessk\\Downloads\\SODEXO2011.xls", 21, 81);
+		alimentarSistema("C:\\Users\\nessk\\Downloads\\SODEXO2016.xls", 22, 17);
+		
+			alimentarSistema("C:\\Users\\nessk\\Downloads\\AlberoniArruda.xls", 4, 23);
 		alimentarSistema("C:\\Users\\nessk\\Downloads\\EGBA2.xls", 6, 36);
 		alimentarSistema("C:\\Users\\nessk\\Downloads\\MJR2.xls", 2, 22);
+	*/
 		
 		//mailer.enviar_vencimento_gestor(vencimento90_todos());
 		//mailer.pegarContrato();
 		
-		
+
 		
 		while(it.hasNext())
 		{
@@ -215,7 +249,7 @@ public class HomesController {
 		Integer ano = Integer.parseInt(c1.getContents());
 		Integer [] diasMeses = gerarVetorDias();
 		String dataLancamento = new String();
-		
+		Processo p = new Processo();
 		Contrato c = contratos.findOne(id_contrato);
 		while(linhaAtual < linhasALer)
 		{
@@ -229,76 +263,79 @@ public class HomesController {
 			Cell saldoContrato = sheet.getCell(7, linhaAtual);
 			Cell numeroProcesso = sheet.getCell(4, linhaAtual);
 			Cell dataProcesso = sheet.getCell(5, linhaAtual);
+			System.out.println(anoAtual.getContents() + "  - " + ano + caminhoPlanilha);
+			id_proc++;
+			id_inicial++;
 			if(Integer.parseInt(anoAtual.getContents()) != ano)
 			{
 				diasMeses = gerarVetorDias();
 				ano = Integer.parseInt(anoAtual.getContents());
 			}
-			switch(clinha.getContents())
+			switch(clinha.getContents().toUpperCase())
 			{
-				case "Janeiro":
+				case "JANEIRO":
 					diasMeses[1] = diasMeses[1]+1;
 					dataLancamento = ano.toString() +"-01-0"+diasMeses[1].toString();
 					//System.out.println(dataLancamento);
 				break;
-				case "Fevereiro":
+				case "FEVEREIRO":
 					diasMeses[2] = diasMeses[2]+1;
 					dataLancamento = ano.toString() +"-02-0"+diasMeses[2].toString();
 					//System.out.println(dataLancamento);
 				break;
-				case "Março":
+				case "MARÇO":
 					diasMeses[3] = diasMeses[3]+1;
 					dataLancamento = ano.toString() +"-03-0"+diasMeses[3].toString();
 					//System.out.println(dataLancamento);
 				break;
-				case "Abril":
+				case "ABRIL":
 					diasMeses[4] = diasMeses[4]+1;
 					dataLancamento = ano.toString() +"-04-0"+diasMeses[4].toString();
 					//System.out.println(dataLancamento);
 				break;
-				case "Maio":
+				case "MAIO":
 					diasMeses[5] = diasMeses[5]+1;
 					dataLancamento = ano.toString() +"-05-0"+diasMeses[5].toString();
 					//System.out.println(dataLancamento);
 				break;
-				case "Junho":
+				case "JUNHO":
 					diasMeses[6] = diasMeses[6]+1;
 					dataLancamento = ano.toString() +"-06-0"+diasMeses[6].toString();
 					//System.out.println(dataLancamento);
 				break;
-				case "Julho":
+				case "JULHO":
 					diasMeses[7] = diasMeses[7]+1;
 					dataLancamento = ano.toString() +"-07-0"+diasMeses[7].toString();
 					//System.out.println(dataLancamento);
 				break;
-				case "Agosto":
+				case "AGOSTO":
 					diasMeses[8] = diasMeses[8]+1;
 					dataLancamento = ano.toString() +"-08-0"+diasMeses[8].toString();
 					//System.out.println(dataLancamento);
 				break;
-				case "Setembro":
+				case "SETEMBRO":
 					diasMeses[9] = diasMeses[9]+1;
 					dataLancamento = ano.toString() +"-09-0"+diasMeses[9].toString();
 					//System.out.println(dataLancamento);
 				break;
-				case "Outubro":
+				case "OUTUBRO":
 					diasMeses[10] = diasMeses[10]+1;
 					dataLancamento = ano.toString() +"-10-0"+diasMeses[10].toString();
 					//System.out.println(dataLancamento);
 				break;
-				case "Novembro":
+				case "NOVEMBRO":
 					diasMeses[11] = diasMeses[11]+1;
 					dataLancamento = ano.toString() +"-11-0"+diasMeses[11].toString();
 					//System.out.println(dataLancamento);
 				break;
-				case "Dezembro":
+				case "DEZEMBRO":
 					diasMeses[12] = diasMeses[12]+1;
 					dataLancamento = ano.toString() +"-12-0"+diasMeses[12].toString();
 					//System.out.println(dataLancamento);
 				break;
 			}
 			Lancamento l = new Lancamento();
-			id_inicial++;
+			
 			l.setId_lancamento(id_inicial);	
 			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = (Date)formatter.parse(dataLancamento);
@@ -312,21 +349,44 @@ public class HomesController {
 			{
 				l.setNumero_nota_fiscal(n_nota_fiscal.getContents());
 			}
-				Double v1 = Double.parseDouble(valorContrato.getContents().replaceAll(",", "."));
-				BigDecimal valor = new BigDecimal(v1); //problema aqui
-				l.setValor(valor);
-				Double s1 = Double.parseDouble(saldoContrato.getContents().replaceAll(",", "."));
-				BigDecimal saldo = new BigDecimal(s1); //problema aqui
-				l.setSaldo_contrato(saldo);
+				if(!valorContrato.getContents().equals("") || !valorContrato.getContents().isEmpty()) {
+					Double v1 = Double.parseDouble(valorContrato.getContents().replaceAll(",", "."));
+					BigDecimal valor = new BigDecimal(v1); //problema aqui
+					l.setValor(valor);
+				}
+				else
+				{
+					BigDecimal valor = new BigDecimal(BigDecimal.ZERO.toString()); //problema aqui
+					l.setValor(valor);
+				}
+				if(saldoContrato.getContents().length() != 0) {
+					Double s1 = Double.parseDouble(saldoContrato.getContents().replaceAll(",", "."));
+					BigDecimal saldo = new BigDecimal(s1); //problema aqui
+					l.setSaldo_contrato(saldo);
+				}
+				else
+				{
+					BigDecimal saldo = new BigDecimal(BigDecimal.ZERO.toString()); //problema aqui
+					l.setSaldo_contrato(saldo);
+				}
 			
 			l.setObservacao(observacaoContrato.getContents());
-			if(!valorAditivo.getContents().equals("") || !numeroAditivo.getContents().equals(""))
+			if(!valorAditivo.getContents().equals("") || !numeroAditivo.getContents().equals("") || numeroAditivo.getContents().length() != 0 || valorAditivo.getContents().length() != 0)
 			{
-				if(!numeroAditivo.getContents().equals("")) {
+				if(numeroAditivo.getContents().length() != 0) {
 					l.setAditivo_n(Integer.parseInt(numeroAditivo.getContents()));
 				}
-				Double a = Double.parseDouble(valorAditivo.getContents().replaceAll(",", "."));
-				BigDecimal aditivo = new BigDecimal(a);
+				if(!valorAditivo.getContents().equals("")) {
+					System.out.println("Valor do mardito!! " + valorAditivo.getContents().length());
+					Double a = Double.parseDouble(valorAditivo.getContents().replaceAll(",", "."));
+					BigDecimal aditivo = new BigDecimal(a);
+					l.setValor_aditivo(aditivo);
+					l.setPossui_aditivo(true);
+				}
+			}
+			else if(valorAditivo.getContents().equals("") && !numeroAditivo.getContents().isEmpty())
+			{
+				BigDecimal aditivo = new BigDecimal(BigDecimal.ZERO.toString());
 				l.setValor_aditivo(aditivo);
 				l.setPossui_aditivo(true);
 			}
@@ -336,25 +396,36 @@ public class HomesController {
 			
 		if(!numeroProcesso.getContents().equals("") || !dataProcesso.getContents().equals("")) 
 		{
-			Processo p = new Processo();
-			id_proc++;
+			//Processo p = new Processo();
+			
 			p.setId_processo(id_proc);
 			
 			p.setNumero_ci("000000");
 			p.setPago(true);
 			p.setTipo_processo(TipoProcesso.Pagamento);
 			p.setNumero_processo(numeroProcesso.getContents());
-			Date data = (Date)formatter.parse(dataProcesso.getContents());
-			p.setData_abertura(data);
-			p.setData_pagamento(data);
+			if(dataProcesso.getContents().equals(""))
+			{
+				Date data = (Date)formatter.parse(dataLancamento);
+				p.setData_abertura(data);
+				p.setData_pagamento(data);
+
+			}
+			else
+			{
+				Date data = (Date)formatter.parse(dataProcesso.getContents());
+				p.setData_abertura(data);
+				p.setData_pagamento(data);
+
+			}
+		
 			p.setPago(true);
-			l.setProcesso(p);
-			processos.save(p);
+			
+
 		}
 		else
 		{
-			Processo p = new Processo();
-			id_proc++;
+			
 			p.setId_processo(id_proc);
 			p.setNumero_ci("000000");
 			p.setPago(true);
@@ -363,12 +434,19 @@ public class HomesController {
 			Date data = (Date)formatter.parse(dataLancamento);
 			p.setData_abertura(data);
 			p.setData_pagamento(data);
-			l.setProcesso(p);
-			processos.save(p);
+			
+			
 		}
 			linhaAtual++;
 			l.setContrato(c);
 			l.setLiquidado(true);
+		//	l.setProcesso(p);
+		//	p.setLancamento(l);
+			processos.save(p);
+			lancamentos.save(l);
+			l.setProcesso(p);
+			p.setLancamento(l);
+			processos.save(p);
 			lancamentos.save(l);
 		}
 		

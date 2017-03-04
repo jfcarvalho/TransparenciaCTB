@@ -28,9 +28,10 @@
 
 <section layout:fragment="conteudo">
 
-<form class="form-horizontal" method="POST" action="/transparenciactb/contratos/renovar/{id_contrato}"  th:object="${contrato}">
+<form class="form-horizontal" method="POST" th:action="@{/transparenciactb/contratos/renovar/{id_contrato}(id_contrato = ${contrato.id_contrato})}"  th:object="${contrato}">
 		<div layout:include="/mensagem/MensagemUsuario"></div>
-		
+		<input type="hidden" th:field="*{id_contrato}" />
+			
 		<div class="panel panel-default">
 		<div class="panel-heading">
 			<div class="clearfix">
@@ -40,11 +41,11 @@
 	
 	
 	<div class="panel-body">
-	<input type="hidden" th:field="*{id_contrato}" />
+
 	<div class="panel-heading">
 	    <h5><b>Contrato referente:</b><span th:text="${contrato.numero}"></span></h5>
 	    <h5><b>Empresa:</b>:<span th:text="${contrato.contratado} ? ${contrato.contratado.nome} + '-' + ${contrato.contratado.cnpj}"></span></h5>
-	    <h5><b>Gestor</b>:<span th:text="${contrato.gestor.nome}"></span></h5>
+	    <h5><b>Gestor</b>:<span th:text="${contrato.gestor} ? ${contrato.gestor.nome}: 'Não informado'"></span></h5>
 	    <h5><b>Data de assinatura</b>:<span th:text="${contrato.data_vencimento}"></span></h5>
 	    <h5><b>Valor:</b><span th:text="'R$' + ${#numbers.formatDecimal(contrato.valor_contrato, 0, 'POINT', 2, 'COMMA')}"></span></h5>
 	     <h5><b>Saldo atual do contrato:</b><span th:text="'R$' + ${#numbers.formatDecimal(contrato.saldo_contrato, 0, 'POINT', 2, 'COMMA')}"></span></h5>

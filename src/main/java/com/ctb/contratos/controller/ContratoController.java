@@ -740,10 +740,11 @@ public class ContratoController {
 	}
 	
 	@RequestMapping("/gerar_renovacao/{id_contrato}")
-	public ModelAndView gerar_renovacao(@PathVariable("id_contrato")Integer Id_contrato)
+	public ModelAndView gerar_renovacao(@PathVariable("id_contrato")Contrato contrato)
 	{
 		ModelAndView mv = new ModelAndView(RENOVACAO_VIEW);
-	   mv.addObject("contrato", contratos.findOne(Id_contrato));
+	   mv.addObject("contrato", contratos.findOne(contrato.getId_contrato()));
+	   mv.addObject(contrato);
 	   return mv;
 	}
 	
@@ -752,8 +753,12 @@ public class ContratoController {
 	{
 		ModelAndView mv = new ModelAndView(RENOVACAO_VIEW);
 		Contrato contratobd = contratos.findOne(contrato.getId_contrato());
-		contratobd.setProcesso(processos.findOne(Id_processo));
+		Processo p = processos.findOne(Id_processo);
+		contratobd.setProcesso(p);
+		p.setContrato(contratobd);
+		processos.save(p);
 		contratos.save(contratobd);
+		mv.addObject(contratobd);
 		mv.addObject("mensagem", "Processo registrado com sucesso!");
 		return mv;
 	}
@@ -850,7 +855,7 @@ public class ContratoController {
 		List<Processo> processosRenovacao = new ArrayList<Processo>();
 		for(Processo p:processos.findAll())
 		{
-			if(p.getTipo_processo().getTipo().equals("Renovação") || p.getTipo_processo().getTipo().equals("Nova licitação") )
+			if((p.getTipo_processo().getTipo().equals("Renovação") || p.getTipo_processo().getTipo().equals("Nova licitação") ) && p.getContrato() == null)
 			{
 				processosRenovacao.add(p);
 			}

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
@@ -154,8 +155,10 @@ public class LancamentoController {
 		lancamento.setValor(lancamentobd.getValor());
 		lancamento.setValor_aditivo(lancamentobd.getValor_aditivo());
 		lancamento.setDoe_aditivo(lancamentobd.getDoe_aditivo());
-		
-	lancamento.setProcesso(processos.findOne(Id_processo));
+		Processo p = processos.findOne(Id_processo);
+		lancamento.setProcesso(p);
+		p.setLancamento(lancamento);
+		processos.save(p);
 	lancamento.setLiquidado(true);
 
 		lancamentos.save(lancamento);
@@ -222,7 +225,16 @@ public class LancamentoController {
 	@ModelAttribute("todosProcessos")
 	public List<Processo> todosProcessos()
 	{
-		return processos.findAll();
+		List <Processo> p = processos.findAll();
+		List <Processo> np = new ArrayList<Processo>();
+		for(Processo proc:p)
+		{
+			if(proc.getTipo_processo().getTipo().equals("Pagamento") && proc.getLancamento() == null)
+			{
+				np.add(proc);
+			}
+		}
+		return np;
 	}
 	
 	public BigDecimal gastoMedio(Contrato contrato)
