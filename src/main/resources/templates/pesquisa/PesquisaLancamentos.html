@@ -19,7 +19,7 @@
 		<div class="panel-heading">
 		<div class="clearfix">	
 			<h1 class="panel-title">Pesquisa de Lançamentos</h1>
-			<form method="GET" action="/transparenciactb/lancamentos/novo/{id_contrato}">
+			<form method="GET" action="/transparenciactb/lancamentos/pesquisar/{id_contrato}">
 			<div class="col-lg-3">
    				 <div class="input-group">
      				 <input type="text" class="form-control" placeholder="Pesquise aqui..." name="busca"/>
@@ -29,8 +29,8 @@
    				 </div>
  			 </div>
  			 <div class="col-lg-12">
- 			 	<input type="radio" name ="nome" /> Numero nota fiscal
- 			 	<input type="radio" name ="setor" /> Data de lancamento
+ 			 	<input type="radio" name ="numero" /> Numero nota fiscal
+ 			 	<input type="radio" name ="data" /> Data de lancamento
  			 </div>
  			  
  			</form>

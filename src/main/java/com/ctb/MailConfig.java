@@ -19,7 +19,7 @@ public class MailConfig {
 		mailSender.setHost("smtp.office365.com");
 		mailSender.setPort(587);
 		mailSender.setUsername("suporte.ctb1210@ctb.ba.gov.br");
-		mailSender.setPassword("Ctb0001");
+		mailSender.setPassword("GT&SeR{@");
 		
 		Properties props = new Properties();
 		props.put("mail.transport.protocol", "smtp");

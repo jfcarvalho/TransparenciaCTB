@@ -10,8 +10,6 @@ import com.ctb.contratos.model.Contratado;
 import com.ctb.contratos.model.Lancamento;
 import com.ctb.contratos.model.Usuario;
 
-public interface Lancamentos extends JpaRepository<Lancamento, Integer>{
-	
-	
-	
+public interface Lancamentos extends JpaRepository<Lancamento, Integer> {
+	//List<Lancamento> porNota(String nota_fiscal, Integer id_usuario);
 }

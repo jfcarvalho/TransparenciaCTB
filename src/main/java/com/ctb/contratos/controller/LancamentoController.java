@@ -45,10 +45,13 @@ import com.ctb.contratos.model.Contrato;
 import com.ctb.contratos.model.Fonte;
 import com.ctb.contratos.model.Lancamento;
 import com.ctb.contratos.model.TipoAditivo;
+import com.ctb.contratos.model.Usuario;
 import com.ctb.contratos.repository.Contratados;
 import com.ctb.contratos.repository.Contratos;
 import com.ctb.contratos.repository.Lancamentos;
+import com.ctb.contratos.repository.LancamentosQueries;
 import com.ctb.contratos.repository.Processos;
+import com.ctb.contratos.repository.Usuarios;
 import com.ctb.security.AppUserDetailsService;
 
 @Controller
@@ -68,10 +71,14 @@ public class LancamentoController {
 	
 	@Autowired
 	private Lancamentos lancamentos;
+
+	private LancamentosQueries lancamentosQ;
 	@Autowired
 	private Processos processos;
 	@Autowired
 	private Contratos contratos;
+	@Autowired
+	private Usuarios usuarios;
 	@Autowired
 	private Mailer mailer;
 	
@@ -260,7 +267,7 @@ public class LancamentoController {
 	
 	
 	@RequestMapping(value="/pesquisar/{id_contrato}")
-	public ModelAndView pesquisar(@PathVariable("id_contrato") Integer Id_contrato, String busca, String nome, String setor, @PageableDefault(size=5) Pageable pageable) throws ParseException
+	public ModelAndView pesquisar(@PathVariable("id_contrato") Integer Id_contrato, String busca, String numero, String data, @PageableDefault(size=5) Pageable pageable) throws ParseException
 	{
 		ModelAndView mv = new ModelAndView("/pesquisa/PesquisaLancamentos");
 		Contrato c = contratos.findOne(Id_contrato);
@@ -268,12 +275,29 @@ public class LancamentoController {
 		int paginaAtual = pageable.getPageNumber();
 		int totalRegistrosPorPagina = pageable.getPageSize();
 		int primeiroRegistro = paginaAtual * totalRegistrosPorPagina;
-		
+		Usuario us = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
 		
 		criteria.setFirstResult(primeiroRegistro);
         criteria.setMaxResults(totalRegistrosPorPagina);
     	criteria.add(Restrictions.eq("contrato", c));
-        
+    	if(numero != null) {
+			if(busca != null && numero.equals("on")) {
+				List<Lancamento> todosLancamentos = lancamentosQ.porNota(busca, us.getId_usuario());
+				mv.addObject("todosLancamentos", todosLancamentos);
+				
+				
+				return mv;
+			}
+		}
+    	/*
+		else if(data != null) {
+			if(busca != null && objeto.equals("on")) {
+				List<Contrato> todosContratos = contratos.findByObjetoContaining(busca);
+				mv.addObject("buscaContratos", todosContratos);
+				return mv;
+			}
+		}
+        */
         Comparator<Lancamento> cmp = new Comparator<Lancamento>() {
 	        public int compare(Lancamento l1, Lancamento l2) {
 	          return l2.getData().compareTo(l1.getData());
@@ -394,20 +418,29 @@ public class LancamentoController {
 		Contrato c = contratos.findOne(lancamento.getContrato().getId_contrato());
 		BigDecimal resultop1 = new BigDecimal(c.getSaldo_contrato().toString());
 		BigDecimal resultop2 = new BigDecimal(lancamento.getValor().toString());
-		BigDecimal resultop3 = new BigDecimal(lancamento.getValor_aditivo().toString());
+		BigDecimal resultop3 = new BigDecimal(BigDecimal.ZERO.toString());
+		if(lancamento.getValor_aditivo() != null) {
+			resultop3 = resultop3.add(lancamento.getValor_aditivo());
+		}
+		
 		c.setSaldo_contrato(resultop1.add(resultop2));
+		if(lancamento.getProcesso() != null) {
+			Processo p = processos.findOne(lancamento.getProcesso().getId_processo());
+			p.setLancamento(null);
+			processos.save(p);
+		}
+		lancamento.setProcesso(null);
+		lancamento.setContrato(null);
+		
 		if(lancamento.getPossui_aditivo() == true)
 		{
-			
 			c.setSaldo_contrato(resultop1.subtract(resultop3));
-			//c.setSaldo_contrato(c.getSaldo_contrato() - lancamento.getValor_aditivo());
-			
 		}
 		contratos.save(c);
 		//usuarios.delete(id_usuario);
 		//desvincularLancamento(lancamento);
-		lancamentos.delete(id_lancamento);
-		return "redirect:/transparenciactb/lancamentos/pesquisar/"+ lancamento.getContrato().getId_contrato();	
+		lancamentos.delete(lancamento);
+		return "redirect:/transparenciactb/lancamentos/pesquisar/"+ c.getId_contrato();	
 	
 	}
 	

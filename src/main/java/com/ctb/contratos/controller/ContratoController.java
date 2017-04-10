@@ -855,12 +855,13 @@ public class ContratoController {
 		List<Processo> processosRenovacao = new ArrayList<Processo>();
 		for(Processo p:processos.findAll())
 		{
+			if(processos.findAll() != null) {
 			if((p.getTipo_processo().getTipo().equals("Renovação") || p.getTipo_processo().getTipo().equals("Nova licitação") ) && p.getContrato() == null)
 			{
 				processosRenovacao.add(p);
 			}
+			}
 		}
-		
 		return processosRenovacao;
 	}
 	
