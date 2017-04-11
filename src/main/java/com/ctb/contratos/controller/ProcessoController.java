@@ -1,12 +1,22 @@
 package com.ctb.contratos.controller;
 
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.hibernate.Criteria;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -38,6 +48,9 @@ public class ProcessoController {
 	
 	@Autowired
 	private Lancamentos lancamentos;
+	@PersistenceContext
+	private EntityManager manager;
+	
 	
 	@RequestMapping("/novo")
 	public ModelAndView novo()
@@ -50,10 +63,61 @@ public class ProcessoController {
 	}
 	
 	@RequestMapping(method= RequestMethod.GET)
-	public ModelAndView pesquisar(String busca, String nome, String setor) throws ParseException
+	public ModelAndView pesquisar(String busca, String numero, String data, @PageableDefault(size=10) Pageable pageable) throws ParseException
 	{
 		ModelAndView mv = new ModelAndView("/pesquisa/PesquisaProcessos");
 		//mv.addObject("usuarios", todosUsuarios);
+		Criteria criteria = manager.unwrap(Session.class).createCriteria(Processo.class);
+		int primeiroRegistro = pageable.getPageNumber()*pageable.getPageSize();	
+		criteria.setFirstResult(primeiroRegistro);
+		criteria.setMaxResults(pageable.getPageSize());
+		if(numero != null) {
+			if(busca != null && numero.equals("on")) {
+				//List<Lancamento> todosLancamentos = lancamentosQ.porNota(busca, us.getId_usuario());
+				//Usuario us = usuarios.findOne(id_usuario);
+				List<Processo> procs = processos.findAll();
+				List<Processo> processos_limitados = new ArrayList<Processo>();
+					for(Processo p: procs)
+					{
+						
+						if(p.getNumero_processo() != null) {
+							if(p.getNumero_processo().contains(busca))
+								
+							{
+								processos_limitados.add(p);
+							}
+						}
+					}
+				
+				mv.addObject("buscaProcessos", processos_limitados);
+				
+				
+				return mv;
+			}
+		}
+    	
+		else if(data != null) {
+			if(busca != null && data.equals("on")) {
+				List<Processo> procs = processos.findAll();
+				List<Processo> processos_limitados = new ArrayList<Processo>();
+					for(Processo p: procs)
+					{
+				
+						if(p.getData_abertura() != null) {
+							if(p.getData_abertura().toString().contains(busca))
+								
+							{
+								processos_limitados.add(p);
+							}
+						}
+					}
+				
+				mv.addObject("buscaProcessos", processos_limitados);
+				return mv;
+			}
+		}
+
+		 mv.addObject("buscaProcessos", processos.findAll(pageable));
     
 	return mv;
 	}

@@ -271,6 +271,7 @@ public class LancamentoController {
 	{
 		ModelAndView mv = new ModelAndView("/pesquisa/PesquisaLancamentos");
 		Contrato c = contratos.findOne(Id_contrato);
+		mv.addObject("contrato", c);
 		Criteria criteria = manager.unwrap(Session.class).createCriteria(Lancamento.class);
 		int paginaAtual = pageable.getPageNumber();
 		int totalRegistrosPorPagina = pageable.getPageSize();
@@ -282,22 +283,50 @@ public class LancamentoController {
     	criteria.add(Restrictions.eq("contrato", c));
     	if(numero != null) {
 			if(busca != null && numero.equals("on")) {
-				List<Lancamento> todosLancamentos = lancamentosQ.porNota(busca, us.getId_usuario());
-				mv.addObject("todosLancamentos", todosLancamentos);
+				//List<Lancamento> todosLancamentos = lancamentosQ.porNota(busca, us.getId_usuario());
+				//Usuario us = usuarios.findOne(id_usuario);
+				Contrato contratos_usuario = contratos.findOne(Id_contrato);
+				List<Lancamento> lancamentos_limitados = new ArrayList<Lancamento>();
+					for(Lancamento l: contratos_usuario.getLancamentos())
+					{
+						
+						if(l.getNumero_nota_fiscal() != null) {
+							if(l.getNumero_nota_fiscal().contains(busca))
+								
+							{
+								lancamentos_limitados.add(l);
+							}
+						}
+					}
+				
+				mv.addObject("todosLancamentos", lancamentos_limitados);
 				
 				
 				return mv;
 			}
 		}
-    	/*
+    	
 		else if(data != null) {
-			if(busca != null && objeto.equals("on")) {
-				List<Contrato> todosContratos = contratos.findByObjetoContaining(busca);
-				mv.addObject("buscaContratos", todosContratos);
+			if(busca != null && data.equals("on")) {
+				Contrato contratos_usuario = contratos.findOne(Id_contrato);
+				List<Lancamento> lancamentos_limitados = new ArrayList<Lancamento>();
+					for(Lancamento l: contratos_usuario.getLancamentos())
+					{
+						System.out.println(l.getData().toString());
+						if(l.getData() != null) {
+							if(l.getData().toString().contains(busca))
+								
+							{
+								lancamentos_limitados.add(l);
+							}
+						}
+					}
+				
+				mv.addObject("todosLancamentos", lancamentos_limitados);
 				return mv;
 			}
 		}
-        */
+        
         Comparator<Lancamento> cmp = new Comparator<Lancamento>() {
 	        public int compare(Lancamento l1, Lancamento l2) {
 	          return l2.getData().compareTo(l1.getData());
