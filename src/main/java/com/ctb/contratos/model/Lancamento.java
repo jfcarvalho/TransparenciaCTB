@@ -32,8 +32,9 @@ public class Lancamento {
 	private Integer id_lancamento;
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern= "dd/MM/yyyy")
-	
 	private Date data;
+
+	private String competencia;
 	
 	private String numero_nota_fiscal;
 
@@ -216,5 +217,13 @@ public class Lancamento {
 	}
 	public void setMedicao(String medicao) {
 		this.medicao = medicao;
+	}
+
+	public String getCompetencia() {
+		return competencia;
+	}
+
+	public void setCompetencia(String competencia) {
+		this.competencia = competencia;
 	}
 }

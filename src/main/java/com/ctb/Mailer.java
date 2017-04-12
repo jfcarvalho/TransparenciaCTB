@@ -59,7 +59,7 @@ public class Mailer {
 			MimeMessage mimeMessage = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 			helper.setFrom("suporte.ctb1210@ctb.ba.gov.br");
-			helper.setTo("jfcarvalho@ctb.ba.gov.br");
+			helper.setTo("romeuoj@ctb.ba.gov.br");
 			helper.setSubject("E-mail Teste Contratos");
 			helper.setText(email, true);
 			mailSender.send(mimeMessage);

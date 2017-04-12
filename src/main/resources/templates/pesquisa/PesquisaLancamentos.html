@@ -14,6 +14,7 @@
 <section class="aw-layout-content  js-content is-toggled">
 <div layout:include="/cabecalho/CabecalhoLancamento"></div>
 
+
 <div class="panel panel-default">
 		
 		<div class="panel-heading">
@@ -34,7 +35,7 @@
  			 </div>
  			  
  			</form>
-			<a class="btn btn-link aw-link-panel" th:href="@{/transparenciactb/lancamentos/novo/{id_contrato}(id_contrato=${contrato.id_contrato})}">Novo lançamento</a>
+			<a class="btn btn-link aw-link-panel" th:href="@{/transparenciactb/lancamentos/novo/{id_contrato}(id_contrato=${contrato.id_contrato})}">Novo lançamento</a>|<a class="btn btn-link aw-link-panel" th:href="@{/transparenciactb/contratos}">Voltar a pesquisa de contratos</a>
 		</div>
 		</div>
 		<div class="panel-body">

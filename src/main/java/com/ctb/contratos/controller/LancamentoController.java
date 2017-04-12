@@ -96,7 +96,11 @@ public class LancamentoController {
 	public ModelAndView gerar_pagamento(@PathVariable("id_lancamento")Integer Id_lancamento)
 	{
 		ModelAndView mv = new ModelAndView(PAGAMENTO_VIEW);
-	   mv.addObject("lancamento", lancamentos.findOne(Id_lancamento));
+	   Lancamento l = lancamentos.findOne(Id_lancamento);
+	   Processo p = l.getProcesso();
+	   mv.addObject("lancamento", l);
+	   mv.addObject("processo", p);
+	   
 	   return mv;	
 	}
 	
@@ -143,7 +147,7 @@ public class LancamentoController {
 	}
 	
 	@RequestMapping(value= "/pagar/{id_lancamento}", method=RequestMethod.POST)
-	public ModelAndView pagar(Lancamento lancamento, @RequestParam("lancamento_id_processo" )Integer Id_processo)
+	public ModelAndView pagar(Lancamento lancamento, @RequestParam("lancamento_id_processo" )Integer Id_processo, @RequestParam Date data_pagamento, @RequestParam Integer lancamento_id_processo, @RequestParam boolean pago )
 	{
 		ModelAndView mv = new ModelAndView(PAGAMENTO_VIEW);
 		Lancamento lancamentobd = lancamentos.findOne(lancamento.getId_lancamento());
@@ -162,7 +166,10 @@ public class LancamentoController {
 		lancamento.setValor(lancamentobd.getValor());
 		lancamento.setValor_aditivo(lancamentobd.getValor_aditivo());
 		lancamento.setDoe_aditivo(lancamentobd.getDoe_aditivo());
+		lancamento.setCompetencia(lancamentobd.getCompetencia());
 		Processo p = processos.findOne(Id_processo);
+		p.setData_pagamento(data_pagamento);
+		p.setPago(pago);
 		lancamento.setProcesso(p);
 		p.setLancamento(lancamento);
 		processos.save(p);
@@ -218,11 +225,16 @@ public class LancamentoController {
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		Date hora = Calendar.getInstance().getTime(); // Ou qualquer outra forma que tem
+		String datas[] = lancamento.getData().toString().split(" ");
+		String ano = datas[5];
+		lancamento.setCompetencia(lancamento.getCompetencia()+"/"+ ano);
 		String dataFormatada = sdf.format(hora);
 		lancamento.setHora(dataFormatada);
+		
 	//	System.out.println(gastoMedio(c));
-		mailer.enviar_lancamento_gestor(lancamento,"jfcarvalho@ctb.ba.gov.br");
-		checaGastoContrato(c, gastoMedio(c), lancamento.getValor());
+		mailer.enviar_lancamento_gestor(lancamento,"romeuoj@ctb.ba.gov.br");
+	//	checaGastoContrato(c, gastoMedio(c), lancamento.getValor());
+		System.out.println(datas);
 		contratos.save(c);
 		lancamentos.save(lancamento);		
 		attributes.addFlashAttribute("mensagem", "Lancamento salvo com sucesso!");	
@@ -267,7 +279,7 @@ public class LancamentoController {
 	
 	
 	@RequestMapping(value="/pesquisar/{id_contrato}")
-	public ModelAndView pesquisar(@PathVariable("id_contrato") Integer Id_contrato, String busca, String numero, String data, @PageableDefault(size=5) Pageable pageable) throws ParseException
+	public ModelAndView pesquisar(@PathVariable("id_contrato") Integer Id_contrato, String busca, String numero, String data, @PageableDefault(size=10) Pageable pageable) throws ParseException
 	{
 		ModelAndView mv = new ModelAndView("/pesquisa/PesquisaLancamentos");
 		Contrato c = contratos.findOne(Id_contrato);
@@ -395,6 +407,10 @@ public class LancamentoController {
 		lancbd.setValor_aditivo(lancamento.getValor_aditivo());
 		lancbd.setValor(lancamento.getValor());
 		lancbd.setDoe_aditivo(lancamento.getDoe_aditivo());
+		String datas[] = lancamento.getData().toString().split("-");
+		String ano = datas[0];
+		lancbd.setCompetencia(lancamento.getCompetencia()+"/"+ ano);
+		
 		lancamentos.save(lancbd);
 		recalcularSaldos(lancbd.getContrato());
 		mv.addObject("mensagem", "Lançamento editado com sucesso");
