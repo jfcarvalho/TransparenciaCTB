@@ -5,14 +5,14 @@
 
 </head>
 
-<div class="alert alert-success" th:if="${!#strings.isEmpty(mensagem)}">
+<div class="alert alert-success" th:if="!${vencido}">
 		<span th:text="${mensagem}"></span>
 	</div>
 	
-	<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
-	<div th:each="detailedError : ${#fields.detailedErrors()}">
-		<span th:text="${detailedError.message}"></span>
-	</div>
+	<div class="alert alert-danger" th:if="${vencido}">
+	
+		<span th:text="${mensagem}"></span>
+	
 </div>
 
 </html>

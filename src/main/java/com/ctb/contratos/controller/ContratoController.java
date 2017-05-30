@@ -35,6 +35,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ctb.Processo;
 import com.ctb.contratos.model.AditivoSetting;
+import com.ctb.contratos.model.AnoResumo;
 import com.ctb.contratos.model.Contratado;
 import com.ctb.contratos.model.Contrato;
 import com.ctb.contratos.model.Fonte;
@@ -58,6 +59,7 @@ import javax.persistence.PersistenceContext;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -76,6 +78,7 @@ public class ContratoController {
 	private static final String LANCAMENTOS_VIEW = "/pesquisa/PesquisaLancamentos";
 	private static final String VISUALIZAR_VIEW = "/visualizacao/VisualizarContrato";
 	private static final String RESUMO_VIEW = "/visualizacao/ResumoContrato";
+	private static final String RESUMOCINCO_VIEW = "/visualizacao/ResumoContratoCincoAnos";
 	private static final String GERARRESUMO_VIEW = "/visualizacao/GerarResumoContrato";
 	private static final String RELATORIOTCE_VIEW = "/visualizacao/RelatorioTCE";
 	private static final String GERARRESUMOCONSIGNADO_VIEW = "/visualizacao/GerarResumoConsignadoContrato";
@@ -107,6 +110,7 @@ public class ContratoController {
 	@Autowired
 	private Licitacoes licitacoes;
 	
+	Queue<Integer> meses = new LinkedList();
 	
 	@RequestMapping("/novo")
 	public ModelAndView novo()
@@ -131,6 +135,61 @@ public class ContratoController {
 	public ModelAndView gerarTCE()
 	{
 		ModelAndView mv = new ModelAndView(RELATORIOTCE_VIEW);
+	     List<Contrato> ct = contratos.findAll();
+	     List<Contrato> ctx = new ArrayList<Contrato>();
+	     
+	     for(Contrato c:ct)
+	     {
+	    	 String [] data = c.getData_vencimento().toString().split("-");
+	    	 if(Integer.parseInt(data[0]) >= 2016)
+	    	 {
+	    		 ctx.add(c);
+	    	 }
+	     }
+	     List<PrestacaoContas> prestacao = new ArrayList<PrestacaoContas>();
+	   // int linhaAtual = 5;
+	    for (Contrato c:ctx) {
+	    	PrestacaoContas pc = new PrestacaoContas();
+	    	pc.setCuo("26402");
+	    	pc.setNuo("CTB");
+	    	pc.setCug("1");
+	    	pc.setNug("CTB");
+	    	pc.setContratado(c.getContratado().getNome());
+	    	pc.setCnpj(c.getContratado().getCnpj());
+		    pc.setCpf(c.getCpfResponsavel());
+		    pc.setNumero(c.getNumero());
+		    pc.setObjeto(c.getObjeto());
+		    pc.setDoe(c.getDoe());
+		    if(c.getLicitacao() != null) {
+			    pc.setLicitacao_modalidade(c.getLicitacao().getModalidade().getDescricao());
+			    pc.setLicitacao_numero(c.getLicitacao().getNumero());
+		    }
+		    pc.setContrato_vigencia(c.getData_assinatura());
+		    pc.setContrato_fim(c.getData_vencimento());
+		   pc.setValor(c.getValor_contrato());
+		 
+
+		 		 
+
+		    BigDecimal valorTotalAditivos = totalValoresAditivos(c);
+		    valorTotalAditivos = valorTotalAditivos.add(c.getValor_contrato());
+		 
+		    pc.setValor_com_aditivo(valorTotalAditivos);
+		    
+		     Integer qAditivos = totalAditivos(c);
+		     pc.setN_aditivos(qAditivos);
+		    
+		    
+		     BigDecimal pagoExercicio = totalPagoExercicio(c, "2016"); 
+		    pc.setPagoExercicio(pagoExercicio);
+		     
+		     BigDecimal pagoAcumulado = totalPagoAcumulado(c);
+		     pc.setPagoAcumulado(pagoAcumulado);
+		     
+		     prestacao.add(pc);
+	    }
+	    mv.addObject("todos", prestacao); 
+	   
 		return mv;
 	}
 	
@@ -162,7 +221,7 @@ public class ContratoController {
 		
 			}
 			contratosEValores.put(obj.getId_contrato().toString(), String.valueOf(acumuladoValor));
-			System.out.println(contratosEValores.values());
+			
 		    //System.out.println(obj.getValor());
 			//acumulador += obj.getValor(); 
 			
@@ -378,9 +437,245 @@ public class ContratoController {
 		
 		
 		return mv;
+	}
+		/*
+		List<Lancamento> lancamentos = contratos.findOne(Id_contrato).getLancamentos();
+		ModelAndView mv = new ModelAndView(RESUMO_VIEW);
+		Contrato c = contratos.findOne(Id_contrato);
+		Queue<Integer> meses = new LinkedList();
+		int i, indiceElemento;
+		String periodoAComparar;
+		BigDecimal acumuladorValor = new BigDecimal("0");
+		BigDecimal acumuladorAditivo = new BigDecimal("0");
+		
+		
+		BigDecimal acumuladorValorGeral = new BigDecimal("0");
+		BigDecimal acumuladorSaldoGeral = new BigDecimal("0");
+		BigDecimal acumuladorAditivoGeral = new BigDecimal("0");
+		
+		BigDecimal [] mesesSaldo = new BigDecimal[13];
+		BigDecimal [] mesesValores = new BigDecimal[13];
+		BigDecimal [] mesesAditivos = new BigDecimal[13];
+		List<String> periodosComparados = new ArrayList<String>();
+		for(int y=0; y <13; y++)
+		{
+			mesesSaldo[y] = new BigDecimal("0.0");
+		//	mesesValores[y] = new BigDecimal("0");
+			mesesAditivos[y] = new BigDecimal("0.0");
+		}
+		int flagmes = 0;
+		int flagoffset = 0;
+		
+		
+		
+		Comparator<Lancamento> cmp = new Comparator<Lancamento>() {
+	        public int compare(Lancamento l1, Lancamento l2) {
+	          return l1.getData().compareTo(l2.getData());
+	        }
+	    };
+
+	Collections.sort(lancamentos, cmp);
+	
+	for(i=1; i < 13; i++)
+	{
+		flagmes = 0;
+		acumuladorValor =new BigDecimal("0.0");
+		acumuladorAditivo = new BigDecimal("0.0");
+		if(i > 0 && i < 10) {
+			periodoAComparar = ano+ "-0"+ Integer.toString(i);
+		}else {periodoAComparar = ano+ "-"+ Integer.toString(i);}
+		Iterator it = lancamentos.iterator();
+		while(it.hasNext())
+		{
+			Lancamento obj = (Lancamento) it.next();
+		
+			String [] periodo = obj.getCompetencia().split("/");
+			String periodoConvertido = periodo[1]+"-";
+			switch(periodo[0].toUpperCase())
+			{
+				case "JANEIRO":
+					periodoConvertido = periodoConvertido+"01";
+				break;
+				case "FEVEREIRO":
+					periodoConvertido = periodoConvertido+"02";
+				break;
+				case "MARÇO":
+					periodoConvertido = periodoConvertido+"03";
+				break;
+				case "ABRIL":
+					periodoConvertido = periodoConvertido+"04";
+				break;
+				case "MAIO":
+					periodoConvertido = periodoConvertido+"05";
+				break;
+				case "JUNHO":
+					periodoConvertido = periodoConvertido+"06";
+				break;
+				case "JULHO":
+					periodoConvertido = periodoConvertido+"07";
+				break;
+				case "AGOSTO":
+					periodoConvertido = periodoConvertido+"08";
+				break;
+				case "SETEMBRO":
+					periodoConvertido = periodoConvertido+"09";
+				break;
+				case "OUTUBRO":
+					periodoConvertido = periodoConvertido+"10";
+				break;
+				case "NOVEMBRO":
+					periodoConvertido = periodoConvertido+"11";
+				break;
+				case "DEZEMBRO":
+					periodoConvertido = periodoConvertido+"12";
+				break;
+			}
+		//	if(obj.getData().toString().contains(periodoAComparar)) //Tem que mudar aqui (MÊS/ANO Competência)
+			if(periodoConvertido.contains(periodoAComparar))
+			{ 
+				flagmes = 1;
+				acumuladorValor = acumuladorValor.add(obj.getValor());
+				acumuladorValorGeral = acumuladorValorGeral.add(acumuladorValor);
+				//acumuladorSaldo += obj.getSaldo_contrato();
+				if(obj.getPossui_aditivo())
+				{
+					acumuladorAditivo = acumuladorAditivo.add(obj.getValor_aditivo()) ;
+					acumuladorAditivoGeral = acumuladorAditivoGeral.add(acumuladorAditivo);
+					
+				}				
+			}	
+		}
+		if(flagmes == 1)
+		{
+			meses.add(i);
+		}
+		
+
+		mesesValores[i] = acumuladorValor;
+		mesesAditivos[i] = acumuladorAditivo;
+		
+}
+		Iterator itfila = meses.iterator();
+		
+		while (itfila.hasNext()) {
+			if(meses.peek() != null ) {
+				int mes = meses.peek();
+				meses.poll();
+			
+			if(mes > 0 && mes < 10) {
+				periodoAComparar = ano+ "-0"+ Integer.toString(mes);
+			}else {periodoAComparar = ano+ "-"+ Integer.toString(mes);}
+			
+		//	periodosComparados.add(periodoAComparar);
+			
+		
+		Iterator it2 = lancamentos.iterator();
+		while (it2.hasNext()) {
+			Lancamento obj = (Lancamento) it2.next();
+			indiceElemento = lancamentos.indexOf(obj);
+			
+			Lancamento l;			
+			// System.out.println(indiceElemento);
+			if(indiceElemento <= lancamentos.size()-1 && obj.getData().toString().contains(ano)) {
+				if (indiceElemento == lancamentos.size()-1)
+				{	
+					 l = lancamentos.get(indiceElemento);
+				}
+				else { l = lancamentos.get(indiceElemento+1);}
+			//	System.out.println(l.getData().toString().contains(periodoAComparar));
+			//	System.out.println(periodoAComparar);
+			//	System.out.println(l.getData().toString());
+			//	System.out.println(lancamentos.indexOf(l) +" " + lancamentos.size());
+				// System.out.println(obj.getData().toString() + "---" + l.getData().toString()) ;
+				
+				if(compararPeriodos(periodoConvertido, periodosComparados) == false ) //precisamos colocar mais uma condição aqui nesse IF
+				{
+					
+					
+					periodosComparados.add(obj.getData().toString());
+				}
+				
+				
+				if(l.getData().toString().contains(periodoAComparar) == false && compararPeriodos(l.getData().toString(), periodosComparados) == false || l.getData().toString().equals(obj.getData().toString()))
+				{
+				/*	if(lancamentos.indexOf(l) == lancamentos.size()-1 && lancamentos.indexOf(obj) != lancamentos.size()-2) { 
+						mesesSaldo[mes] = l.getSaldo_contrato();
+						break;
+					}
+					else { 
+	
+					mesesSaldo[mes] = obj.getSaldo_contrato() + mesesAditivos[mes] ;
+					acumuladorSaldoGeral.add(obj.getSaldo_contrato()) ; 
+					break;
+					
+						//}
+					}
+			}
+		}
+		}
+	}
+		
+		
+
+	
+	
+
+				
+		mv.addObject("janeiro_saldo", mesesSaldo[1]);		
+		mv.addObject("fevereiro_saldo", mesesSaldo[2]);
+		mv.addObject("marco_saldo", mesesSaldo[3]);
+		mv.addObject("abril_saldo", mesesSaldo[4]);
+		mv.addObject("maio_saldo", mesesSaldo[5]);
+		mv.addObject("junho_saldo", mesesSaldo[6]);
+		mv.addObject("julho_saldo", mesesSaldo[7]);
+		mv.addObject("agosto_saldo", mesesSaldo[8]);
+		mv.addObject("setembro_saldo", mesesSaldo[9]);
+		mv.addObject("outubro_saldo", mesesSaldo[10]);
+		mv.addObject("novembro_saldo", mesesSaldo[11]);
+		mv.addObject("dezembro_saldo", mesesSaldo[12]);
+		
+		mv.addObject("janeiro_valor", mesesValores[1]);		
+		mv.addObject("fevereiro_valor", mesesValores[2]);
+		mv.addObject("marco_valor", mesesValores[3]);
+		mv.addObject("abril_valor", mesesValores[4]);
+		mv.addObject("maio_valor", mesesValores[5]);
+		mv.addObject("junho_valor", mesesValores[6]);
+		mv.addObject("julho_valor", mesesValores[7]);
+		mv.addObject("agosto_valor", mesesValores[8]);
+		mv.addObject("setembro_valor", mesesValores[9]);
+		mv.addObject("outubro_valor", mesesValores[10]);
+		mv.addObject("novembro_valor", mesesValores[11]);
+		mv.addObject("dezembro_valor", mesesValores[12]);
+		
+		mv.addObject("janeiro_aditivo", mesesAditivos[1]);		
+		mv.addObject("fevereiro_aditivo", mesesAditivos[2]);
+		mv.addObject("marco_aditivo", mesesAditivos[3]);
+		mv.addObject("abril_aditivo", mesesAditivos[4]);
+		mv.addObject("maio_aditivo", mesesAditivos[5]);
+		mv.addObject("junho_aditivo", mesesAditivos[6]);
+		mv.addObject("julho_aditivo", mesesAditivos[7]);
+		mv.addObject("agosto_aditivo", mesesAditivos[8]);
+		mv.addObject("setembro_aditivo", mesesAditivos[9]);
+		mv.addObject("outubro_aditivo", mesesAditivos[10]);
+		mv.addObject("novembro_aditivo", mesesAditivos[11]);
+		mv.addObject("dezembro_aditivo", mesesAditivos[12]);
+		
+		mv.addObject("saldoGeral", acumuladorSaldoGeral);
+		mv.addObject("valorGeral", acumuladorValorGeral);
+		mv.addObject("aditivoGeral", acumuladorAditivoGeral);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		return mv;
 		
 	}
-
+*/
 
 	public boolean compararPeriodos(String periodoAComparar, List<String> periodos)
 	{
@@ -427,9 +722,7 @@ public class ContratoController {
 		
 		BigDecimal cem = new BigDecimal("100");
 		BigDecimal multiplicacao = valorTotal.multiply(cem);
-		System.out.println(multiplicacao);
-		System.out.println(totalAditivosPorcentagem);
-		System.out.println(valorTotal);
+	
 		BigDecimal divisao = multiplicacao.divide(totalAditivosPorcentagem, RoundingMode.HALF_DOWN);
 		BigDecimal porcentagemConcluida = new BigDecimal(divisao.toString());
 		
@@ -565,21 +858,26 @@ public class ContratoController {
 		//mv.addObject("usuarios", todosUsuarios);
 		mv.addObject("tem_permissao", tem_permissao);
 		Criteria criteria = manager.unwrap(Session.class).createCriteria(Contrato.class);
+		
 		int primeiroRegistro = pageable.getPageNumber()*pageable.getPageSize();
 		
 		Date dataAtual = new Date();
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
-		System.out.println(dateFormat.format(dataAtual));
-		System.out.println(dataAtual.toString());
+		Comparator<Contrato> cmp = new Comparator<Contrato>() {
+	        public int compare(Contrato c1, Contrato c2) {
+	          return c2.getUltima_atualizacao().compareTo(c1.getUltima_atualizacao());
+	        }
+	    };
 		
 		criteria.setFirstResult(primeiroRegistro);
 		criteria.setMaxResults(pageable.getPageSize());
+		criteria.addOrder(Order.desc("ultima_atualizacao"));
 		if(numero != null) {
 			if(busca != null && numero.equals("on")) {
 				List<Contrato> todosContratos = contratos.findByNumeroContaining(busca);
 				mv.addObject("buscaContratos", todosContratos);
-				System.out.println(todosContratos.size());
+			
 				
 				return mv;
 			}
@@ -593,27 +891,18 @@ public class ContratoController {
 		}
 
 		   
-		   if(AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO") == false)
+		   if(AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO") == false) //Ou seja, se for um gestor comum
 		   {
 			   
-			   List<Contrato> todosContratos = contratos.findAll();
-			   List<Contrato> contratosAchados = new ArrayList<Contrato>();
-			   
-			   Iterator it = todosContratos.iterator();
-				while (it.hasNext()) {
-					Contrato c = (Contrato) it.next();
-					if (c.getGestor().getId_usuario() == currentUser.getId_usuario())
-					{
-						
-						contratosAchados.add(c);
-					}
-				}  
-				mv.addObject("buscaContratos", contratosAchados);
-				return mv;
+			 
+			   List<Contrato> contratosUsuario = currentUser.getContratosGeridos();
+			   contratosUsuario.sort(cmp);
+			   mv.addObject("buscaContratos", contratosUsuario);
+			   return mv;
 		   }
 		   
-		//   List<Contrato> todosContratos= contratos.findAll();
-		   mv.addObject("buscaContratos", contratos.findAll(pageable));
+		  List<Contrato> tc= criteria.list();
+		  mv.addObject("buscaContratos", tc);
 		   
 			return mv;
     
@@ -739,6 +1028,551 @@ public class ContratoController {
 		return mv;
 	}
 	
+	@RequestMapping("/resumo_cincoultimos/{id_contrato}")
+	public ModelAndView gerar_resumo_5ultimos(@PathVariable("id_contrato") Integer contrato)
+	{
+		ModelAndView mv = new ModelAndView(RESUMOCINCO_VIEW);
+		Contrato c = contratos.findOne(contrato);
+		//Inicialização dos vetores
+		
+		//Ano Atual
+		
+		BigDecimal [] valores = new BigDecimal[13];
+		BigDecimal [] aditivos = new BigDecimal[13];
+		BigDecimal [] saldos = new BigDecimal[13];
+		
+		//Ano Atual -1
+		
+		BigDecimal [] valores1 = new BigDecimal[13];
+		BigDecimal [] aditivos1 = new BigDecimal[13];
+		BigDecimal [] saldos1 = new BigDecimal[13];
+		
+		//Ano Atual -2
+		BigDecimal [] valores2 = new BigDecimal[13];
+		BigDecimal [] aditivos2 = new BigDecimal[13];
+		BigDecimal [] saldos2 = new BigDecimal[13];
+		
+		//Ano Atual -3
+		BigDecimal [] valores3 = new BigDecimal[13];
+		BigDecimal [] aditivos3 = new BigDecimal[13];
+		BigDecimal [] saldos3 = new BigDecimal[13];
+		
+		//Ano Atual -4
+		
+		BigDecimal [] valores4 = new BigDecimal[13];
+		BigDecimal [] aditivos4 = new BigDecimal[13];
+		BigDecimal [] saldos4 = new BigDecimal[13];
+		
+		
+		
+		
+		
+		for(int j=0; j < 13; j++)
+		{
+			valores[j] = new BigDecimal(BigDecimal.ZERO.toString());
+			aditivos[j] = new BigDecimal(BigDecimal.ZERO.toString());
+			saldos[j] = new BigDecimal(BigDecimal.ZERO.toString());
+			
+			valores1[j] = new BigDecimal(BigDecimal.ZERO.toString());
+			aditivos1[j] = new BigDecimal(BigDecimal.ZERO.toString());
+			saldos1[j] = new BigDecimal(BigDecimal.ZERO.toString());
+
+			valores2[j] = new BigDecimal(BigDecimal.ZERO.toString());
+			aditivos2[j] = new BigDecimal(BigDecimal.ZERO.toString());
+			saldos2[j] = new BigDecimal(BigDecimal.ZERO.toString());
+			
+			valores3[j] = new BigDecimal(BigDecimal.ZERO.toString());
+			aditivos3[j] = new BigDecimal(BigDecimal.ZERO.toString());
+			saldos3[j] = new BigDecimal(BigDecimal.ZERO.toString());
+			
+			valores4[j] = new BigDecimal(BigDecimal.ZERO.toString());
+			aditivos4[j] = new BigDecimal(BigDecimal.ZERO.toString());
+			saldos4[j] = new BigDecimal(BigDecimal.ZERO.toString());
+		}
+		
+		AnoResumo [] resumos = new AnoResumo[5];
+/*
+		for(int i=0; i < 5; i++)
+		{
+			resumos[i].setAditivos(aditivos);
+			resumos[i].setValores(valores);
+			resumos[i].setSaldos(saldos);
+		}
+	*/	
+		//Fim da inicialização dos vetores
+		
+		Comparator<Lancamento> cmp = new Comparator<Lancamento>() {
+	        public int compare(Lancamento l1, Lancamento l2) {
+	          return l1.getData().compareTo(l2.getData());
+	        }
+	    };
+	    
+	    List<Lancamento> lancs = c.getLancamentos();
+	    Collections.sort(lancs, cmp);
+	    
+	    DateTime ano = new DateTime();
+	    Integer anoInteiro = ano.getYear();
+	    Integer anoInteiromenos1 = anoInteiro-1;
+	    Integer anoInteiromenos2 = anoInteiro-2;
+	    Integer anoInteiromenos3 = anoInteiro-3;
+	    Integer anoInteiromenos4 = anoInteiro-4;
+	    
+	    String anoAtual = anoInteiro.toString();
+	    String anoAtualMenos1 = anoInteiromenos1.toString();
+	    String anoAtualMenos2 = anoInteiromenos2.toString();
+	    String anoAtualMenos3 = anoInteiromenos3.toString();
+	    String anoAtualMenos4 = anoInteiromenos4.toString();
+		
+	    valores = gerarValoresResumo(anoAtual, lancs);
+		aditivos = gerarAditivosResumo(anoAtual, lancs);
+		saldos = gerarSaldosResumo(anoAtual, lancs);
+		
+	    valores1 = gerarValoresResumo(anoAtualMenos1, lancs);
+	    aditivos1 = gerarAditivosResumo(anoAtualMenos1, lancs);
+	    saldos1 = gerarSaldosResumo(anoAtualMenos1, lancs);
+	    
+	    valores2 = gerarValoresResumo(anoAtualMenos2, lancs);
+	    aditivos2 = gerarAditivosResumo(anoAtualMenos2, lancs);
+	    saldos2 = gerarSaldosResumo(anoAtualMenos2, lancs);
+	    
+	    valores3 = gerarValoresResumo(anoAtualMenos3, lancs);
+	    aditivos3 = gerarAditivosResumo(anoAtualMenos3, lancs);
+	    saldos3 = gerarSaldosResumo(anoAtualMenos3, lancs);
+	    
+	    valores4 = gerarValoresResumo(anoAtualMenos4, lancs);
+	    aditivos4 = gerarAditivosResumo(anoAtualMenos4, lancs);
+	    saldos4 = gerarSaldosResumo(anoAtualMenos4, lancs);
+	    
+	    mv.addObject("atual", anoAtual);
+	    mv.addObject("atualm1", anoAtualMenos1);
+	    mv.addObject("atualm2", anoAtualMenos2);
+	    mv.addObject("atualm3", anoAtualMenos3);
+	    mv.addObject("atualm4", anoAtualMenos4);
+	    
+		
+		mv.addObject("janeiro_valor_atual", valores[1]);
+		mv.addObject("janeiro_aditivo_atual", aditivos[1]);
+		mv.addObject("janeiro_saldo_atual", saldos[1]);
+		
+		mv.addObject("fevereiro_valor_atual", valores[2]);
+		mv.addObject("fevereiro_aditivo_atual", aditivos[2]);
+		mv.addObject("fevereiro_saldo_atual", saldos[2]);
+		
+		mv.addObject("marco_valor_atual", valores[3]);
+		mv.addObject("marco_aditivo_atual", aditivos[3]);
+		mv.addObject("marco_saldo_atual", saldos[3]);
+		
+		mv.addObject("abril_valor_atual", valores[4]);
+		mv.addObject("abril_aditivo_atual", aditivos[4]);
+		mv.addObject("abril_saldo_atual", saldos[4]);
+		
+		mv.addObject("maio_valor_atual", valores[5]);
+		mv.addObject("maio_aditivo_atual", aditivos[5]);
+		mv.addObject("maio_saldo_atual", saldos[5]);
+		
+		mv.addObject("junho_valor_atual", valores[6]);
+		mv.addObject("junho_aditivo_atual", aditivos[6]);
+		mv.addObject("junho_saldo_atual", saldos[6]);
+		
+		mv.addObject("julho_valor_atual", valores[7]);
+		mv.addObject("julho_aditivo_atual", aditivos[7]);
+		mv.addObject("julho_saldo_atual", saldos[7]);
+		
+		mv.addObject("agosto_valor_atual", valores[8]);
+		mv.addObject("agosto_aditivo_atual", aditivos[8]);
+		mv.addObject("agosto_saldo_atual", saldos[8]);
+		
+		mv.addObject("setembro_valor_atual", valores[9]);
+		mv.addObject("setembro_aditivo_atual", aditivos[9]);
+		mv.addObject("setembro_saldo_atual", saldos[9]);
+		
+		mv.addObject("outubro_valor_atual", valores[10]);
+		mv.addObject("outubro_aditivo_atual", aditivos[10]);
+		mv.addObject("outubro_saldo_atual", saldos[10]);
+		
+		mv.addObject("novembro_valor_atual", valores[11]);
+		mv.addObject("novembro_aditivo_atual", aditivos[11]);
+		mv.addObject("novembro_saldo_atual", saldos[11]);
+		
+		mv.addObject("dezembro_valor_atual", valores[12]);
+		mv.addObject("dezembro_aditivo_atual", aditivos[12]);
+		mv.addObject("dezembro_saldo_atual", saldos[12]);
+		
+		mv.addObject("janeiro_valor_atual1", valores1[1]);
+		mv.addObject("janeiro_aditivo_atual1", aditivos1[1]);
+		mv.addObject("janeiro_saldo_atual1", saldos1[1]);
+		
+		mv.addObject("fevereiro_valor_atual1", valores1[2]);
+		mv.addObject("fevereiro_aditivo_atual1", aditivos1[2]);
+		mv.addObject("fevereiro_saldo_atual1", saldos1[2]);
+		
+		mv.addObject("marco_valor_atual1", valores1[3]);
+		mv.addObject("marco_aditivo_atual1", aditivos1[3]);
+		mv.addObject("marco_saldo_atual1", saldos1[3]);
+		
+		mv.addObject("abril_valor_atual1", valores1[4]);
+		mv.addObject("abril_aditivo_atual1", aditivos1[4]);
+		mv.addObject("abril_saldo_atual1", saldos1[4]);
+		
+		mv.addObject("maio_valor_atual1", valores1[5]);
+		mv.addObject("maio_aditivo_atual1", aditivos1[5]);
+		mv.addObject("maio_saldo_atual1", saldos1[5]);
+		
+		mv.addObject("junho_valor_atual1", valores1[6]);
+		mv.addObject("junho_aditivo_atual1", aditivos1[6]);
+		mv.addObject("junho_saldo_atual1", saldos1[6]);
+		
+		mv.addObject("julho_valor_atual1", valores1[7]);
+		mv.addObject("julho_aditivo_atual1", aditivos1[7]);
+		mv.addObject("julho_saldo_atual1", saldos1[7]);
+		
+		mv.addObject("agosto_valor_atual1", valores1[8]);
+		mv.addObject("agosto_aditivo_atual1", aditivos1[8]);
+		mv.addObject("agosto_saldo_atual1", saldos1[8]);
+		
+		mv.addObject("setembro_valor_atual1", valores1[9]);
+		mv.addObject("setembro_aditivo_atual1", aditivos1[9]);
+		mv.addObject("setembro_saldo_atual1", saldos1[9]);
+		
+		mv.addObject("outubro_valor_atual1", valores1[10]);
+		mv.addObject("outubro_aditivo_atual1", aditivos1[10]);
+		mv.addObject("outubro_saldo_atual1", saldos1[10]);
+		
+		mv.addObject("novembro_valor_atual1", valores1[11]);
+		mv.addObject("novembro_aditivo_atual1", aditivos1[11]);
+		mv.addObject("novembro_saldo_atual1", saldos1[11]);
+		
+		mv.addObject("dezembro_valor_atual1", valores1[12]);
+		mv.addObject("dezembro_aditivo_atual1", aditivos1[12]);
+		mv.addObject("dezembro_saldo_atual1", saldos1[12]);
+		
+		mv.addObject("janeiro_valor_atual2", valores2[1]);
+		mv.addObject("janeiro_aditivo_atual2", aditivos2[1]);
+		mv.addObject("janeiro_saldo_atual2", saldos2[1]);
+		
+		mv.addObject("fevereiro_valor_atual2", valores2[2]);
+		mv.addObject("fevereiro_aditivo_atual2", aditivos2[2]);
+		mv.addObject("fevereiro_saldo_atual2", saldos2[2]);
+		
+		mv.addObject("marco_valor_atual2", valores2[3]);
+		mv.addObject("marco_aditivo_atual2", aditivos2[3]);
+		mv.addObject("marco_saldo_atual2", saldos2[3]);
+		
+		mv.addObject("abril_valor_atual2", valores2[4]);
+		mv.addObject("abril_aditivo_atual2", aditivos2[4]);
+		mv.addObject("abril_saldo_atual2", saldos2[4]);
+		
+		mv.addObject("maio_valor_atual2", valores2[5]);
+		mv.addObject("maio_aditivo_atual2", aditivos2[5]);
+		mv.addObject("maio_saldo_atual2", saldos2[5]);
+		
+		mv.addObject("junho_valor_atual2", valores2[6]);
+		mv.addObject("junho_aditivo_atual2", aditivos2[6]);
+		mv.addObject("junho_saldo_atual2", saldos2[6]);
+		
+		mv.addObject("julho_valor_atual2", valores2[7]);
+		mv.addObject("julho_aditivo_atual2", aditivos2[7]);
+		mv.addObject("julho_saldo_atual2", saldos2[7]);
+		
+		mv.addObject("agosto_valor_atual2", valores2[8]);
+		mv.addObject("agosto_aditivo_atual2", aditivos2[8]);
+		mv.addObject("agosto_saldo_atual2", saldos2[8]);
+		
+		mv.addObject("setembro_valor_atual2", valores2[9]);
+		mv.addObject("setembro_aditivo_atual2", aditivos2[9]);
+		mv.addObject("setembro_saldo_atual2", saldos2[9]);
+		
+		mv.addObject("outubro_valor_atual2", valores2[10]);
+		mv.addObject("outubro_aditivo_atual2", aditivos2[10]);
+		mv.addObject("outubro_saldo_atual2", saldos2[10]);
+		
+		mv.addObject("novembro_valor_atual2", valores2[11]);
+		mv.addObject("novembro_aditivo_atual2", aditivos2[11]);
+		mv.addObject("novembro_saldo_atual2", saldos2[11]);
+		
+		mv.addObject("dezembro_valor_atual2", valores2[12]);
+		mv.addObject("dezembro_aditivo_atual2", aditivos2[12]);
+		mv.addObject("dezembro_saldo_atual2", saldos2[12]);
+		
+		mv.addObject("janeiro_valor_atual3", valores3[1]);
+		mv.addObject("janeiro_aditivo_atual3", aditivos3[1]);
+		mv.addObject("janeiro_saldo_atual3", saldos3[1]);
+		
+		mv.addObject("fevereiro_valor_atual3", valores3[2]);
+		mv.addObject("fevereiro_aditivo_atual3", aditivos3[2]);
+		mv.addObject("fevereiro_saldo_atual3", saldos3[2]);
+		
+		mv.addObject("marco_valor_atual3", valores3[3]);
+		mv.addObject("marco_aditivo_atual3", aditivos3[3]);
+		mv.addObject("marco_saldo_atual3", saldos3[3]);
+		
+		mv.addObject("abril_valor_atual3", valores3[4]);
+		mv.addObject("abril_aditivo_atual3", aditivos3[4]);
+		mv.addObject("abril_saldo_atual3", saldos3[4]);
+		
+		mv.addObject("maio_valor_atual3", valores3[5]);
+		mv.addObject("maio_aditivo_atual3", aditivos3[5]);
+		mv.addObject("maio_saldo_atual3", saldos3[5]);
+		
+		mv.addObject("junho_valor_atual3", valores3[6]);
+		mv.addObject("junho_aditivo_atual3", aditivos3[6]);
+		mv.addObject("junho_saldo_atual3", saldos3[6]);
+		
+		mv.addObject("julho_valor_atual3", valores3[7]);
+		mv.addObject("julho_aditivo_atual3", aditivos3[7]);
+		mv.addObject("julho_saldo_atual3", saldos3[7]);
+		
+		mv.addObject("agosto_valor_atual3", valores3[8]);
+		mv.addObject("agosto_aditivo_atual3", aditivos3[8]);
+		mv.addObject("agosto_saldo_atual3", saldos3[8]);
+		
+		mv.addObject("setembro_valor_atual3", valores3[9]);
+		mv.addObject("setembro_aditivo_atual3", aditivos3[9]);
+		mv.addObject("setembro_saldo_atual3", saldos3[9]);
+		
+		mv.addObject("outubro_valor_atual3", valores3[10]);
+		mv.addObject("outubro_aditivo_atual3", aditivos3[10]);
+		mv.addObject("outubro_saldo_atual3", saldos3[10]);
+		
+		mv.addObject("novembro_valor_atual3", valores3[11]);
+		mv.addObject("novembro_aditivo_atual3", aditivos3[11]);
+		mv.addObject("novembro_saldo_atual3", saldos3[11]);
+		
+		mv.addObject("dezembro_valor_atual3", valores3[12]);
+		mv.addObject("dezembro_aditivo_atual3", aditivos3[12]);
+		mv.addObject("dezembro_saldo_atual3", saldos3[12]);
+		
+		mv.addObject("janeiro_valor_atual4", valores4[1]);
+		mv.addObject("janeiro_aditivo_atual4", aditivos4[1]);
+		mv.addObject("janeiro_saldo_atual4", saldos4[1]);
+		
+		mv.addObject("fevereiro_valor_atual4", valores4[2]);
+		mv.addObject("fevereiro_aditivo_atual4", aditivos4[2]);
+		mv.addObject("fevereiro_saldo_atual4", saldos4[2]);
+		
+		mv.addObject("marco_valor_atual4", valores4[3]);
+		mv.addObject("marco_aditivo_atual4", aditivos4[3]);
+		mv.addObject("marco_saldo_atual4", saldos4[3]);
+		
+		mv.addObject("abril_valor_atual4", valores4[4]);
+		mv.addObject("abril_aditivo_atual4", aditivos4[4]);
+		mv.addObject("abril_saldo_atual4", saldos4[4]);
+		
+		mv.addObject("maio_valor_atual4", valores4[5]);
+		mv.addObject("maio_aditivo_atual4", aditivos4[5]);
+		mv.addObject("maio_saldo_atual4", saldos4[5]);
+		
+		mv.addObject("junho_valor_atual4", valores4[6]);
+		mv.addObject("junho_aditivo_atual4", aditivos4[6]);
+		mv.addObject("junho_saldo_atual4", saldos4[6]);
+		
+		mv.addObject("julho_valor_atual4", valores4[7]);
+		mv.addObject("julho_aditivo_atual4", aditivos4[7]);
+		mv.addObject("julho_saldo_atual4", saldos4[7]);
+		
+		mv.addObject("agosto_valor_atual4", valores4[8]);
+		mv.addObject("agosto_aditivo_atual1", aditivos4[8]);
+		mv.addObject("agosto_saldo_atual4", saldos4[8]);
+		
+		mv.addObject("setembro_valor_atual4", valores4[9]);
+		mv.addObject("setembro_aditivo_atual4", aditivos4[9]);
+		mv.addObject("setembro_saldo_atual4", saldos4[9]);
+		
+		mv.addObject("outubro_valor_atual4", valores4[10]);
+		mv.addObject("outubro_aditivo_atual4", aditivos4[10]);
+		mv.addObject("outubro_saldo_atual4", saldos4[10]);
+		
+		mv.addObject("novembro_valor_atual4", valores4[11]);
+		mv.addObject("novembro_aditivo_atual4", aditivos4[11]);
+		mv.addObject("novembro_saldo_atual4", saldos4[11]);
+		
+		mv.addObject("dezembro_valor_atual4", valores4[12]);
+		mv.addObject("dezembro_aditivo_atual4", aditivos4[12]);
+		mv.addObject("dezembro_saldo_atual4", saldos4[12]);
+		
+		
+		return mv;
+	}
+	
+	public BigDecimal [] gerarValoresResumo(String ano, List<Lancamento> lancs)
+	{
+		int flagmes;
+		BigDecimal acumuladorValor;
+		BigDecimal acumuladorValorGeral;
+		BigDecimal [] valores = new BigDecimal [13];
+		String periodoAComparar;
+		
+		int indiceElemento;
+		
+		
+		for(int i=1; i < 13; i++)
+		{
+			flagmes = 0;
+			acumuladorValor =new BigDecimal("0.0");
+		
+			if(i > 0 && i < 10) {
+				periodoAComparar = ano+ "-0"+ Integer.toString(i);
+			}else {periodoAComparar = ano+ "-"+ Integer.toString(i);}
+			Iterator it = lancs.iterator();
+			while(it.hasNext())
+			{
+				Lancamento obj = (Lancamento) it.next();
+			
+				
+				if(obj.getData().toString().contains(periodoAComparar))
+				{ 
+					flagmes = 1;
+					acumuladorValor = acumuladorValor.add(obj.getValor());
+					
+					//acumuladorSaldo += obj.getSaldo_contrato();				
+				}	
+			}
+			if(flagmes == 1)
+			{
+				meses.add(i);
+			}
+			valores[i] = acumuladorValor;
+			
+			
+	}
+		
+		return valores;
+	}
+	
+	public BigDecimal [] gerarSaldosResumo(String ano, List<Lancamento> lanc)
+	{
+		BigDecimal [] mesesSaldo = new BigDecimal[13];
+		List<String> periodosComparados = new ArrayList<String>();
+		
+		String periodoAComparar;
+		Iterator itfila = meses.iterator();
+		Integer indiceElemento = 0;
+		
+		BigDecimal acumuladorSaldoGeral = new BigDecimal("0");
+	
+		
+		while (itfila.hasNext()) {
+			if(meses.peek() != null ) {
+				int mes = meses.peek();
+				meses.poll();
+			
+			if(mes > 0 && mes < 10) {
+				periodoAComparar = ano+ "-0"+ Integer.toString(mes);
+			}else {periodoAComparar = ano+ "-"+ Integer.toString(mes);}
+			
+		//	periodosComparados.add(periodoAComparar);
+			
+		
+		Iterator it2 = lanc.iterator();
+		while (it2.hasNext()) {
+			Lancamento obj = (Lancamento) it2.next();
+			indiceElemento = lanc.indexOf(obj);
+			
+			Lancamento l;			
+			// System.out.println(indiceElemento);
+			if(indiceElemento <= lanc.size()-1 && obj.getData().toString().contains(ano)) {
+				if (indiceElemento == lanc.size()-1)
+				{	
+					 l = lanc.get(indiceElemento);
+				}
+				else { l = lanc.get(indiceElemento+1);}
+			//	System.out.println(l.getData().toString().contains(periodoAComparar));
+			//	System.out.println(periodoAComparar);
+			//	System.out.println(l.getData().toString());
+			//	System.out.println(lancamentos.indexOf(l) +" " + lancamentos.size());
+				// System.out.println(obj.getData().toString() + "---" + l.getData().toString()) ;
+				
+				if(compararPeriodos(obj.getData().toString(), periodosComparados) == false ) //precisamos colocar mais uma condição aqui nesse IF
+				{
+					
+					
+					periodosComparados.add(obj.getData().toString());
+				}
+				
+				
+				if(l.getData().toString().contains(periodoAComparar) == false && compararPeriodos(l.getData().toString(), periodosComparados) == false || l.getData().toString().equals(obj.getData().toString()))
+				{
+				/*	if(lancamentos.indexOf(l) == lancamentos.size()-1 && lancamentos.indexOf(obj) != lancamentos.size()-2) { 
+						mesesSaldo[mes] = l.getSaldo_contrato();
+						break;
+					}
+					else { */
+					
+					mesesSaldo[mes] = obj.getSaldo_contrato() /*+ mesesAditivos[mes] */;
+					acumuladorSaldoGeral.add(obj.getSaldo_contrato()) ; 
+					break;
+						//}
+					}
+			}
+		}
+		}
+			 
+	}
+		return mesesSaldo;
+}
+	
+	public BigDecimal [] gerarAditivosResumo(String ano, List<Lancamento> lancamentos)
+	{
+	
+
+		Queue<Integer> meses = new LinkedList();
+		int i, indiceElemento;
+		String periodoAComparar;
+
+		BigDecimal acumuladorAditivo = new BigDecimal("0");
+	
+		BigDecimal acumuladorAditivoGeral = new BigDecimal("0");
+		
+		BigDecimal [] mesesSaldo = new BigDecimal[13];
+		BigDecimal [] mesesValores = new BigDecimal[13];
+		BigDecimal [] mesesAditivos = new BigDecimal[13];
+		List<String> periodosComparados = new ArrayList<String>();
+		for(int y=0; y <13; y++)
+		{
+			mesesAditivos[y] = new BigDecimal("0.0");
+		}
+		int flagmes = 0;
+		int flagoffset = 0;
+		
+	
+	for(i=1; i < 13; i++)
+	{
+	
+		flagmes = 0;
+		
+		acumuladorAditivo = new BigDecimal("0.0");
+		if(i > 0 && i < 10) {
+			periodoAComparar = ano+ "-0"+ Integer.toString(i);
+		}else {periodoAComparar = ano+ "-"+ Integer.toString(i);}
+		Iterator it = lancamentos.iterator();
+		while(it.hasNext())
+		{
+			Lancamento obj = (Lancamento) it.next();
+		
+			
+			if(obj.getData().toString().contains(periodoAComparar))
+			{ 
+				flagmes = 1;
+				if(obj.getPossui_aditivo())
+				{
+					acumuladorAditivo = acumuladorAditivo.add(obj.getValor_aditivo()) ;
+					acumuladorAditivoGeral = acumuladorAditivoGeral.add(acumuladorAditivo);
+					
+				}				
+			}	
+		}
+	/*	if(flagmes == 1)
+		{
+			meses.add(i);
+		}
+		*/
+		mesesAditivos[i] = acumuladorAditivo;
+		
+}
+	return mesesAditivos;
+	}
+	
+	
 	@RequestMapping("/gerar_renovacao/{id_contrato}")
 	public ModelAndView gerar_renovacao(@PathVariable("id_contrato")Contrato contrato)
 	{
@@ -766,9 +1600,9 @@ public class ContratoController {
 	
 	public void desvincularLancamentos(Contrato contrato)
 	{
-		System.out.println("Entrou aqui nesse método");
+		
 		List<Lancamento> contratosLancamentos = contrato.getLancamentos();
-		System.out.println(contratosLancamentos);
+		
 		//System.out.println(contratosLancamentos.size());
 		if(contratosLancamentos != null) {
 			Iterator it = contratosLancamentos.iterator();
@@ -776,8 +1610,7 @@ public class ContratoController {
 		while(it.hasNext())
 		{
 			Lancamento obj = (Lancamento) it.next();
-			System.out.println("Entrou aqui nesse laço");
-			System.out.println(obj.getContrato().getNumero());
+			
 			if(obj.getContrato().getNumero() == contrato.getNumero()) {
 				obj.setContrato(null);
 				lancamentos.save(obj);
@@ -954,6 +1787,75 @@ public class ContratoController {
 		c.setSaldo_contrato(saldo_corrente);
 		contratos.save(c);
 	}
+	
+	public Integer totalAditivos(Contrato contrato)
+	{
+		Integer nAditivos = 0;
+			for(Lancamento l:contrato.getLancamentos())
+			{
+				if(l.getPossui_aditivo() == true || l.getAditivo_n() != null || l.getValor_aditivo() != null)
+				{
+					nAditivos++;
+				}
+			}
+		
+		return nAditivos;
+	}
+
+	public BigDecimal totalValoresAditivos(List<Contrato> contratos)
+	{
+		BigDecimal totalValor = new BigDecimal(BigDecimal.ZERO.toString());
+		for(Contrato c:contratos)
+		{
+			for(Lancamento l:c.getLancamentos())
+			{
+				if(l.getPossui_aditivo() == true || l.getAditivo_n() != null || l.getValor_aditivo() != null)
+				{
+				
+					totalValor = totalValor.add(l.getValor_aditivo());
+				}
+			}
+		}
+		return totalValor;
+	}
+
+	public BigDecimal totalValoresAditivos(Contrato contrato)
+	{
+		BigDecimal totalValor = new BigDecimal(BigDecimal.ZERO.toString());
+		for(Lancamento l:contrato.getLancamentos())
+			{
+				if((l.getPossui_aditivo() == true || l.getAditivo_n() != null) && l.getValor_aditivo() != null)
+				{
+					totalValor = totalValor.add(l.getValor_aditivo());
+				}
+			}
+		
+		return totalValor;
+	}
+
+	public BigDecimal totalPagoExercicio(Contrato contrato, String ano)
+	{
+		BigDecimal acumulado = new BigDecimal(BigDecimal.ZERO.toString());
+		for(Lancamento l:contrato.getLancamentos())
+		{
+			if(l.getData().toString().contains(ano))
+			{
+				acumulado = acumulado.add(l.getValor());
+			}
+		}
+		return acumulado;
+	}
+
+	public BigDecimal totalPagoAcumulado(Contrato contrato)
+	{
+		BigDecimal acumulado = new BigDecimal(BigDecimal.ZERO.toString());
+		for(Lancamento l:contrato.getLancamentos())
+		{
+				acumulado = acumulado.add(l.getValor());
+		}
+		return acumulado;
+	}
+	
 	
 	
 	

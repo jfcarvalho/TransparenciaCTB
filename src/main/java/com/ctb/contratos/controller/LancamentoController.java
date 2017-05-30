@@ -18,6 +18,7 @@ import javax.persistence.PersistenceContext;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
@@ -184,61 +185,74 @@ public class LancamentoController {
 
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public String salvar(Lancamento lancamento, @RequestParam Integer lancamento_id_contrato, RedirectAttributes attributes)
+	public ModelAndView salvar(Lancamento lancamento, @RequestParam Integer lancamento_id_contrato, RedirectAttributes attributes)
 	{
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
 		Contrato c = contratos.findOne(lancamento_id_contrato);
+		mv.addObject("contrato",c);
 		lancamento.setLiquidado(false);
 		
-	
-		if(lancamento_id_contrato != null)
-		{
-			Contrato contrato = contratos.findOne(lancamento_id_contrato);
-			//contrato.setSaldo_contrato(contrato.getSaldo_contrato() - lancamento.getValor());
-			lancamento.setContrato(contrato);
-			contratos.save(contrato);
-		}
-		if(lancamento.getPossui_aditivo() && lancamento.getMeses_prorrogacao() != null)
-		{
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(lancamento.getContrato().getData_vencimento());
-			cal.add(Calendar.MONTH, lancamento.getMeses_prorrogacao());
-	
-			
-			
-			c.setDuracao_meses(c.getDuracao_meses()+ lancamento.getMeses_prorrogacao());
-			c.setMeses_vencimento(c.getMeses_vencimento()+ lancamento.getMeses_prorrogacao());
-			c.setData_vencimento(cal.getTime());
-			
-		}
-		BigDecimal resultop1 = new BigDecimal(c.getSaldo_contrato().toString());
-		BigDecimal resultop2 = new BigDecimal("0");
-		if(lancamento.getValor_aditivo() != null)
-		{
-			resultop2 = new BigDecimal(lancamento.getValor_aditivo().toString());
-		}
-		BigDecimal resultop3 = new BigDecimal(lancamento.getValor().toString());
-		BigDecimal  resultop4 = resultop1.add(resultop2);
-		BigDecimal resultop5 = resultop4.subtract(resultop3);
-		lancamento.setSaldo_contrato(resultop5);
-		c.setSaldo_contrato(resultop5 );
+		DateTime inicio = new DateTime();
+		DateTime fim = new DateTime(c.getData_vencimento());
+		Months m = Months.monthsBetween(inicio, fim);
+		Days d = Days.daysBetween(inicio, fim);
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-		Date hora = Calendar.getInstance().getTime(); // Ou qualquer outra forma que tem
-		String datas[] = lancamento.getData().toString().split(" ");
-		String ano = datas[5];
-		lancamento.setCompetencia(lancamento.getCompetencia()+"/"+ ano);
-		String dataFormatada = sdf.format(hora);
-		lancamento.setHora(dataFormatada);
+		if( d.getDays() >= 0 ) { 
+			if(lancamento_id_contrato != null)
+			{
+				Contrato contrato = contratos.findOne(lancamento_id_contrato);
+				//contrato.setSaldo_contrato(contrato.getSaldo_contrato() - lancamento.getValor());
+				lancamento.setContrato(contrato);
+				contratos.save(contrato);
+			}
+			if(lancamento.getPossui_aditivo() && lancamento.getMeses_prorrogacao() != null)
+			{
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(lancamento.getContrato().getData_vencimento());
+				cal.add(Calendar.MONTH, lancamento.getMeses_prorrogacao());
 		
-	//	System.out.println(gastoMedio(c));
-		mailer.enviar_lancamento_gestor(lancamento,"romeuoj@ctb.ba.gov.br");
-	//	checaGastoContrato(c, gastoMedio(c), lancamento.getValor());
-		System.out.println(datas);
-		contratos.save(c);
-		lancamentos.save(lancamento);		
-		attributes.addFlashAttribute("mensagem", "Lancamento salvo com sucesso!");	
-		return "redirect:/transparenciactb/lancamentos/pesquisar/" + lancamento.getContrato().getId_contrato();
+				
+				
+				c.setDuracao_meses(c.getDuracao_meses()+ lancamento.getMeses_prorrogacao());
+				c.setMeses_vencimento(c.getMeses_vencimento()+ lancamento.getMeses_prorrogacao());
+				c.setData_vencimento(cal.getTime());
+				
+			}
+			BigDecimal resultop1 = new BigDecimal(c.getSaldo_contrato().toString());
+			BigDecimal resultop2 = new BigDecimal("0");
+			if(lancamento.getValor_aditivo() != null)
+			{
+				resultop2 = new BigDecimal(lancamento.getValor_aditivo().toString());
+			}
+			BigDecimal resultop3 = new BigDecimal(lancamento.getValor().toString());
+			BigDecimal  resultop4 = resultop1.add(resultop2);
+			BigDecimal resultop5 = resultop4.subtract(resultop3);
+			lancamento.setSaldo_contrato(resultop5);
+			c.setSaldo_contrato(resultop5 );
+			c.setUltima_atualizacao(inicio.toDate());
+			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+			Date hora = Calendar.getInstance().getTime(); // Ou qualquer outra forma que tem
+			String datas[] = lancamento.getData().toString().split(" ");
+			String ano = datas[5];
+			lancamento.setCompetencia(lancamento.getCompetencia()+"/"+ ano);
+			String dataFormatada = sdf.format(hora);
+			lancamento.setHora(dataFormatada);
+			
+		//	System.out.println(gastoMedio(c));
+			mailer.enviar_lancamento_gestor(lancamento,"anderson.araujo@ctb.ba.gov.br");
+		//	checaGastoContrato(c, gastoMedio(c), lancamento.getValor());
+			contratos.save(c);
+			lancamentos.save(lancamento);		
+			mv.addObject("mensagem", "Lancamento salvo com sucesso!");
+			//attributes.addFlashAttribute("mensagem", "Lancamento salvo com sucesso!");	
+			//return "redirect:/transparenciactb/lancamentos/pesquisar/" + lancamento.getContrato().getId_contrato();
+			return mv;
+		}
+		else {
+				  mv.addObject("vencido", true);
+				  mv.addObject("mensagem", "Este contrato está vencido!, não será mais possivel fazer lancamentos nele");
+				  return mv;
+		}
 	}
 
 	
@@ -290,9 +304,11 @@ public class LancamentoController {
 		int primeiroRegistro = paginaAtual * totalRegistrosPorPagina;
 		Usuario us = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
 		
+		
 		criteria.setFirstResult(primeiroRegistro);
         criteria.setMaxResults(totalRegistrosPorPagina);
     	criteria.add(Restrictions.eq("contrato", c));
+    	criteria.addOrder(Order.desc("data"));
     	if(numero != null) {
 			if(busca != null && numero.equals("on")) {
 				//List<Lancamento> todosLancamentos = lancamentosQ.porNota(busca, us.getId_usuario());
@@ -324,7 +340,7 @@ public class LancamentoController {
 				List<Lancamento> lancamentos_limitados = new ArrayList<Lancamento>();
 					for(Lancamento l: contratos_usuario.getLancamentos())
 					{
-						System.out.println(l.getData().toString());
+					
 						if(l.getData() != null) {
 							if(l.getData().toString().contains(busca))
 								
@@ -360,7 +376,7 @@ public class LancamentoController {
 	    List<Lancamento> lancamentosOrdenados = criteria.list();
 	   // lancamentosOrdenados.sort(cmp2);
 	    //Collections.sort(lancamentosOrdenados);
-	    Collections.reverse(lancamentosOrdenados);
+	   // Collections.reverse(lancamentosOrdenados);
 	    //lancamentosOrdenados.sort(cmp);
 	   
 		//criteria.add(Restrictions.eq("contrato", c));
@@ -384,6 +400,7 @@ public class LancamentoController {
 		Contrato c = contratos.findOne(teste.getContrato().getId_contrato());
 		lancamento.setContrato(c);
 		mv.addObject(lancamento);
+		mv.addObject("contrato", c);
 		return mv;
 		
 	}
@@ -407,6 +424,9 @@ public class LancamentoController {
 		lancbd.setValor_aditivo(lancamento.getValor_aditivo());
 		lancbd.setValor(lancamento.getValor());
 		lancbd.setDoe_aditivo(lancamento.getDoe_aditivo());
+		Contrato c = contratos.findOne(lancbd.getContrato().getId_contrato());
+		DateTime inicio = new DateTime();
+		c.setUltima_atualizacao(inicio.toDate());
 		String datas[] = lancamento.getData().toString().split("-");
 		String ano = datas[0];
 		lancbd.setCompetencia(lancamento.getCompetencia()+"/"+ ano);
@@ -467,7 +487,8 @@ public class LancamentoController {
 		if(lancamento.getValor_aditivo() != null) {
 			resultop3 = resultop3.add(lancamento.getValor_aditivo());
 		}
-		
+		DateTime inicio = new DateTime();
+		c.setUltima_atualizacao(inicio.toDate());
 		c.setSaldo_contrato(resultop1.add(resultop2));
 		if(lancamento.getProcesso() != null) {
 			Processo p = processos.findOne(lancamento.getProcesso().getId_processo());

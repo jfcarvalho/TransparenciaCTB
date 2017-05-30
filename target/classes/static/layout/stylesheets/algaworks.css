@@ -640,3 +640,9 @@ body {
   margin-top: 0px !important;
   margin-bottom: 0px !important;
 }
+
+ .table_principal {
+width: 60%;
+max-width: 60%;
+margin-bottom: 18px;}
+

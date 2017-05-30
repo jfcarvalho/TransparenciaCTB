@@ -8,7 +8,7 @@
 <head>
 
 
-<title>Resumo de Contrato</title>
+<title>Informação sobre o gestor</title>
 </head>
 
 <body>
@@ -17,41 +17,21 @@
 <section class="aw-layout-content  js-content is-toggled">
 <div layout:include="/cabecalho/CabecalhoLancamento"></div>
 
-  <br/>
-					
-					  
-<h3 style="text-align: center;">Escolha o qual deseja-se ver o resumo do contrato</h3>
-	<div class="clearfix" th:object="${contrato}">	
-		<form method="GET" th:action="@{/transparenciactb/contratos/resumo/{id_contrato}(id_contrato=${contrato.id_contrato})}">
-			<div class="col-lg-3">
-					  <br/>
-					 <div class="input-group">
-					 <span>Escolha o Ano</span>
-					<select class="form-control" name="ano">
- 						 <option value="2014">2014</option>
- 						 <option value="2015">2015</option>
- 						 <option value="2016">2016</option>
- 						 <option value="2017">2017</option>
- 						 <option value="2018">2018</option>
- 						 <option value="2019">2019</option>
-					</select>
-     				 </div>
-     				 <br/>
-     				 <div class="input-group">
-    				  <span class="input-group-btn">
-       					 <button class="btn btn-default" type="submit">Gerar</button>
-      				</span>
-      				
-   				</div>
-   				<span><a th:href="@{/transparenciactb/contratos/resumo_cincoultimos/{id_contrato}(id_contrato=${contrato.id_contrato})}">Resumo dos últimos 5 anos</a></span>
- 			 </div>
- 			  
- 			</form>
-		</div>
+
+<br/>
+<br/>
+<br/>
+
+
+Testando 1234
+
+	
+
+
+
 </section>
 </div>
 </body>
-
 
 <script src="/layout/javascripts/vendors.min.js"></script>
 <script src="/layout/javascripts/algaworks.min.js"></script>
@@ -61,5 +41,7 @@
  <script src="/layout/javascripts/bootstrap-datepicker.pt-BR.min.js"></script>
 <script src="/layout/javascripts/bootstrap.min.js"></script>
 <script src="/layout/javascripts/jquery-2.2.0.min.js"></script>
+<script src="/layout/javascripts/Chart.min.js"></script>
+<script src="/layout/javascripts/graficos.js"></script>
 
 </html>

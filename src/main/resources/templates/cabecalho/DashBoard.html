@@ -90,8 +90,11 @@
         </li>
         
         
-        <li class="aw-menu__item" th:if="${permissao}">
-         
+      <li class="aw-menu__item" th:if="${permissao}">
+          <a href="#">
+            <i class="glyphicon glyphicon-stats"></i><span>Relatórios</span>
+            <i class="aw-menu__navigation-icon  fa"></i>
+          </a>
       
           <ul class="aw-menu__list  aw-menu__list--sublist">
             <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/contratos/relatorio_tce">Tribunal de CONTAS</a></li>
@@ -100,7 +103,21 @@
             
           </ul>
         </li>
+        
              
+             <li class="aw-menu__item" th:if="${permissao}">
+          <a href="#">
+            <i class="glyphicon glyphicon-folder-open"></i><span>Documentos</span>
+            <i class="aw-menu__navigation-icon  fa"></i>
+          </a>
+      
+          <ul class="aw-menu__list  aw-menu__list--sublist">
+            <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/contratos/relatorio_tce">Cadastrar Documento</a></li>
+              <li class="aw-menu__item  aw-menu__item--link"><a href="/transparenciactb/contratos/relatorio_tce">Pesquisar Documento</a></li>
+           
+            
+          </ul>
+        </li>
 
       </ul>
      

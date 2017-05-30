@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+<link rel="stylesheet" type="text/css" href="/layout/stylesheets/bootstrap-datepicker.standalone.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/bootstrap.min.css"/>
+ 	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/vendors.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/algaworks.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/application.css"/>
+<head>
+
+
+<title>Resumo de Contrato</title>
+</head>
+
+<body>
+
+<div class="aw-layout-page">
+<section class="aw-layout-content  js-content is-toggled">
+<div layout:include="/cabecalho/CabecalhoLancamento"></div>
+
+
+<br/>
+<br/>
+<br/>
+
+<table class="table_principal table-bordered table-striped" th:object="${relatorio}">
+ <tr>
+  <td>
+  <p></p>
+  </td>
+  <td>
+  <p>Valor</p>
+  </td>
+  <td>
+  <p>Saldo</p>
+  </td>
+  <td>
+  <p >Aditivo</p>
+  </td>
+  
+ </tr>
+ <tr>
+  <td >
+  <p >Janeiro <span th:text="${atual}"></span></p>
+  </td>
+  <td>
+  <p th:text="${janeiro_valor_atual}"></p> 
+  </td>
+  <td>
+  <p th:text="${janeiro_saldo_atual}"></p>
+  </td>
+  <td >
+<p th:text="${janeiro_aditivo_atual}"></p>
+  </td>
+ 
+ </tr>
+ <tr >
+  <td>
+  <p>Fevereiro <span th:text="${atual}"></span></p>
+  </td>
+  <td>
+<p th:text="${fevereiro_valor_atual}"></p>
+  </td>
+  <td >
+ <p th:text="${fevereiro_saldo_atual}"></p>
+  </td>
+  <td >
+<p th:text="${fevereiro_aditivo_atual}"></p>
+  </td>
+  
+ </tr>
+ <tr>
+  <td>
+  <p>Março <span th:text="${atual}"></span></p>
+  </td>
+  <td>
+<p th:text="${marco_valor_atual}"></p>
+  </td>
+  <td>
+<p th:text="${marco_saldo_atual}"></p>
+  </td>
+  <td >
+<p th:text="${marco_aditivo_atual}"></p>
+  </td>
+ </tr>
+ <tr>
+  <td>
+  <p>Abril <span th:text="${atual}"></span></p>
+  </td>
+  <td>
+<p th:text="${abril_valor_atual}"></p>
+  </td>
+  <td>
+<p th:text="${abril_saldo_atual}"></p>
+  </td>
+  <td >
+<p th:text="${abril_aditivo_atual}"></p>
+  </td>
+  
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Maio <span th:text="${atual}"></span></p>
+  </td>
+  <td>
+<p th:text="${maio_valor_atual}"></p>
+  </td>
+  <td>
+<p th:text="${maio_saldo_atual}"></p>
+  </td>
+  <td >
+<p th:text="${abril_aditivo_atual}"></p>
+  </td>
+  
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Junho <span th:text="${atual}"></span></p>
+  </td>
+  <td>
+  <p th:text="${junho_valor_atual}"></p>
+  </td>
+  <td>
+<p th:text="${junho_saldo_atual}"></p>
+  </td>
+  <td >
+<p th:text="${junho_aditivo_atual}"></p>
+  </td>
+  
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Julho <span th:text="${atual}"></span></p>
+  </td>
+  <td>
+<p th:text="${julho_valor_atual}"></p>
+  </td>
+  <td>
+   <p th:text="${julho_saldo_atual}"></p>
+  </td>
+  <td >
+<p th:text="${julho_aditivo_atual}"></p>
+  </td>
+ 
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Agosto <span th:text="${atual}"></span></p>
+  </td>
+  <td>
+<p th:text="${agosto_valor_atual}"></p>
+  </td>
+  <td>
+<p th:text="${agosto_saldo_atual}"></p>
+  </td>
+  <td >
+<p th:text="${agosto_aditivo_atual}"></p>
+  </td>
+
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Setembro <span th:text="${atual}"></span></p>
+  </td>
+  <td>
+<p th:text="${setembro_valor_atual}"></p>
+  </td>
+  <td>
+<p th:text="${setembro_saldo_atual}"></p>
+  </td>
+  <td >
+<p th:text="${setembro_aditivo_atual}"></p>
+  </td>
+ 
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Outubro <span th:text="${atual}"></span></p>
+  </td>
+  <td>
+<p th:text="${outubro_valor_atual}"></p>
+  </td>
+  <td>
+<p th:text="${outubro_saldo_atual}"></p>
+  </td>
+  <td >
+<p th:text="${outubro_aditivo_atual}"></p>
+  </td>
+
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Novembro <span th:text="${atual}"></span></p>
+  </td>
+  <td>
+<p th:text="${novembro_valor_atual}"></p>
+  </td>
+  <td>
+<p th:text="${novembro_saldo_atual}"></p>
+  </td>
+  <td >
+<p th:text="${novembro_aditivo_atual}"></p>
+  </td>
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Dezembro <span th:text="${atual}"></span></p>
+  </td>
+  <td>
+<p th:text="${dezembro_valor_atual}"></p>
+  </td>
+  <td>
+<p th:text="${dezembro_saldo_atual}"></p>
+  </td>
+  <td >
+<p th:text="${dezembro_aditivo_atual}"></p>
+  </td>
+
+ </tr>
+ 
+</table>
+
+<div style="float: left">
+
+<table class="table_secundaria table-bordered table-striped" th:object="${relatorio}">
+ <tr>
+  <td>
+  <p></p>
+  </td>
+  <td>
+  <p>Valor</p>
+  </td>
+  <td>
+  <p>Saldo</p>
+  </td>
+  <td>
+  <p >Aditivo</p>
+  </td>
+  
+ </tr>
+ <tr>
+  <td >
+  <p >Janeiro <span th:text="${atualm1}"></span></p>
+  </td>
+  <td>
+  <p th:text="${janeiro_valor_atual1}"></p> 
+  </td>
+  <td>
+  <p th:text="${janeiro_saldo_atual1}"></p>
+  </td>
+  <td >
+<p th:text="${janeiro_aditivo_atual1}"></p>
+  </td>
+ </tr>
+ <tr >
+<td>
+  <p>Fevereiro <span th:text="${atualm1}"></span></p>
+  </td>
+  <td>
+<p th:text="${fevereiro_valor_atual1}"></p>
+  </td>
+  <td >
+ <p th:text="${fevereiro_saldo_atual1}"></p>
+  </td>
+  <td >
+<p th:text="${fevereiro_aditivo_atual1}"></p>
+  </td>
+  
+ </tr>
+ <tr>
+<td>
+  <p>Março <span th:text="${atualm1}"></span></p>
+  </td>
+  <td>
+<p th:text="${marco_valor_atual1}"></p>
+  </td>
+  <td >
+ <p th:text="${marco_saldo_atual1}"></p>
+  </td>
+  <td >
+<p th:text="${marco_aditivo_atual1}"></p>
+  </td>
+ </tr>
+ <tr>
+<td>
+  <p>Abril <span th:text="${atualm1}"></span></p>
+  </td>
+  <td>
+<p th:text="${abril_valor_atual1}"></p>
+  </td>
+  <td >
+ <p th:text="${abril_saldo_atual1}"></p>
+  </td>
+  <td >
+<p th:text="${abril_aditivo_atual1}"></p>
+  </td>
+  
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Maio <span th:text="${atualm1}"></span></p>
+  </td>
+  <td>
+<p th:text="${maio_valor_atual1}"></p>
+  </td>
+  <td >
+ <p th:text="${maio_saldo_atual1}"></p>
+  </td>
+  <td >
+<p th:text="${maio_aditivo_atual1}"></p>
+  </td>
+  
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Junho <span th:text="${atualm1}"></span></p>
+  </td>
+  <td>
+<p th:text="${junho_valor_atual1}"></p>
+  </td>
+  <td >
+ <p th:text="${junho_saldo_atual1}"></p>
+  </td>
+  <td >
+<p th:text="${junho_aditivo_atual1}"></p>
+  </td>
+  
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Julho <span th:text="${atualm1}"></span></p>
+  </td>
+    <td>
+<p th:text="${julho_valor_atual1}"></p>
+  </td>
+  <td >
+ <p th:text="${julho_saldo_atual1}"></p>
+  </td>
+  <td >
+<p th:text="${julho_aditivo_atual1}"></p>
+  </td>
+
+ 
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Agosto <span th:text="${atualm1}"></span></p>
+  </td>
+    <td>
+<p th:text="${agosto_valor_atual1}"></p>
+  </td>
+  <td >
+ <p th:text="${agosto_saldo_atual1}"></p>
+  </td>
+  <td >
+<p th:text="${agosto_aditivo_atual1}"></p>
+  </td>
+
+
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Setembro <span th:text="${atualm1}"></span></p>
+  </td>
+    <td>
+<p th:text="${setembro_valor_atual1}"></p>
+  </td>
+  <td >
+ <p th:text="${setembro_saldo_atual1}"></p>
+  </td>
+  <td >
+<p th:text="${setembro_aditivo_atual1}"></p>
+  </td>
+
+ 
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Outubro <span th:text="${atualm1}"></span></p>
+  </td>
+    <td>
+<p th:text="${outubro_valor_atual1}"></p>
+  </td>
+  <td >
+ <p th:text="${outubro_saldo_atual1}"></p>
+  </td>
+  <td >
+<p th:text="${outubro_aditivo_atual1}"></p>
+  </td>
+
+
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Novembro <span th:text="${atualm1}"></span></p>
+  </td>
+    <td>
+<p th:text="${novembro_valor_atual1}"></p>
+  </td>
+  <td >
+ <p th:text="${novembro_saldo_atual1}"></p>
+  </td>
+  <td >
+<p th:text="${novembro_aditivo_atual1}"></p>
+  </td>
+
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Dezembro <span th:text="${atualm1}"></span></p>
+  </td>
+    <td>
+<p th:text="${dezembro_valor_atual1}"></p>
+  </td>
+  <td >
+ <p th:text="${dezembro_saldo_atual1}"></p>
+  </td>
+  <td >
+<p th:text="${dezembro_aditivo_atual1}"></p>
+  </td>
+
+
+ </tr>
+ 
+</table>
+</div>
+<div style=" display: inline-block;">
+
+<table class="table_secundaria table-bordered table-striped" th:object="${relatorio}">
+ <tr>
+  <td>
+  <p></p>
+  </td>
+  <td>
+  <p>Valor</p>
+  </td>
+  <td>
+  <p>Saldo</p>
+  </td>
+  <td>
+  <p >Aditivo</p>
+  </td>
+  
+ </tr>
+ <tr>
+  <td >
+  <p >Janeiro <span th:text="${atualm2}"></span></p>
+  </td>
+    <td>
+<p th:text="${janeiro_valor_atual2}"></p>
+  </td>
+  <td >
+ <p th:text="${janeiro_saldo_atual2}"></p>
+  </td>
+  <td >
+<p th:text="${janeiro_aditivo_atual2}"></p>
+  </td>
+ 
+ </tr>
+ <tr >
+  <td>
+  <p>Fevereiro <span th:text="${atualm2}"></span></p>
+  </td>
+  <td>
+<p th:text="${fevereiro_valor_atual2}"></p>
+  </td>
+  <td >
+ <p th:text="${fevereiro_saldo_atual2}"></p>
+  </td>
+  <td >
+<p th:text="${fevereiro_aditivo_atual2}"></p>
+  </td>
+  
+ </tr>
+ <tr>
+  <td>
+  <p>Março <span th:text="${atualm2}"></span></p>
+  </td>
+  <td>
+<p th:text="${marco_valor_atual2}"></p>
+  </td>
+  <td >
+ <p th:text="${marco_saldo_atual2}"></p>
+  </td>
+  <td >
+<p th:text="${marco_aditivo_atual2}"></p>
+  </td>
+  </tr>
+ <tr>
+  <td>
+  <p>Abril <span th:text="${atualm2}"></span></p>
+  </td>
+  <td>
+<p th:text="${abril_valor_atual2}"></p>
+  </td>
+  <td >
+ <p th:text="${abril_saldo_atual2}"></p>
+  </td>
+  <td >
+<p th:text="${abril_aditivo_atual2}"></p>
+  </td>
+  
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Maio <span th:text="${atualm2}"></span></p>
+  </td>
+  <td>
+<p th:text="${maio_valor_atual2}"></p>
+  </td>
+  <td >
+ <p th:text="${maio_saldo_atual2}"></p>
+  </td>
+  <td >
+<p th:text="${maio_aditivo_atual2}"></p>
+  </td>
+  
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Junho <span th:text="${atualm2}"></span></p>
+  </td>
+  <td>
+<p th:text="${junho_valor_atual2}"></p>
+  </td>
+  <td >
+ <p th:text="${junho_saldo_atual2}"></p>
+  </td>
+  <td >
+<p th:text="${junho_aditivo_atual2}"></p>
+  </td>
+  
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Julho <span th:text="${atualm2}"></span></p>
+  </td>
+  <td>
+<p th:text="${julho_valor_atual2}"></p>
+  </td>
+  <td >
+ <p th:text="${julho_saldo_atual2}"></p>
+  </td>
+  <td >
+<p th:text="${julho_aditivo_atual2}"></p>
+  </td>
+ 
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Agosto <span th:text="${atualm2}"></span></p>
+  </td>
+  <td>
+<p th:text="${agosto_valor_atual2}"></p>
+  </td>
+  <td >
+ <p th:text="${agosto_saldo_atual2}"></p>
+  </td>
+  <td >
+<p th:text="${agosto_aditivo_atual2}"></p>
+  </td>
+
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Setembro <span th:text="${atualm2}"></span></p>
+  </td>
+  <td>
+<p th:text="${setembro_valor_atual2}"></p>
+  </td>
+  <td >
+ <p th:text="${setembro_saldo_atual2}"></p>
+  </td>
+  <td >
+<p th:text="${setembro_aditivo_atual2}"></p>
+  </td>
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Outubro <span th:text="${atualm2}"></span></p>
+  </td>
+  <td>
+<p th:text="${outubro_valor_atual2}"></p>
+  </td>
+  <td >
+ <p th:text="${outubro_saldo_atual2}"></p>
+  </td>
+  <td >
+<p th:text="${outubro_aditivo_atual2}"></p>
+  </td>
+
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Novembro <span th:text="${atualm2}"></span></p>
+  </td>
+  <td>
+<p th:text="${novembro_valor_atual2}"></p>
+  </td>
+  <td >
+ <p th:text="${novembro_saldo_atual2}"></p>
+  </td>
+  <td >
+<p th:text="${novembro_aditivo_atual2}"></p>
+  </td>
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Dezembro <span th:text="${atualm2}"></span></p>
+  </td>
+  <td>
+<p th:text="${dezembro_valor_atual2}"></p>
+  </td>
+  <td >
+ <p th:text="${dezembro_saldo_atual2}"></p>
+  </td>
+  <td >
+<p th:text="${dezembro_aditivo_atual2}"></p>
+  </td>
+
+ </tr>
+ 
+</table>
+</div>
+<div style="display: inline-block;">
+<table class="table_secundaria table-bordered table-striped" th:object="${relatorio}">
+ <tr>
+  <td>
+  <p></p>
+  </td>
+  <td>
+  <p>Valor</p>
+  </td>
+  <td>
+  <p>Saldo</p>
+  </td>
+  <td>
+  <p >Aditivo</p>
+  </td>
+  
+ </tr>
+ <tr>
+  <td >
+  <p >Janeiro <span th:text="${atualm3}"></span></p>
+  </td>
+  <td>
+<p th:text="${janeiro_valor_atual3}"></p>
+  </td>
+  <td >
+ <p th:text="${janeiro_saldo_atual3}"></p>
+  </td>
+  <td >
+<p th:text="${janeiro_aditivo_atual3}"></p>
+  </td>
+ 
+ </tr>
+ <tr >
+  <td>
+  <p>Fevereiro <span th:text="${atualm3}"></span></p>
+  </td>
+ <td>
+<p th:text="${fevereiro_valor_atual3}"></p>
+  </td>
+  <td >
+ <p th:text="${fevereiro_saldo_atual3}"></p>
+  </td>
+  <td >
+<p th:text="${fevereiro_aditivo_atual3}"></p>
+  </td>
+  
+ </tr>
+ <tr>
+  <td>
+  <p>Março <span th:text="${atualm3}"></span></p>
+  </td>
+  <td>
+<p th:text="${marco_valor_atual3}"></p>
+  </td>
+  <td >
+ <p th:text="${marco_saldo_atual3}"></p>
+  </td>
+  <td >
+<p th:text="${marco_aditivo_atual3}"></p>
+  </td>
+ </tr>
+ <tr>
+  <td>
+  <p>Abril <span th:text="${atualm3}"></span></p>
+  </td>
+  <td>
+<p th:text="${abril_valor_atual3}"></p>
+  </td>
+  <td >
+ <p th:text="${abril_saldo_atual3}"></p>
+  </td>
+  <td >
+<p th:text="${abril_aditivo_atual3}"></p>
+  </td>
+  
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Maio <span th:text="${atualm3}"></span></p>
+  </td>
+  <td>
+<p th:text="${maio_valor_atual3}"></p>
+  </td>
+  <td >
+ <p th:text="${maio_saldo_atual3}"></p>
+  </td>
+  <td >
+<p th:text="${maio_aditivo_atual3}"></p>
+  </td>
+  
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Junho <span th:text="${atualm3}"></span></p>
+  </td>
+ <td>
+<p th:text="${junho_valor_atual3}"></p>
+  </td>
+  <td >
+ <p th:text="${junho_saldo_atual3}"></p>
+  </td>
+  <td >
+<p th:text="${junho_aditivo_atual3}"></p>
+  </td>
+  
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Julho <span th:text="${atualm3}"></span></p>
+  </td>
+  <td>
+<p th:text="${julho_valor_atual3}"></p>
+  </td>
+  <td >
+ <p th:text="${julho_saldo_atual3}"></p>
+  </td>
+  <td >
+<p th:text="${julho_aditivo_atual3}"></p>
+  </td>
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Agosto <span th:text="${atualm3}"></span></p>
+  </td>
+  <td>
+<p th:text="${agosto_valor_atual3}"></p>
+  </td>
+  <td >
+ <p th:text="${agosto_saldo_atual3}"></p>
+  </td>
+  <td >
+<p th:text="${agosto_aditivo_atual3}"></p>
+  </td>
+
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Setembro <span th:text="${atualm3}"></span></p>
+  </td>
+  <td>
+<p th:text="${setembro_valor_atual3}"></p>
+  </td>
+  <td >
+ <p th:text="${setembro_saldo_atual3}"></p>
+  </td>
+  <td >
+<p th:text="${setembro_aditivo_atual3}"></p>
+  </td>
+ 
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Outubro <span th:text="${atualm3}"></span></p>
+  </td>
+  <td>
+<p th:text="${outubro_valor_atual3}"></p>
+  </td>
+  <td >
+ <p th:text="${outubro_saldo_atual3}"></p>
+  </td>
+  <td >
+<p th:text="${outubro_aditivo_atual3}"></p>
+  </td>
+
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Novembro <span th:text="${atualm3}"></span></p>
+  </td>
+  <td>
+<p th:text="${novembro_valor_atual3}"></p>
+  </td>
+  <td >
+ <p th:text="${novembro_saldo_atual3}"></p>
+  </td>
+  <td >
+<p th:text="${novembro_aditivo_atual3}"></p>
+  </td>
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Dezembro <span th:text="${atualm3}"></span></p>
+  </td>
+  <td>
+<p th:text="${dezembro_valor_atual3}"></p>
+  </td>
+  <td >
+ <p th:text="${dezembro_saldo_atual3}"></p>
+  </td>
+  <td >
+<p th:text="${dezembro_aditivo_atual3}"></p>
+  </td>
+
+ </tr>
+ 
+</table>
+</div>
+
+<div style="display: inline-block;">
+<table class="table_secundaria table-bordered table-striped" th:object="${relatorio}">
+ <tr>
+  <td>
+  <p></p>
+  </td>
+  <td>
+  <p>Valor</p>
+  </td>
+  <td>
+  <p>Saldo</p>
+  </td>
+  <td>
+  <p >Aditivo</p>
+  </td>
+  
+ </tr>
+ <tr>
+  <td >
+  <p >Janeiro <span th:text="${atualm4}"></span></p>
+  </td>
+  <td>
+<p th:text="${janeiro_valor_atual4}"></p>
+  </td>
+  <td >
+ <p th:text="${janeiro_saldo_atual4}"></p>
+  </td>
+  <td >
+<p th:text="${janeiro_aditivo_atual4}"></p>
+  </td>
+ 
+ </tr>
+ <tr >
+  <td>
+  <p>Fevereiro <span th:text="${atualm4}"></span></p>
+  </td>
+ <td>
+<p th:text="${fevereiro_valor_atual4}"></p>
+  </td>
+  <td >
+ <p th:text="${fevereiro_saldo_atual4}"></p>
+  </td>
+  <td >
+<p th:text="${fevereiro_aditivo_atual4}"></p>
+  </td>
+  
+ </tr>
+ <tr>
+  <td>
+  <p>Março <span th:text="${atualm4}"></span></p>
+  </td>
+  <td>
+<p th:text="${marco_valor_atual4}"></p>
+  </td>
+  <td >
+ <p th:text="${marco_saldo_atual4}"></p>
+  </td>
+  <td >
+<p th:text="${marco_aditivo_atual4}"></p>
+  </td>
+ </tr>
+ <tr>
+  <td>
+  <p>Abril <span th:text="${atualm4}"></span></p>
+  </td>
+  <td>
+<p th:text="${abril_valor_atual4}"></p>
+  </td>
+  <td >
+ <p th:text="${abril_saldo_atual4}"></p>
+  </td>
+  <td >
+<p th:text="${abril_aditivo_atual4}"></p>
+  </td>
+  
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Maio <span th:text="${atualm4}"></span></p>
+  </td>
+  <td>
+<p th:text="${maio_valor_atual4}"></p>
+  </td>
+  <td >
+ <p th:text="${maio_saldo_atual4}"></p>
+  </td>
+  <td >
+<p th:text="${maio_aditivo_atual4}"></p>
+  </td> 
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Junho <span th:text="${atualm4}"></span></p>
+  </td>
+<td>
+<p th:text="${junho_valor_atual4}"></p>
+  </td>
+  <td >
+ <p th:text="${junho_saldo_atual4}"></p>
+  </td>
+  <td >
+<p th:text="${junho_aditivo_atual4}"></p>
+  </td>  
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Julho <span th:text="${atualm4}"></span></p>
+  </td>
+<td>
+<p th:text="${julho_valor_atual4}"></p>
+  </td>
+  <td >
+ <p th:text="${julho_saldo_atual4}"></p>
+  </td>
+  <td >
+<p th:text="${julho_aditivo_atual4}"></p>
+  </td>  
+
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Agosto <span th:text="${atualm4}"></span></p>
+  </td>
+  <td>
+<p th:text="${agosto_valor_atual4}"></p>
+  </td>
+  <td >
+ <p th:text="${agosto_saldo_atual4}"></p>
+  </td>
+  <td >
+<p th:text="${agosto_aditivo_atual4}"></p>
+  </td>  
+
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Setembro <span th:text="${atualm4}"></span></p>
+  </td>
+  <td>
+<p th:text="${setembro_valor_atual4}"></p>
+  </td>
+  <td >
+ <p th:text="${setembro_saldo_atual4}"></p>
+  </td>
+  <td >
+<p th:text="${setembro_aditivo_atual4}"></p>
+  </td>  
+
+ 
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Outubro <span th:text="${atualm4}"></span></p>
+  </td>
+  <td>
+<p th:text="${outubro_valor_atual4}"></p>
+  </td>
+  <td >
+ <p th:text="${outubro_saldo_atual4}"></p>
+  </td>
+  <td >
+<p th:text="${outubro_aditivo_atual4}"></p>
+  </td>  
+
+
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Novembro <span th:text="${atualm4}"></span></p>
+  </td>
+  <td>
+<p th:text="${novembro_valor_atual4}"></p>
+  </td>
+  <td >
+ <p th:text="${novembro_saldo_atual4}"></p>
+  </td>
+  <td >
+<p th:text="${novembro_aditivo_atual4}"></p>
+  </td>  
+
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Dezembro <span th:text="${atualm4}"></span></p>
+  </td>
+  <td>
+<p th:text="${dezembro_valor_atual4}"></p>
+  </td>
+  <td >
+ <p th:text="${dezembro_saldo_atual4}"></p>
+  </td>
+  <td >
+<p th:text="${dezembro_aditivo_atual4}"></p>
+  </td>  
+
+
+ </tr>
+ 
+</table>
+
+</div>
+
+
+
+</section>
+</div>
+</body>
+
+<script src="/layout/javascripts/vendors.min.js"></script>
+<script src="/layout/javascripts/algaworks.min.js"></script>
+
+
+<script src="/layout/javascripts/bootstrap-datepicker.min.js"></script>
+ <script src="/layout/javascripts/bootstrap-datepicker.pt-BR.min.js"></script>
+<script src="/layout/javascripts/bootstrap.min.js"></script>
+<script src="/layout/javascripts/jquery-2.2.0.min.js"></script>
+<script src="/layout/javascripts/Chart.min.js"></script>
+<script src="/layout/javascripts/graficos.js"></script>
+
+</html>

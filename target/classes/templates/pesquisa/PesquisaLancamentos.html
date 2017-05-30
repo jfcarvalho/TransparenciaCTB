@@ -14,12 +14,13 @@
 <section class="aw-layout-content  js-content is-toggled">
 <div layout:include="/cabecalho/CabecalhoLancamento"></div>
 
+
 <div class="panel panel-default">
 		
 		<div class="panel-heading">
 		<div class="clearfix">	
 			<h1 class="panel-title">Pesquisa de Lançamentos</h1>
-			<form method="GET" action="/transparenciactb/lancamentos/novo/{id_contrato}">
+			<form method="GET" th:action="@{/transparenciactb/lancamentos/pesquisar/{id_contrato}(id_contrato=${contrato.id_contrato})}">
 			<div class="col-lg-3">
    				 <div class="input-group">
      				 <input type="text" class="form-control" placeholder="Pesquise aqui..." name="busca"/>
@@ -29,12 +30,12 @@
    				 </div>
  			 </div>
  			 <div class="col-lg-12">
- 			 	<input type="radio" name ="nome" /> Numero nota fiscal
- 			 	<input type="radio" name ="setor" /> Data de lancamento
+ 			 	<input type="radio" name ="numero" /> Numero nota fiscal
+ 			 	<input type="radio" name ="data" /> Data de lancamento
  			 </div>
  			  
  			</form>
-			<a class="btn btn-link aw-link-panel" th:href="@{/transparenciactb/lancamentos/novo/{id_contrato}(id_contrato=${contrato.id_contrato})}">Novo lançamento</a>
+			<a class="btn btn-link aw-link-panel" th:href="@{/transparenciactb/lancamentos/novo/{id_contrato}(id_contrato=${contrato.id_contrato})}">Novo lançamento</a>|<a class="btn btn-link aw-link-panel" th:href="@{/transparenciactb/contratos}">Voltar a pesquisa de contratos</a> | <a class="btn btn-link aw-link-panel" th:href="@{/transparenciactb/}">Voltar a home</a> 
 		</div>
 		</div>
 		<div class="panel-body">
@@ -61,7 +62,7 @@
 					<td class="text-center" th:text="${lancamento.aditivo_n}"></td>
 					<td class="text-center" th:text="${lancamento.valor_aditivo} ? ${lancamento.valor_aditivo} : 'Não informado'"></td>
 					<td class="text-center" th:text="${lancamento.observacao}"></td>
-						 <td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/lancamentos/gerar_edicao_lancamento/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:if="${permissao}" th:href="@{/transparenciactb/lancamentos/remove/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> Remover</span></a> <a  target="_blank" th:if="${permissao}" th:href="@{/transparenciactb/lancamentos/gerar_pagamento/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-usd"> Registrar Pagamento</span></a><a th:if="${lancamento.possui_aditivo}" th:href="@{/transparenciactb/garantias/pesquisar/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}"><span class="glyphicon glyphicon-ok">Registrar Garantia</span></a></td> 
+						 <td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/lancamentos/gerar_edicao_lancamento/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:if="${permissao}" th:href="@{/transparenciactb/lancamentos/remove/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> Remover</span></a> <a  target="_blank" th:if="${permissao}" th:href="@{/transparenciactb/lancamentos/gerar_pagamento/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-usd"> Registrar Pagamento</span></a></td> 
 					
 				</tr>
 				

@@ -143,7 +143,7 @@
 					<td class="text-center" th:text="${contrato.contratado} ? ${contrato.contratado.nome} : 'Não informado'"></td>
 					<td class="text-center" th:text="${contrato.gestor} ? ${contrato.gestor.nome} : 'Não informado'"></td>
 					<td class="text-center" th:text="${contrato} ? ${#dates.format(contrato.data_vencimento, 'dd/MM/yyyy')}  : 'Não informado'"></td>
-					<td class="text-center" ><div th:switch="${contrato.processo}" ><span  th:text="${contrato.processo.numero_processo}" th:if="${contrato.processo}" ></span><a  target="_blank" th:href="@{/transparenciactb/contratos/gerar_renovacao/{id_contrato}(id_contrato=${contrato.id_contrato})}" class="btn btn-link btn-xs" th:case="null" ><span class="glyphicon glyphicon-usd">Registrar Processo</span></a></div> </td>
+					<td class="text-center" ><div th:switch="${contrato.processo}" ><span  th:text="${contrato.processo.numero_processo}" th:if="${contrato.processo}" ></span><a  th:href="@{/transparenciactb/contratos/gerar_renovacao/{id_contrato}(id_contrato=${contrato.id_contrato})}" class="btn btn-link btn-xs" th:case="null" ><span class="glyphicon glyphicon-usd">Registrar Processo</span></a></div> </td>
 					
 				
 				</tr>
@@ -160,7 +160,43 @@
 		
 		</div>
 		
+			<div th:if="${registrar_processo}">
+		Últimos laçamentos não pagos 
+		<table  class="table  table-hover">
 		
+			<thead>
+				<tr>
+				<th class="text-center col-md-2">Contrato</th>
+				<th class="text-center col-md-2">Empresa</th>
+				<th class="text-center col-md-2">Gestor</th>
+				<th class="text-center col-md-2">Valor</th>
+				<th class="text-center col-md-2">Data de lancamento</th>
+				<th class="text-center col-md-2">Hora</th>
+				<th class="text-center col-md-2">Processo de pagamento</th>
+			
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="lancamento : ${ultimoslancamentos_sem_processo}">
+					<td class="text-center" ><a th:href="@{/transparenciactb/contratos/visualizar/{id_contrato}(id_contrato=${lancamento.contrato.id_contrato})}" th:text="${lancamento.contrato.numero}"></a></td>
+					<td class="text-center" th:text="${lancamento.contrato.contratado} ? ${lancamento.contrato.contratado.nome} : 'Não informado'"></td>
+						<td class="text-center" th:text="${lancamento.contrato.gestor} ? ${lancamento.contrato.gestor.nome} : 'Não informado'"></td>
+						<td class="text-center" th:text="${lancamento} ? |R$ ${{lancamento.valor}}| : 'Não informado'"></td>
+						<td class="text-center" th:text="${lancamento} ? ${#dates.format(lancamento.data, 'dd/MM/yyyy')} : 'Não informado'"></td>
+						<td class="text-center" th:text="${lancamento.hora} ? ${lancamento.hora} : 'Não informado'"></td>
+						<td class="text-center"><div th:switch="${lancamento.processo} ? ${lancamento.processo.pago}" ><span class="label label-success" th:text="'Pago'" th:case="true" ></span><a  th:href="@{/transparenciactb/lancamentos/gerar_pagamento/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" class="btn btn-link btn-xs" th:case="null" ><span class="glyphicon glyphicon-usd">Registrar Pagamento</span></a></div> </td>
+				</tr>
+				
+			<tr>
+				<td colspan="6" th:if="${#lists.isEmpty(ultimoslancamentos_todos_contratos)}"><div style="text-align:center">Nenhum lançamento encontrado</div></td>
+			</tr>
+			</tbody>
+		
+		</table>
+		<br/>
+		<br/>
+		<br/>
+		</div>
 	
 		
 		<div th:if="${home_gestor_contratos} == false">
@@ -227,7 +263,7 @@
 						<td class="text-center" th:text="${lancamento} ? |R$ ${{lancamento.valor}}| : 'Não informado'"></td>
 						<td class="text-center" th:text="${lancamento} ? ${#dates.format(lancamento.data, 'dd/MM/yyyy')} : 'Não informado'"></td>
 						<td class="text-center" th:text="${lancamento.hora} ? ${lancamento.hora} : 'Não informado'"></td>
-						<td class="text-center"><div th:switch="${lancamento.processo} ? ${lancamento.processo.pago}" ><span class="label label-success" th:text="'Pago'" th:case="true" ></span><a  target="_blank" th:href="@{/transparenciactb/lancamentos/gerar_pagamento/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" class="btn btn-link btn-xs" th:case="null" ><span class="glyphicon glyphicon-usd">Registrar Pagamento</span></a></div> </td>
+						<td class="text-center"><div th:switch="${lancamento.processo} ? ${lancamento.processo.pago}" ><span class="label label-success" th:text="'Pago'" th:case="true" ></span><a  th:href="@{/transparenciactb/lancamentos/gerar_pagamento/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" class="btn btn-link btn-xs" th:case="null" ><span class="glyphicon glyphicon-usd">Registrar Pagamento</span></a></div> </td>
 				</tr>
 				
 			<tr>

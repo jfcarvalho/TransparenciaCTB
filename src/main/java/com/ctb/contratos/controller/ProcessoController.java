@@ -14,7 +14,10 @@ import javax.persistence.PersistenceContext;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -71,6 +74,7 @@ public class ProcessoController {
 		int primeiroRegistro = pageable.getPageNumber()*pageable.getPageSize();	
 		criteria.setFirstResult(primeiroRegistro);
 		criteria.setMaxResults(pageable.getPageSize());
+		criteria.addOrder(Order.desc("id_processo"));
 		if(numero != null) {
 			if(busca != null && numero.equals("on")) {
 				//List<Lancamento> todosLancamentos = lancamentosQ.porNota(busca, us.getId_usuario());
@@ -116,8 +120,10 @@ public class ProcessoController {
 				return mv;
 			}
 		}
-
-		 mv.addObject("buscaProcessos", processos.findAll(pageable));
+		List<Processo> processosOrdenados = criteria.list();
+		Page<Processo> procs = new PageImpl<Processo>(processosOrdenados, pageable, processosOrdenados.size());
+		
+		 mv.addObject("buscaProcessos", procs);
     
 	return mv;
 	}

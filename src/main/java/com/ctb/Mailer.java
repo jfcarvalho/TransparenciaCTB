@@ -26,9 +26,12 @@ import com.ctb.contratos.controller.ContratosInterface;
 import com.ctb.contratos.model.Contratado;
 import com.ctb.contratos.model.Contrato;
 import com.ctb.contratos.model.Lancamento;
+import com.ctb.contratos.model.Usuario;
 import com.ctb.contratos.repository.Contratados;
 import com.ctb.contratos.repository.Contratos;
+import com.ctb.contratos.repository.Usuarios;
 import com.ctb.contratos.util.ContratosAVencer;
+import com.ctb.security.AppUserDetailsService;
 
 @Component
 public class Mailer {
@@ -45,6 +48,9 @@ public class Mailer {
 	
 	@Autowired
 	private Contratados contratados;
+	
+	@Autowired
+	private Usuarios usuarios;
 	
 	@Async
 	public void enviar_vencimento_gestor(List<Contrato> lc, String Email, Integer dias)
@@ -73,7 +79,7 @@ public class Mailer {
 	public void enviar_lancamento_gestor(Lancamento lc, String Email)
 	{
 		
-		
+		Usuario u = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
 		Context context = new Context();
 		context.setVariable("lancamento", lc);
 		context.setVariable("contrato", lc.getContrato());
@@ -82,8 +88,8 @@ public class Mailer {
 			MimeMessage mimeMessage = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 			helper.setFrom("suporte.ctb1210@ctb.ba.gov.br");
-			helper.setTo("jfcarvalho@ctb.ba.gov.br");
-			helper.setSubject("E-mail Teste Contratos");
+			helper.setTo(Email);
+			helper.setSubject("SGC - Atualização de Contrato");
 			helper.setText(email, true);
 			mailSender.send(mimeMessage);
 		} catch(MessagingException e) {

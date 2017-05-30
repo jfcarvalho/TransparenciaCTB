@@ -2,6 +2,7 @@ package com.ctb.contratos.controller;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.ctb.Processo;
 import com.ctb.contratos.model.Contratado;
 import com.ctb.contratos.model.Contrato;
+import com.ctb.contratos.model.Lancamento;
 import com.ctb.contratos.repository.Contratados;
 import com.ctb.contratos.repository.Contratos;
 import com.ctb.contratos.repository.Usuarios;
@@ -62,6 +64,7 @@ public class ContratadoController {
 	public ModelAndView pesquisar(String busca, String nome, String cnpj) throws ParseException
 	{
 		ModelAndView mv = new ModelAndView("/pesquisa/PesquisaContratados");
+		 
 		if(nome != null) {
 			if(busca != null && nome.equals("on")) {
 				List<Contratado> todosContratados = contratados.findByNomeContaining(busca);
@@ -78,7 +81,8 @@ public class ContratadoController {
 				return mv;
 			}
 		}
-		 //  List<Contratado> todosContratados = contratados.findAll();
+		 //  List<Contrato> tc = contratos.findAll();
+		 
 		   mv.addObject("buscaContratados", contratados.findAll());
 		   return mv;
 	}
