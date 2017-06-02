@@ -66,7 +66,7 @@
 					<td class="text-center" th:text="${processo.numero_processo}"></td>
 					<td class="text-center" th:text="${processo.tipo_processo.tipo}"></td>
 					<td class="text-center" th:text="${processo.numero_ci}"></td>
-					<td class="text-center" th:text="${#dates.format(processo.data_abertura, 'dd/MM/yyyy')}"></td>
+					<td class="text-center" th:text="${processo.data_abertura} ? ${#dates.format(processo.data_abertura, 'dd/MM/yyyy')}"></td>
 					<td class="text-center" th:if="${permissao}"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/processos/{id_processo}(id_processo=${processo.id_processo})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:href="@{/transparenciactb/processos/remove/{id_processo}(id_processo=${processo.id_processo})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> Remover</span></a></td>	
 				</tr>
 				

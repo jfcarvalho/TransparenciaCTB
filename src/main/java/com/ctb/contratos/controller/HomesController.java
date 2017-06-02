@@ -53,8 +53,8 @@ import jxl.read.biff.BiffException;
 
 public class HomesController {
 	private String HOME_VIEW = "/home/PaginaInicial";
-	static int id_inicial =0;
-	static int id_proc =0;
+	static int id_inicial = 984;
+	static int id_proc =550;
 	@Autowired
 	private Usuarios usuarios;
 	
@@ -99,10 +99,49 @@ public class HomesController {
 		DateTime date = new DateTime();
 		ano = Integer.toString(date.getYear());
 		teste = contratosVSvalores();
+		/*alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\ALBERONI.xls", 4, 27);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\BASE.xls", 12, 31);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\BATUR.xls", 28, 32);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\BMW.xls", 15, 17);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\BRASPEB.xls", 1, 68);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\BRASPECL.xls", 2, 63);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\CALDAS.xls", 13, 50);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\ECT.xls", 23, 62);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\EGBA.xls", 6, 44);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\ENTEL.xls", 18, 55);
 		
 	
-
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\IEL.xls", 20, 72);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\IPSE.xls", 29, 16);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\LARCLEAN.xls", 35, 16);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\LRX.xls", 36, 18);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\PERFORMANCE.xls", 14, 18);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\PLUS.xls", 37, 53);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\PRODEB.xls", 7, 59);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\PROSEGUR.xls", 30, 59);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\REALIZA.xls", 27, 54);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\UNIMED.xls", 26, 38);
+		*/
 		
+		/*alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\MJR.xls", 2, 28);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\VIVO.xls", 8, 20);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\TTC1.xls", 38, 19);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\TRIVALE.xls", 41, 23);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\SOS.xls", 32, 26);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\SOFCON.xls", 31, 17);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\TELEMARLD.xls", 24, 40);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\TELEMARREDE.xls", 25, 73);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\FFGARE.xls", 17, 20);
+		*/
+		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\FFSCONSTRUCOES.xls", 16, 24);
+		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\DUCTOR.xls", 10, 169);
+		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\ENGEVIX.xls", 11, 94);
+		
+		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\GIBBOR.xls", 19, 35);
+	//	alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\FFPASSEIO.xls", 42, 15);
+		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\VOLUNTARIAS.xls", 45, 18);
+		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\FPMF.xls", 44, 15);
+	//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\PROJCONSULT.xls", 40, 22);
 		while(it.hasNext())
 		{
 			Contrato obj = (Contrato) it.next();
@@ -208,16 +247,21 @@ public class HomesController {
 		{
 			Cell clinha = sheet.getCell(2, linhaAtual);
 			Cell anoAtual = sheet.getCell(0, linhaAtual);
+			Cell medicao = sheet.getCell(1, linhaAtual);
 			Cell n_nota_fiscal = sheet.getCell(3, linhaAtual);
 			Cell valorContrato = sheet.getCell(6,linhaAtual);
+			//Cell numeroAditivo = sheet.getCell(10, linhaAtual);
+			//Cell valorAditivo = sheet.getCell(11, linhaAtual);
 			Cell numeroAditivo = sheet.getCell(8, linhaAtual);
 			Cell valorAditivo = sheet.getCell(9, linhaAtual);
 			Cell observacaoContrato = sheet.getCell(10, linhaAtual);
+			//Cell observacaoContrato = sheet.getCell(12, linhaAtual);
+			//Cell saldoContrato = sheet.getCell(9, linhaAtual);
 			Cell saldoContrato = sheet.getCell(7, linhaAtual);
 			Cell numeroProcesso = sheet.getCell(4, linhaAtual);
 			Cell dataProcesso = sheet.getCell(5, linhaAtual);
 			
-			id_proc++;
+			
 			id_inicial++;
 			if(Integer.parseInt(anoAtual.getContents()) != ano)
 			{
@@ -300,6 +344,7 @@ public class HomesController {
 			l.setHora("00:00");
 			l.setDoe_aditivo(null);
 			l.setCompetencia(Competencia);
+			l.setMedicao(medicao.getContents());
 			if(!n_nota_fiscal.getContents().equals(""))
 			{
 				l.setNumero_nota_fiscal(n_nota_fiscal.getContents());
@@ -349,10 +394,10 @@ public class HomesController {
 				l.setPossui_aditivo(false);
 			}
 			
-		if(!numeroProcesso.getContents().equals("") || !dataProcesso.getContents().equals("")) 
+		if(!numeroProcesso.getContents().contains("[]") && !dataProcesso.getContents().contains("[]")) //Ajeitar aqui!!
 		{
 			//Processo p = new Processo();
-			
+			id_proc++;
 			p.setId_processo(id_proc);
 			
 			p.setNumero_ci("000000");
@@ -378,33 +423,34 @@ public class HomesController {
 			
 
 		}
-		else
-		{
+		
 			
-			p.setId_processo(id_proc);
-			p.setNumero_ci("000000");
-			p.setPago(true);
-			p.setTipo_processo(TipoProcesso.Pagamento);
-			p.setNumero_processo("Desconhecido");
-			Date data = (Date)formatter.parse(dataLancamento);
-			p.setData_abertura(data);
-			p.setData_pagamento(data);
+			Processo paux = processos.findOne(1);
+			
+		//	processos.save(paux);
+		//	l.setProcesso(paux);
 			
 			
-		}
+		
 			linhaAtual++;
 			l.setContrato(c);
 			l.setLiquidado(true);
-		//	l.setProcesso(p);
-		//	p.setLancamento(l);
-			processos.save(p);
-			lancamentos.save(l);
-			l.setProcesso(p);
-			p.setLancamento(l);
-			processos.save(p);
-			lancamentos.save(l);
+			if(!numeroProcesso.getContents().contains("[]") && !dataProcesso.getContents().contains("[]"))
+			{
+				processos.save(p);
+				lancamentos.save(l);
+				l.setProcesso(p);
+				p.setLancamento(l);
+				processos.save(p);
+				lancamentos.save(l);
 		}
-		
+			else
+			{
+				lancamentos.save(l);
+				l.setProcesso(paux);
+				lancamentos.save(l);
+			}
+	}
 	}
 	
 	public Integer [] gerarVetorDias()
