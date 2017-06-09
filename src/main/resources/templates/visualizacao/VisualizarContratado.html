@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+<link rel="stylesheet" type="text/css" href="/layout/stylesheets/bootstrap-datepicker.standalone.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/bootstrap.min.css"/>
+ 	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/vendors.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/algaworks.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/application.css"/>
+<head>
+
+
+<title>Visualização de Usuários</title>
+</head>
+
+<body>
+<div class="aw-layout-page">
+<section class="aw-layout-content  js-content is-toggled">
+<div layout:include="/cabecalho/CabecalhoLancamento"></div>
+
+
+<table>
+ <tr>
+  <td>
+  <h5>Nome da Empresa(SIGLA):</h5>
+  </td>
+  <td>
+  <div th:text="${contratado_nome}" style="width: 300px"></div>
+  </td>
+ </tr>
+ 
+ <tr>
+ 
+  <td>
+  <h5>Razão Social:</h5>
+  </td>
+  
+  <td>
+  <div th:text="${contratado_razaosocial}" style="width: 300px"></div>
+  </td>
+  
+  </tr>
+  
+  <tr>
+   <td>
+  <h5>CNPJ:</h5>
+  </td>
+  
+  <td> 
+  <div th:text="${contratado_cnpj}" style="width: 300px"></div>
+  </td>
+ </tr>
+ 
+  <tr>
+   <td>
+  <h5>Quantidade de Contratos Assinados:</h5>
+  </td>
+  
+  <td> 
+  <div th:text="${contratado_q_contratos}" style="width: 300px"></div>
+  </td>
+ </tr>
+ 
+ <tr>
+   <td>
+  <h5>Quantidade de Lancamentos(Notas Fiscais) cadastradas:</h5>
+  </td>
+  
+  <td> 
+  <div th:text="${contratado_q_lancamentos}" style="width: 300px"></div>
+  </td>
+ </tr>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+</table>
+
+<div style="background-color:#1e94d2; color:white"><center><h3>Lista de contratos firmados com a empresa</h3></center></div>
+
+<table class="table table-bordered table-striped">
+<thead>
+				<tr>
+				<th class="text-center col-md-1">Número do Contrato</th>
+				<th class="text-center col-md-2">Empresa</th>
+				<th class="text-center col-md-1">Objeto</th>
+				<th class="text-center col-md-1">Valor do Contrato:</th>
+				<th class="text-center col-md-1">Data de assinatura</th>
+				<th class="text-center col-md-1">Data de Vencimento</th>
+				</tr>
+				
+</thead>
+<tbody>
+				<tr th:each="contrato : ${contratado_contratos}">
+					
+					<td class="text-center" th:text="${contrato.numero}"></td>
+					<td class="text-center" th:text="${contrato.contratado.nome}"></td>
+					<td class="text-center" th:text="${contrato.objeto}"></td>
+					<td class="text-center" th:text="'R$' + ${#numbers.formatDecimal(contrato.valor_contrato, 0, 'POINT', 2, 'COMMA')}"></td>
+					<td class="text-center" th:text="${contrato.data_assinatura} ? ${#dates.format(contrato.data_assinatura, 'dd/MM/yyyy')} : 'Não informado'"></td>
+					<td class="text-center" th:text="${contrato.data_vencimento} ? ${#dates.format(contrato.data_vencimento, 'dd/MM/yyyy')} : 'Não informado'"></td>
+					
+				
+				</tr>
+				
+			<tr>
+				<td colspan="6" th:if="${#lists.isEmpty(contratado_contratos)}">Nenhum contrato</td>
+			</tr>
+</tbody>
+</table>
+
+
+</section>
+</div>
+
+</body>
+</html>

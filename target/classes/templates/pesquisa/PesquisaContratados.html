@@ -32,7 +32,8 @@
    				 </div>
  			 </div>
  			 <div class="col-lg-12">
- 			 	<input type="radio" name ="nome" /> Nome	
+ 			 	<input type="radio" name ="nome" /> SIGLA/Nome	
+ 			 	<input type="radio" name ="razao" /> Razão Social
  			 	<input type="radio" name ="cnpj" /> CNPJ
  			 </div>
  			  
@@ -46,8 +47,10 @@
 		
 			<thead>
 				<tr>
-				<th class="text-center col-md-2">Nome</th>
+				<th class="text-center col-md-2">Nome/SIGLA</th>
+				<th class="text-center col-md-2">Razão Social</th>
 				<th class="text-center col-md-2">CNPJ</th>
+				<th class="text-center col-md-2" th:if="${permissao}">Ações</th>
 				
 				</tr>
 				
@@ -55,6 +58,7 @@
 			<tbody>
 				<tr th:each="contratados : ${buscaContratados}">
 					<td class="text-center" th:text="${contratados.nome}"></td>
+					<td class="text-center" th:text="${contratados.razaosocial}"></td>
 					<td class="text-center" th:text="${contratados.cnpj}"></td>	
 					<td class="text-center" th:if="${permissao}"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/contratados/{id_contratados}(id_contratados=${contratados.id_contratado})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:href="@{/transparenciactb/contratados/remove/{id_contratados}(id_contratados=${contratados.id_contratado})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> remover</span></a></td>
 				</tr>

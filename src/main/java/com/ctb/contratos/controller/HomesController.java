@@ -14,6 +14,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -52,6 +54,7 @@ import jxl.read.biff.BiffException;
 
 
 public class HomesController {
+	public static final long TEMPO_MENSAGEM = (1000 * 60*60);
 	private String HOME_VIEW = "/home/PaginaInicial";
 	static int id_inicial = 984;
 	static int id_proc =550;
@@ -142,6 +145,24 @@ public class HomesController {
 		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\VOLUNTARIAS.xls", 45, 18);
 		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\FPMF.xls", 44, 15);
 	//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\PROJCONSULT.xls", 40, 22);
+		
+		   System.out.println("inicio");  
+	         Timer timer = null;  
+	         if (timer == null) {  
+	             timer = new Timer();  
+	             TimerTask tarefa = new TimerTask() {  
+	                 public void run() {  
+	                     try {  
+	                         System.out.println("Teste Agendador");  
+	                        //chamar metodo  
+	                     } catch (Exception e) {  
+	                         e.printStackTrace();  
+	                     }  
+	                 }  
+	             };  
+	             timer.scheduleAtFixedRate(tarefa, TEMPO_MENSAGEM, TEMPO_MENSAGEM);  
+	         }
+	         
 		while(it.hasNext())
 		{
 			Contrato obj = (Contrato) it.next();

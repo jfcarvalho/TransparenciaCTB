@@ -71,7 +71,7 @@
 			</thead>
 			<tbody>
 				<tr th:each="contrato : ${contratosgeridos}">
-					<td class="text-center"><a th:href="@{/transparenciactb/contratos/visualizar/{id_contrato}(id_contrato=${contrato.id_contrato})}" th:text="${contrato.numero}"></a></td>
+					<td class="text-center"><a th:href="@{/transparenciactb/lancamentos/pesquisar/{id_contrato}(id_contrato=${contrato.id_contrato})}" th:text="${contrato.numero}"></a> (<a th:href="@{/transparenciactb/contratos/visualizar/{id_contrato}(id_contrato=${contrato.id_contrato})}" th:text="'Visualizar'"></a>)</td>
 					<td class="text-center" th:text="${contrato.contratado} ? ${contrato.contratado.nome} : 'Não informado'"></td>
 						<td class="text-center" th:text="${contrato} ? |R$ ${{contrato.valor_contrato}} |: 'Não informado'"></td>
 						<td class="text-center" th:text="${contrato} ? |R$ ${{contrato.saldo_contrato}}| : 'Não informado'"></td>
@@ -104,7 +104,7 @@
 			</thead>
 			<tbody>
 				<tr th:each="contrato : ${vencimento90dias}">
-					<td class="text-center" th:text="${contrato} ? ${contrato.numero} : 'Nãoo informado'"></td>
+					<td class="text-center"><a th:href="@{/transparenciactb/lancamentos/pesquisar/{id_contrato}(id_contrato=${contrato.id_contrato})}" th:text="${contrato.numero}"></a> (<a th:href="@{/transparenciactb/contratos/visualizar/{id_contrato}(id_contrato=${contrato.id_contrato})}" th:text="'Visualizar'"></a>)</td>
 					<td class="text-center" th:text="${contrato.contratado} ? ${contrato.contratado.nome} : 'Não informado'"></td>
 					<td class="text-center" th:text="${contrato} ? ${#dates.format(contrato.data_vencimento, 'dd/MM/yyyy')}  : 'Não informado'"></td>
 				
@@ -139,7 +139,7 @@
 			</thead>
 			<tbody>
 				<tr th:each="contrato : ${vencimento90dias_todos}">
-					<td class="text-center" th:text="${contrato} ? ${contrato.numero} : 'Nãoo informado'"></td>
+					<td class="text-center"><a th:href="@{/transparenciactb/lancamentos/pesquisar/{id_contrato}(id_contrato=${contrato.id_contrato})}" th:text="${contrato.numero}"></a> (<a th:href="@{/transparenciactb/contratos/visualizar/{id_contrato}(id_contrato=${contrato.id_contrato})}" th:text="'Visualizar'"></a>)</td>
 					<td class="text-center" th:text="${contrato.contratado} ? ${contrato.contratado.nome} : 'Não informado'"></td>
 					<td class="text-center" th:text="${contrato.gestor} ? ${contrato.gestor.nome} : 'Não informado'"></td>
 					<td class="text-center" th:text="${contrato} ? ${#dates.format(contrato.data_vencimento, 'dd/MM/yyyy')}  : 'Não informado'"></td>
@@ -178,7 +178,7 @@
 			</thead>
 			<tbody>
 				<tr th:each="lancamento : ${ultimoslancamentos_sem_processo}">
-					<td class="text-center" ><a th:href="@{/transparenciactb/contratos/visualizar/{id_contrato}(id_contrato=${lancamento.contrato.id_contrato})}" th:text="${lancamento.contrato.numero}"></a></td>
+					<td class="text-center" th:text="${lancamento.contrato.numero}"></td>
 					<td class="text-center" th:text="${lancamento.contrato.contratado} ? ${lancamento.contrato.contratado.nome} : 'Não informado'"></td>
 						<td class="text-center" th:text="${lancamento.contrato.gestor} ? ${lancamento.contrato.gestor.nome} : 'Não informado'"></td>
 						<td class="text-center" th:text="${lancamento} ? |R$ ${{lancamento.valor}}| : 'Não informado'"></td>
@@ -218,7 +218,8 @@
 			</thead>
 			<tbody>
 				<tr th:each="lancamento : ${ultimoslancamentos}">
-					<td class="text-center"><a th:href="@{/transparenciactb/contratos/visualizar/{id_contrato}(id_contrato=${lancamento.contrato.id_contrato})}" th:text="${lancamento.contrato.numero}"></a></td>
+					<!--  <td class="text-center"><a th:href="@{/transparenciactb/contratos/visualizar/{id_contrato}(id_contrato=${lancamento.contrato.id_contrato})}" th:text="${lancamento.contrato.numero}"></a></td>-->
+					<td class="text-center"><a th:href="@{/transparenciactb/lancamentos/pesquisar/{id_contrato}(id_contrato=${lancamento.contrato.id_contrato})}" th:text="${lancamento.contrato.numero}"></a> (<a th:href="@{/transparenciactb/contratos/visualizar/{id_contrato}(id_contrato=${lancamento.contrato.id_contrato})}" th:text="'Visualizar'"></a>)</td>
 					<td class="text-center" th:text="${lancamento.contrato.contratado} ? ${lancamento.contrato.contratado.nome} : 'Não informado'"></td>
 						<td class="text-center" th:text="${lancamento} ? |R$ ${{lancamento.valor}}| : 'Não informado'"></td>
 						<td class="text-center" th:text="${lancamento} ? ${#dates.format(lancamento.data, 'dd/MM/yyyy')} + '-' + ${lancamento.hora} : 'Não informado'"></td>
@@ -257,8 +258,7 @@
 			</thead>
 			<tbody>
 				<tr th:each="lancamento : ${ultimoslancamentos_todos_contratos}">
-					<td class="text-center" ><a th:href="@{/transparenciactb/contratos/visualizar/{id_contrato}(id_contrato=${lancamento.contrato.id_contrato})}" th:text="${lancamento.contrato.numero}"></a></td>
-					<td class="text-center" th:text="${lancamento.contrato.contratado} ? ${lancamento.contrato.contratado.nome} : 'Não informado'"></td>
+<td class="text-center"><a th:href="@{/transparenciactb/lancamentos/pesquisar/{id_contrato}(id_contrato=${lancamento.contrato.id_contrato})}" th:text="${lancamento.contrato.numero}"></a> (<a th:href="@{/transparenciactb/contratos/visualizar/{id_contrato}(id_contrato=${lancamento.contrato.id_contrato})}" th:text="'Visualizar'"></a>)</td>					<td class="text-center" th:text="${lancamento.contrato.contratado} ? ${lancamento.contrato.contratado.nome} : 'Não informado'"></td>
 						<td class="text-center" th:text="${lancamento.contrato.gestor} ? ${lancamento.contrato.gestor.nome} : 'Não informado'"></td>
 						<td class="text-center" th:text="${lancamento} ? |R$ ${{lancamento.valor}}| : 'Não informado'"></td>
 						<td class="text-center" th:text="${lancamento} ? ${#dates.format(lancamento.data, 'dd/MM/yyyy')} : 'Não informado'"></td>

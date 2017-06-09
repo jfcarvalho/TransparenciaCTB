@@ -72,7 +72,17 @@
 					<option th:each="fiscal : ${todosFiscais}" th:value="${fiscal.id_usuario}" th:text="${fiscal.nome}" th:selected="${contrato.fiscal} ? ${contrato.fiscal.id_usuario} == ${fiscal.id_usuario}"></option>
 				</select>
 			</div>
-		</div>	 
+		
+		</div>	
+		
+		<div class="form-group">
+			<label for="arquitetura" class="col-sm-2 control-label">Empresa contratada:</label>
+			<div class="col-sm-4">
+				<select class="form-control" name="contrato_id_contrato">
+					<option th:each="contratado : ${todosContratados}" th:value="${contratado.id_contratado}" th:text="${contratado.nome}" th:selected="${contrato.contratado} ? ${contratado.id_contratado} == ${contrato.contratado.id_contratado}"></option>
+				</select>
+			</div>
+		</div> 
 		    
 		
 		

@@ -38,10 +38,18 @@
  </tr>
  <tr>
   <td>
-  Empresa:
+  Nome/Sigla Empresa:
   </td>
   <td>
   <div th:text="${contrato.contratado} ? ${contrato.contratado.nome}: 'Sem nome'" style="width: 300px" ></div> 
+  </td>
+ </tr>
+ <tr>
+  <td>
+  Razão Social Empresa:
+  </td>
+  <td>
+  <div th:text="${contrato.contratado.razaosocial}" style="width: 300px" ></div> 
   </td>
  </tr>
  <tr>

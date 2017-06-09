@@ -21,6 +21,7 @@ import com.ctb.Processo;
 import com.ctb.contratos.model.Contratado;
 import com.ctb.contratos.model.Contrato;
 import com.ctb.contratos.model.Lancamento;
+import com.ctb.contratos.model.Usuario;
 import com.ctb.contratos.repository.Contratados;
 import com.ctb.contratos.repository.Contratos;
 import com.ctb.contratos.repository.Usuarios;
@@ -31,6 +32,7 @@ import com.ctb.security.AppUserDetailsService;
 
 public class ContratadoController {
 	private static final String CADASTRO_VIEW = "/cadastro/CadastroContratado"; 
+	private static final String CONTRATADO_VIEW = "/visualizacao/VisualizarContratado"; 
 
 	@Autowired
 	private Contratados contratados;
@@ -134,15 +136,46 @@ public class ContratadoController {
 		return listaNova;
 	}
 
-	@RequestMapping("/teste")
-	public String teste()
+	@RequestMapping(value="/visualizar/{id_contratado}")
+	public ModelAndView visualizar_usuario(@PathVariable Integer id_contratado, RedirectAttributes attributes)
 	{
-		return "/cadastro/cadastro-produto";
+		Contratado contratado = contratados.findOne(id_contratado);
+		ModelAndView mv = new ModelAndView(CONTRATADO_VIEW);
+		
+		mv.addObject("contratado_nome", contratado.getNome());
+		mv.addObject("contratado_razao", contratado.getNome());
+		mv.addObject("contratado_cnpj", contratado.getCnpj());
+		mv.addObject("contratado_contratos", contratado.getContratos());
+		mv.addObject("contratado_q_contratos", contratado.getContratos().size());
+		mv.addObject("contratado_q_lancamentos", quantidadeLancamentos(contratado));
+		/*
+		mv.addObject("usuario_telefone", usuario.getTelefone());
+		mv.addObject("usuario_contratos_geridos", usuario.getContratosGeridos());
+		mv.addObject("usuario_contratos_fiscalizados", usuario.getContratosFiscalizados());
+		//usuarios.delete(id_usuario);
+		*/
+		return mv;	
+	
 	}
+	
+	
 	
 	@ModelAttribute("permissao")
 	public boolean temPermissao() {
 		return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
+	}
+	
+	public Integer quantidadeLancamentos (Contratado contratado)
+	{
+		Integer nlancs = 0;
+		for(Contrato c: contratado.getContratos())
+		{
+			for(Lancamento l: c.getLancamentos())
+			{
+				nlancs++;
+			}
+		}
+		return nlancs;
 	}
 	
 }

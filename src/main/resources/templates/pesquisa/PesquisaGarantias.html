@@ -50,6 +50,8 @@
 				<th class="text-center col-md-2">Apólice</th>
 				<th class="text-center col-md-2">Proposta</th>
 				<th class="text-center col-md-2">Modalidade</th>
+				<th class="text-center col-md-2">Início da Vigencia</th>
+				<th class="text-center col-md-2">Fim da Vigência</th>
 				<th class="text-center col-md-2">Ação</th>
 				
 				</tr>
@@ -61,6 +63,8 @@
 					<td class="text-center" th:text="${garantia.apolice}"></td>
 					<td class="text-center" th:text="${garantia.proposta}"></td>
 					<td class="text-center" th:text="${garantia.modalidade}"></td>	
+					<td class="text-center" th:text="${#dates.format(garantia.inicio_vigencia, 'dd/MM/yyyy')}"></td>
+					<td class="text-center" th:text="${#dates.format(garantia.fim_vigencia, 'dd/MM/yyyy')}" ></td>
 					<td class="text-center" th:if="${permissao}"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/garantias/{id_garantia}(id_garantia=${garantia.id_garantia})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:href="@{/transparenciactb/garantias/remove/{id_garantia}(id_garantia=${garantia.id_garantia})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> remover</span></a></td>
 				</tr>
 				

@@ -23,6 +23,9 @@ public class Contratado {
 	private String cnpj;
 	@OneToMany(mappedBy="contratado")
 	private List<Contrato> contratos;
+	
+	private String razaosocial;
+	
 	//private Contrato contrato;
 	
 	public Integer getId_contratado()
@@ -62,5 +65,13 @@ public class Contratado {
 	public void setContratos(List<Contrato> contratos)
 	{
 		this.contratos = contratos;
+	}
+
+	public String getRazaosocial() {
+		return razaosocial;
+	}
+
+	public void setRazaosocial(String razaosocial) {
+		this.razaosocial = razaosocial;
 	}
 }

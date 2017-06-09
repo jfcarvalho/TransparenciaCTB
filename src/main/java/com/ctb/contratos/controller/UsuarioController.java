@@ -30,6 +30,7 @@ import com.ctb.security.AppUserDetailsService;
 @RequestMapping("/transparenciactb/usuarios")
 public class UsuarioController {
 	private static final String CADASTRO_VIEW = "/cadastro/CadastroUsuario"; 
+	private static final String USUARIO_VIEW = "/visualizacao/VisualizarUsuario"; 
 	@Autowired
 	private Usuarios usuarios;
 	@Autowired
@@ -106,6 +107,7 @@ public class UsuarioController {
 		mv.addObject(usuario);
 		return mv;
 	}
+	
 	@RequestMapping(value="/remove/{id_usuario}")
 	public String excluir(@PathVariable Integer id_usuario, RedirectAttributes attributes)
 	{
@@ -116,6 +118,25 @@ public class UsuarioController {
 		attributes.addFlashAttribute("mensagem", "Usuário excluido com sucesso com sucesso!");	
 		//usuarios.delete(id_usuario);
 		return "redirect:/transparenciactb/usuarios";	
+	
+	}
+	
+	@RequestMapping(value="/visualizar/{id_usuario}")
+	public ModelAndView visualizar_usuario(@PathVariable Integer id_usuario, RedirectAttributes attributes)
+	{
+		Usuario usuario = usuarios.findOne(id_usuario);
+		ModelAndView mv = new ModelAndView(USUARIO_VIEW);
+		
+		mv.addObject("usuario_nome", usuario.getNome());
+		mv.addObject("usuario_matricula", usuario.getMatricula());
+		mv.addObject("usuario_email", usuario.getEmail());
+		mv.addObject("usuario_funcao", usuario.getFuncao());
+		mv.addObject("usuario_setor", usuario.getSetor());
+		mv.addObject("usuario_telefone", usuario.getTelefone());
+		mv.addObject("usuario_contratos_geridos", usuario.getContratosGeridos());
+		mv.addObject("usuario_contratos_fiscalizados", usuario.getContratosFiscalizados());
+		//usuarios.delete(id_usuario);
+		return mv;	
 	
 	}
 	

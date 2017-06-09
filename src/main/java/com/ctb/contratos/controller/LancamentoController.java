@@ -414,7 +414,6 @@ public class LancamentoController {
 		lancbd.setAditivo_n(lancamento.getAditivo_n());
 		lancbd.setData(lancamento.getData());
 		lancbd.setDataliquidacao(lancamento.getDataliquidacao());
-		lancbd.setLiquidado(lancamento.getLiquidado());
 		lancbd.setMeses_prorrogacao(lancamento.getMeses_prorrogacao());
 		lancbd.setNumero_nota_fiscal(lancamento.getNumero_nota_fiscal());
 		lancbd.setObservacao(lancamento.getObservacao());
@@ -424,11 +423,14 @@ public class LancamentoController {
 		lancbd.setValor_aditivo(lancamento.getValor_aditivo());
 		lancbd.setValor(lancamento.getValor());
 		lancbd.setDoe_aditivo(lancamento.getDoe_aditivo());
+		
+		
 		Contrato c = contratos.findOne(lancbd.getContrato().getId_contrato());
 		DateTime inicio = new DateTime();
 		c.setUltima_atualizacao(inicio.toDate());
-		String datas[] = lancamento.getData().toString().split("-");
-		String ano = datas[0];
+		String datas[] = lancamento.getData().toString().split(" ");
+		System.out.println(lancamento.getData().toString());
+		String ano = datas[5];
 		lancbd.setCompetencia(lancamento.getCompetencia()+"/"+ ano);
 		
 		lancamentos.save(lancbd);

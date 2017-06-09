@@ -45,15 +45,23 @@
 	
 	<div class="panel-body">
 	<input type="hidden" th:field="*{id_contratado}" />
+	
+	<div class="form-group" th:classappend="${#fields.hasErrors('nome')} ? has-error">
+			<label for="nome" class="col-sm-2 control-label" >Razão Social:</label>
+			<div class="col-sm-4">
+				<input type="text" class="form-control" id="razaosocial" name="razaosocial" th:field="*{nome}"/>
+			</div>
+		</div>
+		
 		<div class="form-group" th:classappend="${#fields.hasErrors('nome')} ? has-error">
-			<label for="nome" class="col-sm-2 control-label" >Nome:</label>
+			<label for="nome" class="col-sm-2 control-label" >Nome/SIGLA:</label>
 			<div class="col-sm-4">
 				<input type="text" class="form-control" id="nome" name="nome" th:field="*{nome}"/>
 			</div>
 		</div>
 			<div class="form-group" th:classappend="${#fields.hasErrors('cnpj')} ? has-error">
 			<label for="cnpj" class="col-sm-2 control-label">CNPJ:</label>
-			<div class="col-sm-2">
+			<div class="col-sm-4">
 				<input type="text" class="form-control" id="cnpj" name="cnpj" th:field="*{cnpj}" />
 			</div>
 		</div>

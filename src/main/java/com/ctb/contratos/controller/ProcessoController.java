@@ -45,6 +45,7 @@ import com.ctb.security.AppUserDetailsService;
 @RequestMapping("/transparenciactb/processos")
 public class ProcessoController {
 	private static final String CADASTRO_VIEW = "/cadastro/CadastroProcesso";
+	private static final String PROCESSO_VIEW = "/visualizacao/VisualizarProcesso";
 
 	@Autowired
 	private Processos processos;
@@ -188,6 +189,32 @@ public class ProcessoController {
 		}
 		return null;
 	}
+	
+	@RequestMapping(value="/visualizar/{id_processo}")
+	public ModelAndView visualizar_usuario(@PathVariable Integer id_processo, RedirectAttributes attributes)
+	{
+		Processo processo = processos.findOne(id_processo);
+		ModelAndView mv = new ModelAndView(PROCESSO_VIEW);
+		
+		mv.addObject("processo_numero", processo.getNumero_processo());
+		mv.addObject("processo_tipo_processo", processo.getTipo_processo().getTipo());
+		mv.addObject("processo_data_abertura", processo.getData_abertura());
+		mv.addObject("processo_pago", processo.getPago());
+		mv.addObject("processo_data_pagamento", processo.getData_pagamento());
+		mv.addObject("processo_numeroci", processo.getNumero_ci());
+		mv.addObject("processo_lancamento", processo.getLancamento());
+		mv.addObject("processo_contrato", processo.getContrato());
+		/*
+		mv.addObject("usuario_telefone", usuario.getTelefone());
+		mv.addObject("usuario_contratos_geridos", usuario.getContratosGeridos());
+		mv.addObject("usuario_contratos_fiscalizados", usuario.getContratosFiscalizados());
+		//usuarios.delete(id_usuario);
+		*/
+		return mv;	
+	
+	}
+	
+	
 	@ModelAttribute("permissao")
 	public boolean temPermissao() {
 		return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
