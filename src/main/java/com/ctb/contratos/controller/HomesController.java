@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ctb.ConfAvisos;
 import com.ctb.Mailer;
 import com.ctb.Processo;
 import com.ctb.TipoProcesso;
@@ -36,6 +37,7 @@ import com.ctb.contratos.model.Contratado;
 import com.ctb.contratos.model.Contrato;
 import com.ctb.contratos.model.Lancamento;
 import com.ctb.contratos.model.Usuario;
+import com.ctb.contratos.repository.ConfAvisoss;
 import com.ctb.contratos.repository.Contratados;
 import com.ctb.contratos.repository.Contratos;
 import com.ctb.contratos.repository.Lancamentos;
@@ -54,7 +56,7 @@ import jxl.read.biff.BiffException;
 
 
 public class HomesController {
-	public static final long TEMPO_MENSAGEM = (1000 * 60*60);
+	public static final long TEMPO_MENSAGEM = (1000*60*60);
 	private String HOME_VIEW = "/home/PaginaInicial";
 	static int id_inicial = 984;
 	static int id_proc =550;
@@ -73,6 +75,10 @@ public class HomesController {
 	private Contratados contratadas;
 	@Autowired
 	private Mailer mailer;
+	
+	@Autowired
+	private ConfAvisoss cfs;
+	
 	ModelAndView mv = new ModelAndView(HOME_VIEW);	
 	
 	@RequestMapping(method=RequestMethod.GET)
@@ -145,16 +151,25 @@ public class HomesController {
 		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\VOLUNTARIAS.xls", 45, 18);
 		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\FPMF.xls", 44, 15);
 	//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\PROJCONSULT.xls", 40, 22);
-		
-		   System.out.println("inicio");  
+		/*
 	         Timer timer = null;  
 	         if (timer == null) {  
 	             timer = new Timer();  
 	             TimerTask tarefa = new TimerTask() {  
 	                 public void run() {  
 	                     try {  
-	                         System.out.println("Teste Agendador");  
-	                        //chamar metodo  
+	                         //System.out.println("Teste Agendador");  
+	                        //chamar metodo
+	                    	 if(cfs.findAll().size() > 0) {
+		                    	 ConfAvisos cf = cfs.findOne(1);
+		                    	 if(cf.getData_aviso().toString().equals(DateTime.now().toString()))
+		                    	 {
+		                    		 //enviar aviso
+		                    	 }
+	                    	}
+	                    	 else{
+	                    		 //Criar uma instância de avisos e mandar uma msg, registrando a data em que foi mandado
+	                    	 }
 	                     } catch (Exception e) {  
 	                         e.printStackTrace();  
 	                     }  
@@ -162,7 +177,7 @@ public class HomesController {
 	             };  
 	             timer.scheduleAtFixedRate(tarefa, TEMPO_MENSAGEM, TEMPO_MENSAGEM);  
 	         }
-	         
+	         */
 		while(it.hasNext())
 		{
 			Contrato obj = (Contrato) it.next();

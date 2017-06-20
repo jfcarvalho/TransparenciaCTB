@@ -20,6 +20,7 @@ public class ConfAvisos {
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern= "dd/MM/yyyy")
 	private Date data_aviso;
+	private String tipo_aviso;
 	
 	public Integer getId_aviso()
 	{
@@ -28,5 +29,20 @@ public class ConfAvisos {
 	public void setId_aviso(Integer id_aviso)
 	{
 		this.id_aviso = id_aviso;
+	}
+	public String getTipo_aviso() {
+		return tipo_aviso;
+	}
+	public void setTipo_aviso(String tipo_aviso) {
+		this.tipo_aviso = tipo_aviso;
+	}
+	
+	public Date getData_aviso()
+	{
+		return this.data_aviso;
+	}
+	public void setData_aviso(Date data_aviso)
+	{
+		this.data_aviso = data_aviso;
 	}
 }
