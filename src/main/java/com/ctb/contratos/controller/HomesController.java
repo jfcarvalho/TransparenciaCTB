@@ -516,8 +516,10 @@ public class HomesController {
 			while(it2.hasNext())
 			{
 				Lancamento l = (Lancamento) it2.next();
-				acumuladoValor = acumuladoValor.add(l.getValor());
-			}
+				if(l.getValor() != null) {
+					acumuladoValor = acumuladoValor.add(l.getValor());
+					}
+				}
 			contratosEvalores.put(obj.getContratado().getNome(), acumuladoValor.toString());
 		
 		}

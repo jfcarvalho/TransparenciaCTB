@@ -261,8 +261,17 @@ public class ContratoController {
 		BigDecimal [] mesesValores = new BigDecimal[13];
 		BigDecimal [] mesesAditivos = new BigDecimal[13];
 		List<String> periodosComparados = new ArrayList<String>();
-		boolean primeiroAno = true;
+		boolean primeiroAno = false;
+		boolean primeiraVez = true;
 		
+		
+		if(lancamentos.get(0).getCompetencia().contains(ano))
+		{
+			primeiroAno = true;
+		}
+	
+			
+	
 		for(int y=0; y <13; y++)
 		{
 			mesesSaldo[y] = new BigDecimal("0.0");
@@ -287,6 +296,8 @@ public class ContratoController {
 		flagmes = 0;
 		acumuladorValor =new BigDecimal("0.0");
 		acumuladorAditivo = new BigDecimal("0.0");
+		
+		
 		if(i > 0 && i < 10) {
 			periodoAComparar = ano+ "-0"+ Integer.toString(i);
 		}else {periodoAComparar = ano+ "-"+ Integer.toString(i);}
@@ -296,16 +307,13 @@ public class ContratoController {
 			Lancamento obj = (Lancamento) it.next();
 			String dia = obj.getData().toString().split("-")[2];
 			String dt_1 = transformar_data(obj.getCompetencia())+"-"+dia;
-			if(obj.getCompetencia().split("/")[1].contains(ano) == false)
-			{
-				primeiroAno = false;
-			}
+			
 			if(dt_1.contains(periodoAComparar)) //mudar aqui tb
 			{ 
 				flagmes = 1;
 				acumuladorValor = acumuladorValor.add(obj.getValor());
-				acumuladorValorGeral = acumuladorValorGeral.add(acumuladorValor);
-				//acumuladorSaldo += obj.getSaldo_contrato();
+				//acumuladorValorGeral = acumuladorValorGeral.add(acumuladorValor);
+				
 				if(obj.getPossui_aditivo())
 				{
 					acumuladorAditivo = acumuladorAditivo.add(obj.getValor_aditivo()) ;
@@ -316,6 +324,7 @@ public class ContratoController {
 				
 			}	
 		}
+		primeiraVez = false;
 		if(flagmes == 1)
 		{
 			meses.add(i);
@@ -364,12 +373,7 @@ public class ContratoController {
 				String dia = l.getData().toString().split("-")[2];
 				String dt_l = transformar_data(l.getCompetencia())+ "-"+dia;
 				
-				
-			//	System.out.println(l.getData().toString().contains(periodoAComparar));
-			//	System.out.println(periodoAComparar);
-			//	System.out.println(l.getData().toString());
-			//	System.out.println(lancamentos.indexOf(l) +" " + lancamentos.size());
-				// System.out.println(obj.getData().toString() + "---" + l.getData().toString()) ;
+		
 				
 				if(compararPeriodos(dt_obj, periodosComparados) == false ) //mudar o getData para outra coisa
 				{
@@ -381,38 +385,68 @@ public class ContratoController {
 				
 				if(dt_l.contains(periodoAComparar) == false && compararPeriodos(dt_l, periodosComparados) == false || dt_l.equals(dt_obj)) //mudar aqui tb
 				{
-				/*	if(lancamentos.indexOf(l) == lancamentos.size()-1 && lancamentos.indexOf(obj) != lancamentos.size()-2) { 
-						mesesSaldo[mes] = l.getSaldo_contrato();
-						break;
-					}
-					else { */
+			
 					mesesSaldo[mes] = obj.getSaldo_contrato() /*+ mesesAditivos[mes] */;
 					acumuladorSaldoGeral.add(obj.getSaldo_contrato()) ; 
 					break;
-						//}
+						
 					}
 			}
 		}
 		}
 	}
-		/*
-		if(lancamentos.size() > 0) {
-			Iterator it = lancamentos.iterator();
-			boolean primeiroANO = false;
-			BigDecimal acumValor = new BigDecimal("0");
-			if(lancamentos.get(0).getCompetencia().split("/")[1].contains(ano)) 
+		BigDecimal valorAno = new BigDecimal("0");
+		BigDecimal valorContrato = new BigDecimal("0");
+		BigDecimal valorAditivoAno = new BigDecimal("0");
+		BigDecimal valorAditivoContrato = new BigDecimal("0");
+		BigDecimal saldoAno = new BigDecimal("0");
+		BigDecimal saldoContrato = new BigDecimal("0");
+		
+		//Calculo dos valores do ano e do contrato
+		for(Lancamento l: lancamentos)
+		{
+			if(l.getCompetencia().contains(ano))
 			{
-				primeiroANO = true;
-			}
-			while(it.hasNext())
-			{
-				Lancamento obj = (Lancamento) it.next();
+				valorAno = valorAno.add(l.getValor());
+				if(l.getPossui_aditivo() == true && l.getValor_aditivo() != null)
+				{
+					valorAditivoAno = valorAditivoAno.add(l.getValor_aditivo());
+					valorAditivoContrato = valorAditivoContrato.add(l.getValor_aditivo());
+				}
+				valorContrato = valorContrato.add(l.getValor());
+				
 				
 			}
-	}
-	*/
-	
-
+			else
+			{
+				
+				if(lancamentos.get(0).getCompetencia().contains(ano)) //se for o primeiro ano de contrato
+				{
+					
+					break;
+				}
+				String [] comp = l.getCompetencia().split("/");
+				Integer anoAVerificar = Integer.valueOf(comp[1]);
+				if(anoAVerificar > Integer.valueOf(ano))
+				{
+					if(lancamentos.size() > 1)
+					{
+						Integer index = lancamentos.indexOf(l);
+						
+						saldoAno = lancamentos.get(index-1).getSaldo_contrato();
+						saldoContrato = saldoAno;
+					}
+					
+					break;
+				}
+				
+				valorContrato = valorContrato.add(l.getValor());
+				if(l.getPossui_aditivo() == true && l.getValor_aditivo() != null)
+				{
+					valorAditivoContrato = valorAditivoContrato.add(l.getValor_aditivo());
+				}
+			}
+		}
 				
 		mv.addObject("janeiro_saldo", mesesSaldo[1]);		
 		mv.addObject("fevereiro_saldo", mesesSaldo[2]);
@@ -452,13 +486,14 @@ public class ContratoController {
 		mv.addObject("outubro_aditivo", mesesAditivos[10]);
 		mv.addObject("novembro_aditivo", mesesAditivos[11]);
 		mv.addObject("dezembro_aditivo", mesesAditivos[12]);
+		mv.addObject("valorGeralAno", valorAno);
+		mv.addObject("valorGeralContrato", valorContrato);
+		mv.addObject("valorAditivoAno", valorAditivoAno);
+		mv.addObject("valorAditivoContrato", valorAditivoContrato);
+		mv.addObject("saldoAno", saldoAno);
+		mv.addObject("saldoContrato", saldoContrato);
 		
-		if(primeiroAno) {
-			mv.addObject("saldoGeral", acumuladorSaldoGeral);
-			mv.addObject("valorGeral", acumuladorValorGeral);
-			mv.addObject("aditivoGeral", acumuladorAditivoGeral);
-			
-		}
+		
 		
 		
 		
@@ -648,8 +683,9 @@ public class ContratoController {
 		{
 			Lancamento obj = (Lancamento) it.next();
 		//	System.out.println(obj.getValor());
-			acumulador = acumulador.add(obj.getValor()); 
-			
+			if(obj.getValor() != null) {
+				acumulador = acumulador.add(obj.getValor()); 
+			}
 			
 		}
 		return acumulador;

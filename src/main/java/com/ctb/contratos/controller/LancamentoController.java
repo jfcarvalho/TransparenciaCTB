@@ -182,6 +182,40 @@ public class LancamentoController {
 		return mv;
 	}
 	
+	@RequestMapping(value= "/aditivo/{id_lancamento}", method=RequestMethod.POST)
+	public ModelAndView aditivo(Lancamento lancamento, @RequestParam("lancamento_id_processo" )Integer Id_processo, @RequestParam Integer lancamento_id_processo)
+	{
+		ModelAndView mv = new ModelAndView(PAGAMENTO_VIEW);
+		Lancamento lancamentobd = lancamentos.findOne(lancamento.getId_lancamento());
+		//mv.addObject("lancamento", lancamentobd);
+		lancamento.setAditivo_n(lancamentobd.getAditivo_n());
+		lancamento.setContrato(lancamentobd.getContrato());
+		lancamento.setData(lancamentobd.getData());
+		lancamento.setMeses_prorrogacao(lancamentobd.getMeses_prorrogacao());
+		lancamento.setNumero_nota_fiscal(lancamentobd.getNumero_nota_fiscal());
+		lancamento.setObservacao(lancamentobd.getObservacao());
+		lancamento.setPossui_aditivo(lancamentobd.getPossui_aditivo());
+		lancamento.setSaldo_contrato(lancamentobd.getSaldo_contrato());
+		lancamento.setHora(lancamentobd.getHora());
+		lancamento.setMedicao(lancamentobd.getMedicao());
+		lancamento.setTipoAditivo(lancamentobd.getTipoAditivo());
+		lancamento.setValor(lancamentobd.getValor());
+		lancamento.setValor_aditivo(lancamentobd.getValor_aditivo());
+		lancamento.setDoe_aditivo(lancamentobd.getDoe_aditivo());
+		lancamento.setCompetencia(lancamentobd.getCompetencia());
+		Processo p = processos.findOne(Id_processo);
+		
+		lancamento.setProcesso(p);
+		p.setLancamento(lancamento);
+		processos.save(p);
+		lancamento.setLiquidado(true);
+
+		lancamentos.save(lancamento);
+		mv.addObject(lancamento);
+		mv.addObject("mensagem", "Pagamento registrado com sucesso!");
+		return mv;
+	}
+	
 
 	
 	@RequestMapping(method = RequestMethod.POST)
@@ -224,11 +258,21 @@ public class LancamentoController {
 			{
 				resultop2 = new BigDecimal(lancamento.getValor_aditivo().toString());
 			}
-			BigDecimal resultop3 = new BigDecimal(lancamento.getValor().toString());
+			BigDecimal resultop3 = new BigDecimal(BigDecimal.ZERO.toString());
+			if(lancamento.getValor() != null)
+			{
+				resultop3 = new BigDecimal(lancamento.getValor().toString());
+					
+			}
+			else{lancamento.setValor(BigDecimal.ZERO);}
+		
+			
+		
 			BigDecimal  resultop4 = resultop1.add(resultop2);
 			BigDecimal resultop5 = resultop4.subtract(resultop3);
 			lancamento.setSaldo_contrato(resultop5);
 			c.setSaldo_contrato(resultop5 );
+			
 			c.setUltima_atualizacao(inicio.toDate());
 			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 			Date hora = Calendar.getInstance().getTime(); // Ou qualquer outra forma que tem
@@ -239,7 +283,7 @@ public class LancamentoController {
 			lancamento.setHora(dataFormatada);
 			
 		//	System.out.println(gastoMedio(c));
-			mailer.enviar_lancamento_gestor(lancamento,"anderson.araujo@ctb.ba.gov.br");
+			//mailer.enviar_lancamento_gestor(lancamento,"anderson.araujo@ctb.ba.gov.br");
 		//	checaGastoContrato(c, gastoMedio(c), lancamento.getValor());
 			contratos.save(c);
 			lancamentos.save(lancamento);		
@@ -420,8 +464,18 @@ public class LancamentoController {
 		lancbd.setPossui_aditivo(lancamento.getPossui_aditivo());
 		lancbd.setObservacao(lancamento.getObservacao());
 		lancbd.setTipoAditivo(lancamento.getTipoAditivo());
-		lancbd.setValor_aditivo(lancamento.getValor_aditivo());
-		lancbd.setValor(lancamento.getValor());
+		if(lancamento.getValor_aditivo() == null)
+		{
+			lancbd.setValor_aditivo(BigDecimal.ZERO);
+		}
+		else {
+			lancbd.setValor_aditivo(lancamento.getValor_aditivo());
+		}
+		if(lancamento.getValor() == null) {
+			lancbd.setValor(BigDecimal.ZERO);
+		}
+		else {lancbd.setValor(lancamento.getValor());}
+		
 		lancbd.setDoe_aditivo(lancamento.getDoe_aditivo());
 		
 		
