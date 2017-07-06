@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+<head>
+<title>Pesquisa de Contratos</title>
+<link rel="stylesheet" type="text/css" href="/layout/stylesheets/vendors.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/algaworks.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/application.css"/>
+
+</head>
+
+<body>
+<div class="aw-layout-page">
+<div layout:include="/cabecalho/Cabecalho"></div>
+
+<div layout:include="/cabecalho/DashBoard"></div>
+
+
+<section class="aw-layout-content  js-content">
+
+
+<div class="panel panel-default">
+		
+		<div class="panel-heading">
+		<div class="clearfix">	
+			<h1 class="panel-title">Pesquisa de Contratos</h1>
+			<form method="GET" action="/transparenciactb/contratos">
+			<div class="col-lg-3">
+   				 <div class="input-group">
+     				 <input type="text" class="form-control" placeholder="Pesquise aqui..." name="busca"/>
+    				  <span class="input-group-btn">
+       					 <button class="btn btn-default" type="submit">Go!</button>
+      				</span>
+   				 </div>
+ 			 </div>
+ 			 <div class="col-lg-12">
+ 			 	<input type="radio" name ="numero" /> Número
+ 			 	<input type="radio" name ="objeto" /> Objeto
+ 			 <input type="radio" name ="nome_empresa" /> Nome da Empresa
+ 			 </div>
+ 			  
+ 			</form>
+			<a class="btn btn-link aw-link-panel" th:href="@{/transparenciactb/contratos/novo}" th:if="${tem_permissao}">Novo contrato</a>
+		</div>
+		</div>
+		<div class="table-responsive  bw-tabela-simples">
+		<div class="panel-body">
+		
+		<table class="table  table-hover">
+		
+			<thead>
+				<tr>
+				<th class="text-center col-md-2">Número de contrato</th>
+				<th class="text-center col-md-2">Objeto</th>
+				<th class="text-center col-md-2">Empresa</th>
+				<th class="text-center col-md-2">Gestor</th>
+				<th class="text-center col-md-2">Saldo</th>
+				<th class="text-center col-md-1">Ação</th>
+				</tr>
+				
+			</thead>
+			<tbody>
+				<tr th:each="contrato : ${buscaContratos}">
+					<td class="text-center" th:text="${contrato.numero}"></td>
+					<td class="text-center" th:text="${contrato.objeto}"></td>
+					<td class="text-center" th:text="${contrato.contratado.nome}"></td>
+					<td class="text-center" th:text="${contrato.gestor.nome}"></td>
+					<td class="text-center" th:text=" |R$ ${{contrato.saldo_contrato}}|"></td>
+					<td class="text-center"><a class="btn btn-link btn-xs" th:if="${permissao}" th:href="@{/transparenciactb/contratos/editar_contrato/{id_contrato}(id_contrato=${contrato.id_contrato})}" ><span class="glyphicon glyphicon-pencil" > editar</span></a><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/lancamentos/pesquisar/{id_contrato}(id_contrato=${contrato.id_contrato})}" ><span class="glyphicon glyphicon-th"></span> lançamentos</a><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/contratos/visualizar/{id_contrato}(id_contrato=${contrato.id_contrato})}" ><span class="glyphicon glyphicon-eye-open">visualizar</span></a><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/contratos/gerar_resumo/{id_contrato}(id_contrato=${contrato.id_contrato})}" ><span class="glyphicon glyphicon-stats"></span> resumo</a><a class="btn btn-link btn-xs" th:if="${permissao}" th:href="@{/transparenciactb/contratos/gerar_renovacao/{id_contrato}(id_contrato=${contrato.id_contrato})}" ><span class="glyphicon glyphicon-file"></span> registrar processo</a></td>
+					
+					
+				</tr>
+				
+			<tr>
+				<td colspan="6" th:if="${#lists.isEmpty(todosContratos)}">Nenhum contrato encontrado</td>
+			</tr>
+			</tbody>
+		
+		</table>
+		<div class="col-sm-12 text-center">
+		
+				<nav aria-label="Page navigation">
+  <ul class="pagination">
+    <li>
+      <a href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    <li><a href="?page=0">1</a></li>
+    <li><a href="?page=1">2</a></li>
+    <li><a href="?page=2">3</a></li>
+    <li><a href= "?page=3">4</a></li>
+    <li><a href= "?page=4">5</a></li>
+    <li><a href="?page=5">6</a></li>
+    <li><a href= "?page=6">7</a></li>
+    <li><a href= "?page=7">8</a></li>
+    <li>
+      <a href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+		</div>
+		
+		
+		</div>
+		</div>
+	</div>	
+</section>
+</div>
+
+<script src="/layout/javascripts/vendors.min.js"></script>
+<script src="/layout/javascripts/algaworks.min.js"></script>
+<script>
+function openPopup(url) {
+	window.open(url, "popup_id", "scrollbars,resizable,width=500,height=500");
+}
+</script>
+
+</body>
+</html>

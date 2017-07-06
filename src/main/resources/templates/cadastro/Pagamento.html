@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+<link rel="stylesheet" type="text/css" href="/layout/stylesheets/bootstrap-datepicker.standalone.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/bootstrap.min.css"/>
+ 	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/vendors.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/algaworks.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/application.css"/>
+	<style type="text/css">
+  .popup{
+     position: fixed;
+     top: 0; bottom: 0;
+     left: 0; right: 0;
+     margin: auto;
+     width: 300px;
+     height: 150px;
+     padding: 20px;
+     border: solid 1px #331;
+     background: #ffffd0;
+     display: none;
+  }
+  </style>
+  
+<head>
+
+
+<title>Cadastro de Lancamentos</title>
+</head>
+
+<section layout:fragment="conteudo">
+
+<form class="form-horizontal" method="POST" th:action="@{/transparenciactb/lancamentos/pagar/{id_lancamento}(id_lancamento = ${lancamento.id_lancamento})}"  th:object="${lancamento}">
+		<div layout:include="/mensagem/MensagemUsuario"></div>
+		
+		<div class="panel panel-default">
+		<div class="panel-heading">
+			<div class="clearfix">
+			<h1 class="panel-title">Pagar lançamento</h1>
+		</div>
+		</div>
+	
+	
+	<div class="panel-body">
+	<input type="hidden" th:field="*{id_lancamento}" />
+	<div class="panel-heading">
+	    <h5><b>Contrato referente:</b><span th:text="${lancamento.contrato.numero}"></span></h5>
+	    <h5><b>Empresa:</b>:<span th:text="${lancamento.contrato.contratado.nome} + '-' + ${lancamento.contrato.contratado.cnpj}"></span></h5>
+	    <h5><b>Gestor</b>:<span th:text="${lancamento.contrato.gestor.nome}"></span></h5>
+	    <h5><b>Data do lancamento</b>:<span th:text="${lancamento.data}"></span></h5>
+	    <h5><b>Valor:</b><span th:text="'R$' + ${#numbers.formatDecimal(lancamento.valor, 0, 'POINT', 2, 'COMMA')}"></span></h5>
+	      <h5><b>Saldo do contrato(Na data de lançamento):</b><span th:text="'R$' + ${#numbers.formatDecimal(lancamento.saldo_contrato, 0, 'POINT', 2, 'COMMA')}"></span></h5>
+		      
+        </div>
+	    
+	    
+		<div class="form-group" >
+			<label for="funcao" class="col-sm-2 control-label">Data do liquidação da nota:</label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control" id="dataliquidacao" name="dataliquidacao" th:field="*{dataliquidacao}" data-provide="datepicker" data-date-format="dd/mm/yyyy" data-date-language="pt-BR" data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom" value="teste"/>
+			</div>
+		</div>
+		
+		<div class="form-group"> 
+ 			<label for="data_compra" class="col-sm-2 control-label">Data de pagamento do processo:</label>
+ 			<div class="col-sm-2"> 
+ 				<input type="text" class="form-control enable-data-processo-input" id="data_pagamento" name="data_pagamento"  data-provide="datepicker" data-date-format="dd/mm/yyyy" data-date-language="pt-BR" data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom"/> 
+ 			</div> 
+ 			<div class="input-group"> 
+ 				        <input  class="enable-data-processo-botao" type="checkbox" name="pago" id="pago" th:checked="${processo} ? ${processo.pago}"/> Pago	 
+ 			</div> 
+ 		</div> 
+		  
+			<div class="form-group">
+			<label for="arquitetura" class="col-sm-2 control-label">Processo de pagamento(número):</label>
+			<div class="col-sm-2">
+				<select class="form-control" name="lancamento_id_processo">
+					<option th:each="processo : ${todosProcessos}" th:value="${processo.id_processo}" th:text="${processo.numero_processo}" th:selected="${lancamento.processo} ? ${lancamento.processo.id_processo} == ${processo.id_processo}"></option>
+				</select>
+			</div>
+		</div>	    
+		
+			
+		
+			<div class="form-group">
+     		<div class="col-sm-offset-2 col-sm-10">
+				<button type="submit" class="btn btn-primary">Cadastrar</button>
+			</div>
+		</div>
+		
+		
+		
+	</div>
+	</div>
+</form>
+</section>
+<script src="/layout/javascripts/vendors.min.js"></script>
+<script src="/layout/javascripts/algaworks.min.js"></script>
+
+
+<script src="/layout/javascripts/bootstrap-datepicker.min.js"></script>
+ <script src="/layout/javascripts/bootstrap-datepicker.pt-BR.min.js"></script>
+<script src="/layout/javascripts/bootstrap.min.js"></script>
+<script src="/layout/javascripts/jquery-2.2.0.min.js"></script>
+<script src="/layout/javascripts/jquery.maskMoney.min.js"></script>
+<script src="/layout/javascripts/jquery.maskMoney.js"></script>
+
+<script src="/layout/javascripts/ctb.js"></script>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+<link rel="stylesheet" type="text/css" href="/layout/stylesheets/bootstrap-datepicker.standalone.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/bootstrap.min.css"/>
+ 	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/vendors.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/algaworks.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/application.css"/>
+<head>
+
+
+<title>Resumo de Contrato</title>
+</head>
+
+<body>
+
+<div class="aw-layout-page">
+<section class="aw-layout-content  js-content is-toggled">
+<div layout:include="/cabecalho/CabecalhoLancamento"></div>
+
+
+<br/>
+<br/>
+<br/>
+
+<table class="table table-bordered table-striped" th:object="${relatorio}">
+ <tr>
+  <td>
+  <p><o:p>&nbsp;</o:p></p>
+  </td>
+  <td>
+  <p>Valor</p>
+  </td>
+  <td>
+  <p>Saldo</p>
+  </td>
+  <td>
+  <p >Aditivo</p>
+  </td>
+  
+ </tr>
+ <tr>
+  <td >
+  <p >Janeiro</p>
+  </td>
+  <td>
+  <p th:text="'R$' + ${#numbers.formatDecimal(janeiro_valor, 0, 'POINT', 2, 'COMMA')}"></p> 
+  </td>
+  <td>
+  <p th:text="'R$' + ${#numbers.formatDecimal(janeiro_saldo, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+  <td >
+<p th:text="'R$' + ${#numbers.formatDecimal(janeiro_aditivo, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+ 
+ </tr>
+ <tr >
+  <td>
+  <p>Fevereiro</p>
+  </td>
+  <td>
+<p th:text= " 'R$' + ${#numbers.formatDecimal(fevereiro_valor, 0, 'POINT', 2, 'COMMA')} "></p>
+  </td>
+  <td >
+ <p th:text=" 'R$' + ${#numbers.formatDecimal(fevereiro_saldo, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+  <td >
+<p th:text=" 'R$' + ${#numbers.formatDecimal(fevereiro_aditivo, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+  
+ </tr>
+ <tr>
+  <td>
+  <p>Março</p>
+  </td>
+  <td>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(marco_valor, 0, 'POINT', 2, 'COMMA')} "></p>
+  </td>
+  <td>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(marco_saldo, 0, 'POINT', 2, 'COMMA')} "></p>
+  </td>
+  <td >
+<p th:text=" 'R$' + ${#numbers.formatDecimal(marco_aditivo, 0, 'POINT', 2, 'COMMA')} "></p>
+  </td>
+ </tr>
+ <tr>
+  <td>
+  <p>Abril</p>
+  </td>
+  <td>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(abril_valor, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+  <td>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(abril_saldo, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+  <td >
+<p th:text=" 'R$' + ${#numbers.formatDecimal(abril_aditivo, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+  
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Maio</p>
+  </td>
+  <td>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(maio_valor, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+  <td>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(maio_saldo, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+  <td >
+<p th:text=" 'R$' + ${#numbers.formatDecimal(maio_aditivo, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+  
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Junho</p>
+  </td>
+  <td>
+  <p th:text=" 'R$' + ${#numbers.formatDecimal(junho_valor, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+  <td>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(junho_saldo, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+  <td >
+<p th:text=" 'R$' + ${#numbers.formatDecimal(junho_aditivo, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+  
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Julho</p>
+  </td>
+  <td>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(julho_valor, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+  <td>
+   <p th:text=" 'R$' + ${#numbers.formatDecimal(julho_saldo, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+  <td >
+<p th:text=" 'R$' + ${#numbers.formatDecimal(julho_aditivo, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+ 
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Agosto</p>
+  </td>
+  <td>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(agosto_valor, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+  <td>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(agosto_saldo, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+  <td >
+<p th:text=" 'R$' + ${#numbers.formatDecimal(agosto_aditivo, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Setembro</p>
+  </td>
+  <td>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(setembro_valor, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+  <td>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(setembro_saldo, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+  <td >
+<p th:text=" 'R$' + ${#numbers.formatDecimal(setembro_aditivo, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+ 
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Outubro</p>
+  </td>
+  <td>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(outubro_valor, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+  <td>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(outubro_saldo, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+  <td >
+<p th:text=" 'R$' + ${#numbers.formatDecimal(outubro_aditivo, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Novembro</p>
+  </td>
+  <td>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(novembro_valor, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+  <td>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(novembro_saldo, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+  <td >
+<p th:text=" 'R$' + ${#numbers.formatDecimal(novembro_aditivo, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+ </tr>
+ 
+  <tr>
+  <td>
+  <p>Dezembro</p>
+  </td>
+  <td>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(dezembro_valor, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+  <td>
+<p th:text=" 'R$' + ${#numbers.formatDecimal(dezembro_saldo, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+  <td >
+<p th:text=" 'R$' + ${#numbers.formatDecimal(dezembro_aditivo, 0, 'POINT', 2, 'COMMA')}"></p>
+  </td>
+
+ </tr>
+ 
+ <tr>
+  <td>
+  <p><b>Total Ano</b></p>
+  </td>
+  <td>
+<b><p th:text=" 'R$' + ${#numbers.formatDecimal(valorGeralAno, 0, 'POINT', 2, 'COMMA')}"></p></b>
+  </td>
+  <td>
+<b><p th:text="'R$' + ${#numbers.formatDecimal(saldoAno, 0, 'POINT', 2, 'COMMA')}"></p></b>
+  </td>
+  <td >
+<b><p th:text="'R$' + ${#numbers.formatDecimal(valorAditivoAno, 0, 'POINT', 2, 'COMMA')} "></p></b>
+  </td>
+
+ </tr>
+ 
+ <tr>
+  <td>
+  <p><b>Total Contrato</b></p>
+  </td>
+  <td>
+<b><p th:text="'R$' + ${#numbers.formatDecimal(valorGeralContrato, 0, 'POINT', 2, 'COMMA')}"></p></b>
+  </td>
+  <td>
+<b><p th:text="'R$' + ${#numbers.formatDecimal(saldoContrato, 0, 'POINT', 2, 'COMMA')}"></p></b>
+  </td>
+  <td >
+<b><p th:text="'R$' + ${#numbers.formatDecimal(valorAditivoContrato, 0, 'POINT', 2, 'COMMA')}"></p></b>
+  </td>
+
+ </tr>
+ 
+</table>
+
+
+	<div  class="col-sm-6">
+			<div  data-target="#graficoValor"></div>
+				<div id="graficoValor"  th:attr="data-valor=${janeiro_valor} + ',' + ${fevereiro_valor} + ',' + ${marco_valor} + ',' + ${abril_valor} + ',' + ${maio_valor} + ',' + ${junho_valor} + ',' + ${julho_valor} + ',' + ${agosto_valor} + ',' + ${setembro_valor} + ',' + ${outubro_valor} + ',' + ${novembro_valor} + ',' + ${dezembro_valor}" class="aw-graph-box">
+					<div class="aw-graph-box__header">
+						<h2 class="aw-graph-box__title">Vendas por origem <small>últimos 6 meses</small></h2>
+					</div>
+					<div class="aw-graph-box__content">
+						<div class="aw-graph-box__no-data">
+							<!--   <i class="fa  fa-line-chart  fa-2x"></i>
+							<span>Não há dados</span> -->
+						</div>
+						<div>
+							<canvas id="graficoLancamentosValor" height="160"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div  class="col-sm-6">
+			<div  data-target="#graficoSaldo"></div>
+				<div id="graficoSaldo"  th:attr="data-saldo=${janeiro_saldo} + ',' + ${fevereiro_saldo} + ',' + ${marco_saldo} + ',' + ${abril_saldo} + ',' + ${maio_saldo} + ',' + ${junho_saldo} + ',' + ${julho_saldo} + ',' + ${agosto_saldo} + ',' + ${setembro_saldo} + ',' + ${outubro_saldo} + ',' + ${novembro_saldo} + ',' + ${dezembro_saldo}" class="aw-graph-box">
+					<div class="aw-graph-box__header">
+						<h2 class="aw-graph-box__title">Vendas por origem <small>últimos 6 meses</small></h2>
+					</div>
+					<div class="aw-graph-box__content">
+						<div class="aw-graph-box__no-data">
+							<!--   <i class="fa  fa-line-chart  fa-2x"></i>
+							<span>Não há dados</span> -->
+						</div>
+						<div>
+							<canvas id="graficoLancamentosSaldo" height="160"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div  class="col-sm-6">
+			<div  data-target="#graficoGeral"></div>
+				<div id="graficoGeral"  th:attr="data-geral=${saldoGeral} + ',' + ${valorGeral} + ',' + ${aditivoGeral} " class="aw-graph-box">
+					<div class="aw-graph-box__header">
+						<h2 class="aw-graph-box__title">Vendas por origem <small>últimos 6 meses</small></h2>
+					</div>
+					<div class="aw-graph-box__content">
+						<div class="aw-graph-box__no-data">
+							<!--   <i class="fa  fa-line-chart  fa-2x"></i>
+							<span>Não há dados</span> -->
+						</div>
+						<div>
+							<canvas id="graficoLancamentosGeral" height="160"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div  class="col-sm-6">
+			<div  data-target="#graficoPorcentagem"></div>
+				<div id="graficoPorcentagem"  th:attr="data-porcentagem=70 + ',' + 30" class="aw-graph-box">
+					<div class="aw-graph-box__header">
+						<h2 class="aw-graph-box__title">Vendas por origem <small>últimos 6 meses</small></h2>
+					</div>
+					<div class="aw-graph-box__content">
+						<div class="aw-graph-box__no-data">
+							<!--  <i class="fa  fa-line-chart  fa-2x"></i>
+							<span>Não há dados</span> -->
+						</div>
+						<div>
+							<canvas id="graficoLancamentosPorcentagem" height="160"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+
+</section>
+</div>
+</body>
+
+<script src="/layout/javascripts/vendors.min.js"></script>
+<script src="/layout/javascripts/algaworks.min.js"></script>
+
+
+<script src="/layout/javascripts/bootstrap-datepicker.min.js"></script>
+ <script src="/layout/javascripts/bootstrap-datepicker.pt-BR.min.js"></script>
+<script src="/layout/javascripts/bootstrap.min.js"></script>
+<script src="/layout/javascripts/jquery-2.2.0.min.js"></script>
+<script src="/layout/javascripts/Chart.min.js"></script>
+<script src="/layout/javascripts/graficos.js"></script>
+
+</html>

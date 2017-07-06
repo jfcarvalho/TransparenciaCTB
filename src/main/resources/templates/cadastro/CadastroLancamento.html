@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+<link rel="stylesheet" type="text/css" href="/layout/stylesheets/bootstrap-datepicker.standalone.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/bootstrap.min.css"/>
+ 	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/vendors.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/algaworks.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/application.css"/>
+<head>
+
+<title>Cadastro de Lancamentos</title>
+</head>
+
+<section layout:fragment="conteudo">
+
+<form class="form-horizontal" method="POST" action="/transparenciactb/lancamentos/" th:object="${lancamento}">
+		<div layout:include="/mensagem/MensagemUsuario"></div>
+		
+		<div class="panel panel-default">
+		<div class="panel-heading">
+			<div class="clearfix">
+			<h1 class="panel-title">Novo Lançamento</h1>
+		<a class="btn btn-link aw-link-panel" th:href="@{/transparenciactb/lancamentos/pesquisar/{id_contrato}(id_contrato = ${contrato.id_contrato})}">Voltar para pesquisa de lançamentos</a>	| <a class="btn btn-link aw-link-panel" href="/transparenciactb/">Voltar para home</a> 
+		</div> 
+		</div>
+	
+	
+	<div class="panel-body">
+	<input type="hidden" th:field="*{id_lancamento}" />
+	
+		
+		
+			<div class="form-group" >
+			<label for="matricula" class="col-sm-2 control-label">Número da nota fiscal:</label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control" id="numero_nota_fiscal" name="numero_nota_fiscal" th:field="*{numero_nota_fiscal}" />
+			</div>
+		</div>
+			<div class="form-group" >
+			<label for="funcao" class="col-sm-2 control-label">Observação:</label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control" id="observacao" name="observacao" th:field="*{observacao}"/>
+			</div>
+		</div>
+		
+		<div class="form-group" >
+			<label for="funcao" class="col-sm-2 control-label">Data do lançamento:</label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control" id="data" name="data" th:field="*{data}" data-provide="datepicker" data-date-format="dd/mm/yyyy" data-date-language="pt-BR" data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom" value="teste"/>
+			</div>
+		</div>
+		
+		<div class="form-group" >
+			<label for="nome" class="col-sm-2 control-label" >Mês de competência:</label>
+		<div class="col-sm-2">
+				<select class="form-control" name="competencia">
+					<option value="Janeiro">Janeiro</option>
+					<option value="Fevereiro">Fevereiro</option>
+					<option value="Março">Março</option>
+					<option value="Abril">Abril</option>
+					<option value="Maio">Maio</option>
+					<option value="Junho">Junho</option>
+					<option value="Julho">Julho</option>
+					<option value="Agosto">Agosto</option>
+					<option value="Setembro">Setembro</option>
+					<option value="Outubro">Outubro</option>
+					<option value="Novembro">Novembro</option>
+					<option value="Dezembro">Dezembro</option>
+				</select>
+			</div>
+			</div>
+		<div class="form-group" >
+		
+		</div>
+		<div class="form-group" >
+			<label for="funcao" class="col-sm-2 control-label">Valor:</label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control js-currency" id="valor" name="valor" th:field="*{valor}"/>
+			</div>
+		</div>
+		
+		<div class="form-group" >
+			<label for="funcao" class="col-sm-2 control-label">Medição:</label>
+			<div class="col-sm-2">
+				<input type="text"  class="form-control" id="medicao" name="medicao" th:field="*{medicao}"/>
+			</div>
+		</div>
+		
+		
+		<div class="form-group">
+			<label for="cnpj" class="col-sm-2 control-label">Contrato:</label>
+			<div class="col-sm-2">
+				<select class="form-control" name="lancamento_id_contrato">
+					<option th:value="${contrato.id_contrato}" th:text="${contrato.numero}" ></option>
+				</select>
+			</div>
+		</div>
+		
+		
+			<input type="checkbox" class="enable-aditivo-lancamento-botao" name="possui_aditivo" th:checked="${possui_aditivo}"/>Este lançamento possui aditivo?<br/>
+		
+	<div class="form-group" >
+			<label for="nome" class="col-sm-2 control-label" >Número do aditivo:</label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control enable-aditivo-lancamento-input" id="aditivo_n" name="aditivo_n" th:field="*{aditivo_n}"/>
+			</div>
+		</div>
+		
+		<div class="form-group" >
+			<label for="nome" class="col-sm-2 control-label" >Valor do aditivo </label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control js-currency enable-aditivo-lancamento-input" id="valor_aditivo" name="valor_aditivo" th:field="*{valor_aditivo}"/>
+			</div>
+		</div>
+		
+		<div class="form-group" >
+			<label for="nome" class="col-sm-2 control-label" >Tipo do aditivo:</label>
+		<div class="col-sm-2">
+				<select class="form-control enable-aditivo-lancamento-input" name="tipoaditivo">
+					<option th:each="tipo : ${todosTipos}" th:value="${tipo}" th:text="${tipo.tipoaditivo}" th:selected="${su} ? ${su.tipoaditivo.tipoaditivo} == ${tipo.tipoaditivo}"></option>
+				</select>
+			</div>
+			</div>
+			
+			<div class="form-group" >
+			<label for="nome" class="col-sm-2 control-label" >Meses de prorrogação (Aditivo de tempo):</label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control enable-aditivo-lancamento-input" id="meses_prorrogacao" name="meses_prorrogacao" th:field="*{meses_prorrogacao}"/>
+			</div>
+		</div>
+		
+		<div class="form-group" >
+			<label for="funcao" class="col-sm-2 control-label">D.O.E:</label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control  enable-aditivo-lancamento-input" id="doe_aditivo" name="doe_aditivo" th:field="*{doe_aditivo}" data-provide="datepicker" data-date-format="dd/mm/yyyy" data-date-language="pt-BR" data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom" value="teste"/>
+			</div>
+		</div>
+		
+		
+	
+		
+		
+			<div class="form-group">
+     		<div class="col-sm-offset-2 col-sm-10">
+				<button type="submit" class="btn btn-primary">Cadastrar</button>
+			</div>
+		</div>
+		
+		
+		
+	</div>
+	</div>
+</form>
+</section>
+<script src="/layout/javascripts/vendors.min.js"></script>
+<script src="/layout/javascripts/algaworks.min.js"></script>
+
+
+<script src="/layout/javascripts/bootstrap-datepicker.min.js"></script>
+ <script src="/layout/javascripts/bootstrap-datepicker.pt-BR.min.js"></script>
+<script src="/layout/javascripts/bootstrap.min.js"></script>
+<script src="/layout/javascripts/jquery-2.2.0.min.js"></script>
+<script src="/layout/javascripts/jquery.maskMoney.min.js"></script>
+<script src="/layout/javascripts/jquery.maskMoney.js"></script>
+<script src="/layout/javascripts/formulario_lancamento.js"></script>
+
+<script src="/layout/javascripts/ctb.js"></script>
+</html>
