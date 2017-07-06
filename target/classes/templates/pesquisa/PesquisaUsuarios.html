@@ -66,7 +66,7 @@
 					<td class="text-center" th:text="${usuario.funcao}"></td>
 					<td class="text-center" th:text="${usuario.email}"></td>
 					<td class="text-center" th:text="${usuario.telefone}"></td>
-					<td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/usuarios/{id_usuario}(id_usuario=${usuario.id_usuario})}"  th:if="${permissao}"><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:href="@{/transparenciactb/usuarios/remove/{id_usuario}(id_usuario=${usuario.id_usuario})}" class="btn btn-link btn-xs"  th:if="${permissao}"><span class="glyphicon glyphicon-remove" th:if="${permissao}"> Remover</span></a></td>
+					<td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/usuarios/{id_usuario}(id_usuario=${usuario.id_usuario})}"  th:if="${permissao}"><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:href="@{/transparenciactb/usuarios/remove/{id_usuario}(id_usuario=${usuario.id_usuario})}" class="btn btn-link btn-xs"  th:if="${permissao}"><span class="glyphicon glyphicon-remove" th:if="${permissao}"> Remover</span></a><a th:href="@{/transparenciactb/usuarios/visualizar/{id_usuario}(id_usuario=${usuario.id_usuario})}" class="btn btn-link btn-xs"  th:if="${permissao}"><span class="glyphicon glyphicon-eye-open"> visualizar</span></a></td>
 				</tr>
 				
 			<tr>

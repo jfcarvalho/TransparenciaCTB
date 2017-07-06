@@ -92,7 +92,7 @@
 		
 		
 		
-			<input type="checkbox" class="enable-aditivo-lancamento-botao" name="possui_aditivo" th:checked="${possui_aditivo}"/>Este lançamento possui aditivo?<br/>
+			<input type="checkbox" class="enable-aditivo-lancamento-botao" name="possui_aditivo" th:checked="${lancamento} ? ${lancamento.possui_aditivo}"/>Este lançamento possui aditivo?<br/>
 		
 	<div class="form-group" >
 			<label for="nome" class="col-sm-2 control-label" >Número do aditivo:</label>
@@ -159,4 +159,5 @@
 <script src="/layout/javascripts/jquery.maskMoney.js"></script>
 
 <script src="/layout/javascripts/ctb.js"></script>
+<script src="/layout/javascripts/formulario_lancamento.js"></script>
 </html>

@@ -261,8 +261,17 @@ public class ContratoController {
 		BigDecimal [] mesesValores = new BigDecimal[13];
 		BigDecimal [] mesesAditivos = new BigDecimal[13];
 		List<String> periodosComparados = new ArrayList<String>();
-		boolean primeiroAno = true;
+		boolean primeiroAno = false;
+		boolean primeiraVez = true;
 		
+		
+		if(lancamentos.get(0).getCompetencia().contains(ano))
+		{
+			primeiroAno = true;
+		}
+	
+			
+	
 		for(int y=0; y <13; y++)
 		{
 			mesesSaldo[y] = new BigDecimal("0.0");
@@ -287,6 +296,8 @@ public class ContratoController {
 		flagmes = 0;
 		acumuladorValor =new BigDecimal("0.0");
 		acumuladorAditivo = new BigDecimal("0.0");
+		
+		
 		if(i > 0 && i < 10) {
 			periodoAComparar = ano+ "-0"+ Integer.toString(i);
 		}else {periodoAComparar = ano+ "-"+ Integer.toString(i);}
@@ -296,16 +307,13 @@ public class ContratoController {
 			Lancamento obj = (Lancamento) it.next();
 			String dia = obj.getData().toString().split("-")[2];
 			String dt_1 = transformar_data(obj.getCompetencia())+"-"+dia;
-			if(obj.getCompetencia().split("/")[1].contains(ano) == false)
-			{
-				primeiroAno = false;
-			}
+			
 			if(dt_1.contains(periodoAComparar)) //mudar aqui tb
 			{ 
 				flagmes = 1;
 				acumuladorValor = acumuladorValor.add(obj.getValor());
-				acumuladorValorGeral = acumuladorValorGeral.add(acumuladorValor);
-				//acumuladorSaldo += obj.getSaldo_contrato();
+				//acumuladorValorGeral = acumuladorValorGeral.add(acumuladorValor);
+				
 				if(obj.getPossui_aditivo())
 				{
 					acumuladorAditivo = acumuladorAditivo.add(obj.getValor_aditivo()) ;
@@ -316,6 +324,7 @@ public class ContratoController {
 				
 			}	
 		}
+		primeiraVez = false;
 		if(flagmes == 1)
 		{
 			meses.add(i);
@@ -364,12 +373,7 @@ public class ContratoController {
 				String dia = l.getData().toString().split("-")[2];
 				String dt_l = transformar_data(l.getCompetencia())+ "-"+dia;
 				
-				
-			//	System.out.println(l.getData().toString().contains(periodoAComparar));
-			//	System.out.println(periodoAComparar);
-			//	System.out.println(l.getData().toString());
-			//	System.out.println(lancamentos.indexOf(l) +" " + lancamentos.size());
-				// System.out.println(obj.getData().toString() + "---" + l.getData().toString()) ;
+		
 				
 				if(compararPeriodos(dt_obj, periodosComparados) == false ) //mudar o getData para outra coisa
 				{
@@ -381,38 +385,68 @@ public class ContratoController {
 				
 				if(dt_l.contains(periodoAComparar) == false && compararPeriodos(dt_l, periodosComparados) == false || dt_l.equals(dt_obj)) //mudar aqui tb
 				{
-				/*	if(lancamentos.indexOf(l) == lancamentos.size()-1 && lancamentos.indexOf(obj) != lancamentos.size()-2) { 
-						mesesSaldo[mes] = l.getSaldo_contrato();
-						break;
-					}
-					else { */
+			
 					mesesSaldo[mes] = obj.getSaldo_contrato() /*+ mesesAditivos[mes] */;
 					acumuladorSaldoGeral.add(obj.getSaldo_contrato()) ; 
 					break;
-						//}
+						
 					}
 			}
 		}
 		}
 	}
-		/*
-		if(lancamentos.size() > 0) {
-			Iterator it = lancamentos.iterator();
-			boolean primeiroANO = false;
-			BigDecimal acumValor = new BigDecimal("0");
-			if(lancamentos.get(0).getCompetencia().split("/")[1].contains(ano)) 
+		BigDecimal valorAno = new BigDecimal("0");
+		BigDecimal valorContrato = new BigDecimal("0");
+		BigDecimal valorAditivoAno = new BigDecimal("0");
+		BigDecimal valorAditivoContrato = new BigDecimal("0");
+		BigDecimal saldoAno = new BigDecimal("0");
+		BigDecimal saldoContrato = new BigDecimal("0");
+		
+		//Calculo dos valores do ano e do contrato
+		for(Lancamento l: lancamentos)
+		{
+			if(l.getCompetencia().contains(ano))
 			{
-				primeiroANO = true;
-			}
-			while(it.hasNext())
-			{
-				Lancamento obj = (Lancamento) it.next();
+				valorAno = valorAno.add(l.getValor());
+				if(l.getPossui_aditivo() == true && l.getValor_aditivo() != null)
+				{
+					valorAditivoAno = valorAditivoAno.add(l.getValor_aditivo());
+					valorAditivoContrato = valorAditivoContrato.add(l.getValor_aditivo());
+				}
+				valorContrato = valorContrato.add(l.getValor());
+				
 				
 			}
-	}
-	*/
-	
-
+			else
+			{
+				
+				if(lancamentos.get(0).getCompetencia().contains(ano)) //se for o primeiro ano de contrato
+				{
+					
+					break;
+				}
+				String [] comp = l.getCompetencia().split("/");
+				Integer anoAVerificar = Integer.valueOf(comp[1]);
+				if(anoAVerificar > Integer.valueOf(ano))
+				{
+					if(lancamentos.size() > 1)
+					{
+						Integer index = lancamentos.indexOf(l);
+						
+						saldoAno = lancamentos.get(index-1).getSaldo_contrato();
+						saldoContrato = saldoAno;
+					}
+					
+					break;
+				}
+				
+				valorContrato = valorContrato.add(l.getValor());
+				if(l.getPossui_aditivo() == true && l.getValor_aditivo() != null)
+				{
+					valorAditivoContrato = valorAditivoContrato.add(l.getValor_aditivo());
+				}
+			}
+		}
 				
 		mv.addObject("janeiro_saldo", mesesSaldo[1]);		
 		mv.addObject("fevereiro_saldo", mesesSaldo[2]);
@@ -452,13 +486,14 @@ public class ContratoController {
 		mv.addObject("outubro_aditivo", mesesAditivos[10]);
 		mv.addObject("novembro_aditivo", mesesAditivos[11]);
 		mv.addObject("dezembro_aditivo", mesesAditivos[12]);
+		mv.addObject("valorGeralAno", valorAno);
+		mv.addObject("valorGeralContrato", valorContrato);
+		mv.addObject("valorAditivoAno", valorAditivoAno);
+		mv.addObject("valorAditivoContrato", valorAditivoContrato);
+		mv.addObject("saldoAno", saldoAno);
+		mv.addObject("saldoContrato", saldoContrato);
 		
-		if(primeiroAno) {
-			mv.addObject("saldoGeral", acumuladorSaldoGeral);
-			mv.addObject("valorGeral", acumuladorValorGeral);
-			mv.addObject("aditivoGeral", acumuladorAditivoGeral);
-			
-		}
+		
 		
 		
 		
@@ -648,8 +683,9 @@ public class ContratoController {
 		{
 			Lancamento obj = (Lancamento) it.next();
 		//	System.out.println(obj.getValor());
-			acumulador = acumulador.add(obj.getValor()); 
-			
+			if(obj.getValor() != null) {
+				acumulador = acumulador.add(obj.getValor()); 
+			}
 			
 		}
 		return acumulador;
@@ -698,7 +734,7 @@ public class ContratoController {
 	}
 	
 	@RequestMapping(method= RequestMethod.GET)
-	public ModelAndView pesquisar(String busca, String numero, String objeto, @PageableDefault(size=5) Pageable pageable) throws ParseException
+	public ModelAndView pesquisar(String busca, String numero, String objeto, String nome_empresa, @PageableDefault(size=5) Pageable pageable) throws ParseException
 	{
 		
 		
@@ -723,7 +759,7 @@ public class ContratoController {
 		criteria.setFirstResult(primeiroRegistro);
 		criteria.setMaxResults(pageable.getPageSize());
 		criteria.addOrder(Order.desc("ultima_atualizacao"));
-		if(numero != null) {
+		if(numero != null && AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO") == true) {
 			if(busca != null && numero.equals("on")) {
 				List<Contrato> todosContratos = contratos.findByNumeroContaining(busca);
 				mv.addObject("buscaContratos", todosContratos);
@@ -732,10 +768,90 @@ public class ContratoController {
 				return mv;
 			}
 		}
-		else if(objeto != null) {
+		else if(objeto != null && AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO") == true) {
 			if(busca != null && objeto.equals("on")) {
 				List<Contrato> todosContratos = contratos.findByObjetoContaining(busca);
 				mv.addObject("buscaContratos", todosContratos);
+				return mv;
+			}
+		}
+		else if(nome_empresa != null && AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO") == true)
+		{
+			if(busca != null && nome_empresa.equals("on"))
+			{
+				List<Contrato> todosCEmpresa = todosContratosEmpresa(contratos.findAll(), busca);
+				mv.addObject("buscaContratos", todosCEmpresa);
+				return mv;
+			}
+		}
+
+		   
+		   if(AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO") == false) //Ou seja, se for um gestor comum
+		   {
+			   
+			   List<Contrato> contratosUsuario = currentUser.getContratosGeridos();
+			   contratosUsuario.sort(cmp);
+			   
+			   
+			   mv.addObject("buscaContratos", contratosUsuario);
+			   return mv;
+		   }
+		   
+		  List<Contrato> tc= criteria.list();
+		  mv.addObject("buscaContratos", tc); 
+		  return mv;
+    
+	}
+	
+	@RequestMapping("/vencidos")
+	public ModelAndView pesquisar_vencidos(String busca, String numero, String objeto, String nome_empresa, @PageableDefault(size=15) Pageable pageable) throws ParseException
+	{
+		
+		
+		Usuario currentUser = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
+		boolean tem_permissao = AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
+		ModelAndView mv = new ModelAndView("/pesquisa/PesquisaContratosVencidos");
+		//mv.addObject("usuarios", todosUsuarios);
+		mv.addObject("tem_permissao", tem_permissao);
+		Criteria criteria = manager.unwrap(Session.class).createCriteria(Contrato.class);
+		
+		int primeiroRegistro = pageable.getPageNumber()*pageable.getPageSize();
+		
+		Date dataAtual = new Date();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		Comparator<Contrato> cmp = new Comparator<Contrato>() {
+	        public int compare(Contrato c1, Contrato c2) {
+	          return c2.getUltima_atualizacao().compareTo(c1.getUltima_atualizacao());
+	        }
+	    };
+		
+		criteria.setFirstResult(primeiroRegistro);
+		criteria.setMaxResults(pageable.getPageSize());
+		criteria.addOrder(Order.desc("ultima_atualizacao"));
+		if(numero != null && AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO") == true) {
+			if(busca != null && numero.equals("on")) {
+				List<Contrato> todosContratos = todosContratosVencidos(contratos.findByNumeroContaining(busca));
+				mv.addObject("buscaContratos", todosContratos);
+			
+				
+				return mv;
+			}
+		}
+		else if(objeto != null && AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO") == true) {
+			if(busca != null && objeto.equals("on")) {
+				List<Contrato> todosContratos = todosContratosVencidos(contratos.findByObjetoContaining(busca));
+				mv.addObject("buscaContratos", todosContratos);
+				return mv;
+			}
+		}
+		
+		else if(nome_empresa != null && AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO") == true)
+		{
+			if(busca != null && nome_empresa.equals("on"))
+			{
+				List<Contrato> todosCEmpresa = todosContratosEmpresa(todosContratosVencidos(contratos.findAll()), busca);
+				mv.addObject("buscaContratos", todosCEmpresa);
 				return mv;
 			}
 		}
@@ -745,18 +861,90 @@ public class ContratoController {
 		   {
 			   
 			 
-			   List<Contrato> contratosUsuario = currentUser.getContratosGeridos();
+			   List<Contrato> contratosUsuario = todosContratosVencidos(currentUser.getContratosGeridos());
 			   contratosUsuario.sort(cmp);
 			   mv.addObject("buscaContratos", contratosUsuario);
 			   return mv;
 		   }
 		   
-		  List<Contrato> tc= criteria.list();
+		  List<Contrato> tc= todosContratosVencidos(criteria.list());
 		  mv.addObject("buscaContratos", tc);
 		   
 			return mv;
     
 	}
+	
+	@RequestMapping("/vigentes")
+	public ModelAndView pesquisar_vigentes(String busca, String numero, String objeto, String nome_empresa, @PageableDefault(size=15) Pageable pageable) throws ParseException
+	{
+		
+		
+		Usuario currentUser = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
+		boolean tem_permissao = AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
+		ModelAndView mv = new ModelAndView("/pesquisa/PesquisaContratosVigente");
+		//mv.addObject("usuarios", todosUsuarios);
+		mv.addObject("tem_permissao", tem_permissao);
+		Criteria criteria = manager.unwrap(Session.class).createCriteria(Contrato.class);
+		
+		int primeiroRegistro = pageable.getPageNumber()*pageable.getPageSize();
+		
+		Date dataAtual = new Date();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		Comparator<Contrato> cmp = new Comparator<Contrato>() {
+	        public int compare(Contrato c1, Contrato c2) {
+	          return c2.getUltima_atualizacao().compareTo(c1.getUltima_atualizacao());
+	        }
+	    };
+		
+		criteria.setFirstResult(primeiroRegistro);
+		criteria.setMaxResults(pageable.getPageSize());
+		criteria.addOrder(Order.desc("ultima_atualizacao"));
+		if(numero != null) {
+			if(busca != null && numero.equals("on")) {
+				List<Contrato> todosContratos = todosContratosVigente(contratos.findByNumeroContaining(busca));
+				mv.addObject("buscaContratos", todosContratos);
+			
+				
+				return mv;
+			}
+		}
+		else if(objeto != null) {
+			if(busca != null && objeto.equals("on")) {
+				List<Contrato> todosContratos = todosContratosVigente(contratos.findByObjetoContaining(busca));
+				mv.addObject("buscaContratos", todosContratos);
+				return mv;
+			}
+		}
+		
+		else if(nome_empresa != null && AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO") == true)
+		{
+			if(busca != null && nome_empresa.equals("on"))
+			{
+				List<Contrato> todosCEmpresa = todosContratosEmpresa(todosContratosVigente(contratos.findAll()), busca);
+				mv.addObject("buscaContratos", todosCEmpresa);
+				return mv;
+			}
+		}
+
+		   
+		   if(AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO") == false) //Ou seja, se for um gestor comum
+		   {
+			   
+			 
+			   List<Contrato> contratosUsuario = todosContratosVigente(currentUser.getContratosGeridos());
+			   contratosUsuario.sort(cmp);
+			   mv.addObject("buscaContratos", contratosUsuario);
+			   return mv;
+		   }
+		   
+		  List<Contrato> tc= todosContratosVigente(criteria.list());
+		  mv.addObject("buscaContratos", tc);
+		   
+			return mv;
+    
+	}
+	
 	
 	
 	@RequestMapping("{id_contrato}")
@@ -1569,6 +1757,55 @@ public class ContratoController {
 	public List<Contrato> todosContratos()
 	{
 		return contratos.findAll();
+	}
+	
+	public List<Contrato> todosContratosVencidos(List<Contrato> c)
+	{
+		List<Contrato> contratos_vencidos = new ArrayList<Contrato>();
+		for(Contrato contrato : c)
+		{
+			DateTime data_vencimento = new DateTime(contrato.getData_vencimento());
+			DateTime data_atual = new DateTime();
+			Days d = Days.daysBetween(data_atual, data_vencimento);
+			
+			if(d.getDays() <= 0)
+			{
+				contratos_vencidos.add(contrato);
+			}
+			
+		}
+		return contratos_vencidos;
+	}
+	
+	public List<Contrato> todosContratosVigente(List<Contrato> c)
+	{
+		List<Contrato> contratos_vigentes = new ArrayList<Contrato>();
+		for(Contrato contrato : c)
+		{
+			DateTime data_vencimento = new DateTime(contrato.getData_vencimento());
+			DateTime data_atual = new DateTime();
+			Days d = Days.daysBetween(data_atual, data_vencimento);
+			
+			if(d.getDays() > 0)
+			{
+				contratos_vigentes.add(contrato);
+			}
+			
+		}
+		return contratos_vigentes;
+	}
+	
+	public List<Contrato> todosContratosEmpresa(List<Contrato> c, String Empresa)
+	{
+		List<Contrato> contratos_empresa = new ArrayList<Contrato>();
+		for(Contrato contrato :c)
+		{
+			if(contrato.getContratado().getNome().contains(Empresa))
+			{
+				contratos_empresa.add(contrato);
+			}
+		}
+		return contratos_empresa;
 	}
 	
 	@ModelAttribute("todasLicitacoes")

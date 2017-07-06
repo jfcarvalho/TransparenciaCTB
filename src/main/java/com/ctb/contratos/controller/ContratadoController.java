@@ -141,6 +141,7 @@ public class ContratadoController {
 	{
 		Contratado contratado = contratados.findOne(id_contratado);
 		ModelAndView mv = new ModelAndView(CONTRATADO_VIEW);
+		mv.addObject("contratado", contratado);
 		
 		mv.addObject("contratado_nome", contratado.getNome());
 		mv.addObject("contratado_razao", contratado.getNome());

@@ -230,13 +230,13 @@
   <p><b>Total Ano</b></p>
   </td>
   <td>
-<p th:text="${valorGeral}"></p>
+<b><p th:text=" 'R$' + ${#numbers.formatDecimal(valorGeralAno, 0, 'POINT', 2, 'COMMA')}"></p></b>
   </td>
   <td>
-<p></p>
+<b><p th:text="'R$' + ${#numbers.formatDecimal(saldoAno, 0, 'POINT', 2, 'COMMA')}"></p></b>
   </td>
   <td >
-<p th:text="${aditivoGeral}"></p>
+<b><p th:text="'R$' + ${#numbers.formatDecimal(valorAditivoAno, 0, 'POINT', 2, 'COMMA')} "></p></b>
   </td>
 
  </tr>
@@ -246,13 +246,13 @@
   <p><b>Total Contrato</b></p>
   </td>
   <td>
-<p></p>
+<b><p th:text="'R$' + ${#numbers.formatDecimal(valorGeralContrato, 0, 'POINT', 2, 'COMMA')}"></p></b>
   </td>
   <td>
-<p></p>
+<b><p th:text="'R$' + ${#numbers.formatDecimal(saldoContrato, 0, 'POINT', 2, 'COMMA')}"></p></b>
   </td>
   <td >
-<p></p>
+<b><p th:text="'R$' + ${#numbers.formatDecimal(valorAditivoContrato, 0, 'POINT', 2, 'COMMA')}"></p></b>
   </td>
 
  </tr>

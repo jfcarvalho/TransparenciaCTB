@@ -252,10 +252,10 @@
 					<td class="text-center"><div th:switch="${lancamento.liquidado}" ><span class="text-center" th:text="${lancamento.dataliquidacao} ? ${#dates.format(lancamento.dataliquidacao, 'dd/MM/yyyy')}" th:case="true" ></span><span class="label label-warning" th:text="'Nota não liquidada'" th:case="false" ></span></div> </td>
 					<td class="text-center"><div th:switch="${lancamento.processo} ? ${lancamento.processo.pago}" ><span class="text-center" th:text="${#dates.format(lancamento.processo.data_pagamento, 'dd/MM/yyyy')}" th:case="true" ></span><span class="label label-warning" th:text="'Não pago'" th:case="null" ></span></div> </td>
 					
-					<td class="text-center" th:text=" 'R$' + ${#numbers.formatDecimal(lancamento.valor, 0, 'POINT', 2, 'COMMA')}"></td>
+					<td class="text-center" th:text=" ${lancamento.valor} ? 'R$' + ${#numbers.formatDecimal(lancamento.valor, 0, 'POINT', 2, 'COMMA')}"></td>
 					<td class="text-center" th:text="${lancamento.aditivo_n} ? ${lancamento.aditivo_n} : 'Sem aditivo'"></td>
 					<td class="text-center" th:text=" ${lancamento.valor_aditivo}  ? ${#numbers.formatDecimal(lancamento.valor_aditivo, 0, 'POINT', 2, 'COMMA')} : 'Não informado'"></td>
-					<td class="text-center" th:text=" 'R$' + ${#numbers.formatDecimal(lancamento.saldo_contrato, 0, 'POINT', 2, 'COMMA')}"></td>
+					<td class="text-center" th:text=" ${lancamento.saldo_contrato} ? 'R$' + ${#numbers.formatDecimal(lancamento.saldo_contrato, 0, 'POINT', 2, 'COMMA')}"></td>
 					<td class="text-center" th:text="${lancamento.observacao}"></td>
 					<!--<td class="text-center" th:text="${lancamento.processo.pago}"></td> -->
 				
