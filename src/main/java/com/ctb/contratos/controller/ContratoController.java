@@ -401,10 +401,14 @@ public class ContratoController {
 		BigDecimal valorAditivoContrato = new BigDecimal("0");
 		BigDecimal saldoAno = new BigDecimal("0");
 		BigDecimal saldoContrato = new BigDecimal("0");
+		List<Lancamento> lancamentos_verificados = new ArrayList<Lancamento>();
 		
 		//Calculo dos valores do ano e do contrato
 		for(Lancamento l: lancamentos)
 		{
+			String [] comp = l.getCompetencia().split("/");
+			Integer anoAVerificar = Integer.valueOf(comp[1]);
+			
 			if(l.getCompetencia().contains(ano))
 			{
 				valorAno = valorAno.add(l.getValor());
@@ -414,37 +418,58 @@ public class ContratoController {
 					valorAditivoContrato = valorAditivoContrato.add(l.getValor_aditivo());
 				}
 				valorContrato = valorContrato.add(l.getValor());
+				lancamentos_verificados.add(l);	
 				
-				
-			}
-			else
-			{
-				
-				if(lancamentos.get(0).getCompetencia().contains(ano)) //se for o primeiro ano de contrato
+				if(lancamentos.indexOf(l) == lancamentos.size()-1) //se ele e o ultimo elemento da lista
 				{
 					
-					break;
-				}
-				String [] comp = l.getCompetencia().split("/");
-				Integer anoAVerificar = Integer.valueOf(comp[1]);
-				if(anoAVerificar > Integer.valueOf(ano))
-				{
-					if(lancamentos.size() > 1)
+					String [] lcomp1 = lancamentos_verificados.get(0).getCompetencia().split("/");
+					saldoAno = l.getSaldo_contrato();
+					if(lcomp1[1].equals(ano))
 					{
-						Integer index = lancamentos.indexOf(l);
-						
-						saldoAno = lancamentos.get(index-1).getSaldo_contrato();
 						saldoContrato = saldoAno;
 					}
 					
-					break;
+					else{
+						saldoContrato = saldoContrato.add(saldoAno);
+					}
+					
 				}
-				
+			}
+			else if(anoAVerificar < Integer.parseInt(ano))
+			{
+				lancamentos_verificados.add(l);
 				valorContrato = valorContrato.add(l.getValor());
 				if(l.getPossui_aditivo() == true && l.getValor_aditivo() != null)
 				{
 					valorAditivoContrato = valorAditivoContrato.add(l.getValor_aditivo());
 				}
+			}
+			else if(anoAVerificar > Integer.parseInt(ano))
+			{
+				
+				
+					if(lancamentos.size() > 1)
+					{
+						
+						saldoAno = saldoAno.add(lancamentos_verificados.get(lancamentos_verificados.size()-1).getSaldo_contrato());		
+						String [] lcomp2 = lancamentos_verificados.get(0).getCompetencia().split("/");
+						if(lcomp2[1].equals(ano))
+						{
+							saldoContrato = saldoAno;
+						}
+						
+						else{
+							saldoContrato = saldoContrato.add(saldoAno);
+					}
+						
+						
+					
+					}
+					
+					break;
+				
+				
 			}
 		}
 				

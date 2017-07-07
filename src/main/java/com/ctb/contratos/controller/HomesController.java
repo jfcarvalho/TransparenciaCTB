@@ -58,8 +58,8 @@ import jxl.read.biff.BiffException;
 public class HomesController {
 	public static final long TEMPO_MENSAGEM = (1000*60*60);
 	private String HOME_VIEW = "/home/PaginaInicial";
-	static int id_inicial = 984;
-	static int id_proc =550;
+	static int id_inicial = 992;
+	static int id_proc =560;
 	@Autowired
 	private Usuarios usuarios;
 	
@@ -108,6 +108,8 @@ public class HomesController {
 		DateTime date = new DateTime();
 		ano = Integer.toString(date.getYear());
 		teste = contratosVSvalores();
+		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\MJR.xls", 2, 28);
+		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\BRASPECL.xls", 3, 64);
 		/*alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\ALBERONI.xls", 4, 27);
 		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\BASE.xls", 12, 31);
 		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\BATUR.xls", 28, 32);
