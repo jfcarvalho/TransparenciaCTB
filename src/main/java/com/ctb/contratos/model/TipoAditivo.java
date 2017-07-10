@@ -2,8 +2,8 @@ package com.ctb.contratos.model;
 
 public enum TipoAditivo {
 	Valor("Valor"),
-	Tempo("Tempo");
-	
+	Tempo("Prazo"),
+	ValorTempo("Valor e Prazo");
 	private String tipoaditivo;
 
 
