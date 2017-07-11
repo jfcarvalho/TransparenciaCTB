@@ -39,6 +39,7 @@ import com.ctb.contratos.model.Usuario;
 import com.ctb.contratos.repository.Contratados;
 import com.ctb.contratos.repository.Lancamentos;
 import com.ctb.contratos.repository.Processos;
+import com.ctb.contratos.repository.Usuarios;
 import com.ctb.security.AppUserDetailsService;
 
 @Controller
@@ -49,6 +50,9 @@ public class ProcessoController {
 
 	@Autowired
 	private Processos processos;
+	
+	@Autowired
+	private Usuarios usuarios;
 	
 	@Autowired
 	private Lancamentos lancamentos;
@@ -133,6 +137,8 @@ public class ProcessoController {
 	public String salvar(@Validated Processo processo, RedirectAttributes attributes)
 	{
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
+		Usuario user = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
+		processo.setUsuario(user);
 		processos.save(processo);		
 		attributes.addFlashAttribute("mensagem", "Processo salvo com sucesso!");	
 		return "redirect:/transparenciactb/processos/novo";

@@ -12,6 +12,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 
+import com.ctb.Processo;
+
 @Entity
 
 public class Usuario {
@@ -29,6 +31,9 @@ public class Usuario {
 	private List<Contrato> contratosGeridos;
 	@OneToMany(mappedBy="fiscal")
 	private List<Contrato> contratosFiscalizados;
+	
+	@OneToMany(mappedBy="usuario")
+	private List<Processo> processos;
 	
 	@ManyToMany
 	@JoinTable(name = "usuario_grupo", joinColumns = @JoinColumn(name = "codigo_usuario")
@@ -127,6 +132,14 @@ public class Usuario {
 
 	public void setGrupos(List<Grupo> grupos) {
 		this.grupos = grupos;
+	}
+	
+	public List<Processo> getProcessos() {
+		return processos;
+	}
+
+	public void setProcessos(List<Processo> processos) {
+		this.processos = processos;
 	}
 
 	

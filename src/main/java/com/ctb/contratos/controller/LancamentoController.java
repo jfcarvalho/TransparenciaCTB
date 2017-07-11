@@ -15,6 +15,8 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -29,6 +31,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -41,6 +44,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ctb.Mailer;
 import com.ctb.Processo;
+import com.ctb.TipoProcesso;
 import com.ctb.contratos.model.Contratado;
 import com.ctb.contratos.model.Contrato;
 import com.ctb.contratos.model.Fonte;
@@ -146,9 +150,9 @@ public class LancamentoController {
 		}
 		return acumulador;
 	}
-	
+	/*
 	@RequestMapping(value= "/pagar/{id_lancamento}", method=RequestMethod.POST)
-	public ModelAndView pagar(Lancamento lancamento, @RequestParam("lancamento_id_processo" )Integer Id_processo, @RequestParam Date data_pagamento, @RequestParam Integer lancamento_id_processo, @RequestParam boolean pago )
+	public ModelAndView pagar(Lancamento lancamento, @RequestParam Date data_pagamento, @RequestParam boolean pago )
 	{
 		ModelAndView mv = new ModelAndView(PAGAMENTO_VIEW);
 		Lancamento lancamentobd = lancamentos.findOne(lancamento.getId_lancamento());
@@ -181,7 +185,26 @@ public class LancamentoController {
 		mv.addObject("mensagem", "Pagamento registrado com sucesso!");
 		return mv;
 	}
+	*/
 	
+	@RequestMapping(value= "/pagar/{id_lancamento}", method=RequestMethod.POST)
+	public ModelAndView pagar(Lancamento lancamento, @RequestParam Date data_pagamento, @RequestParam boolean pago )
+	{
+		ModelAndView mv = new ModelAndView(PAGAMENTO_VIEW);
+		Lancamento lancbd = lancamentos.findOne(lancamento.getId_lancamento());
+		lancbd.setLiquidado(true);
+		lancbd.setDataliquidacao(lancamento.getDataliquidacao());
+		Processo p = lancbd.getProcesso();
+		p.setData_pagamento(data_pagamento);
+		p.setPago(pago);
+		processos.save(p);
+		lancamentos.save(lancbd);
+		mv.addObject(lancbd);
+		mv.addObject("mensagem", "Pagamento registrado com sucesso!");
+		return mv;
+		
+		
+	}
 	@RequestMapping(value= "/aditivo/{id_lancamento}", method=RequestMethod.POST)
 	public ModelAndView aditivo(Lancamento lancamento, @RequestParam("lancamento_id_processo" )Integer Id_processo, @RequestParam Integer lancamento_id_processo)
 	{
@@ -219,7 +242,8 @@ public class LancamentoController {
 
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView salvar(Lancamento lancamento, @RequestParam Integer lancamento_id_contrato, RedirectAttributes attributes)
+	public ModelAndView salvar(Lancamento lancamento, @RequestParam Integer lancamento_id_contrato, String tipo_processo ,String numero_processo , String ano_processo, 
+	@DateTimeFormat(pattern= "dd/MM/yyyy") Date data_processo,RedirectAttributes attributes)
 	{
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
 		Contrato c = contratos.findOne(lancamento_id_contrato);
@@ -230,6 +254,29 @@ public class LancamentoController {
 		DateTime fim = new DateTime(c.getData_vencimento());
 		Months m = Months.monthsBetween(inicio, fim);
 		Days d = Days.daysBetween(inicio, fim);
+		System.out.println("Número do processo: "+ numero_processo+ " ano do processo: " + ano_processo+ " data do processo" + data_processo);
+		Processo p = new Processo();
+		int tproc = processos.findAll().size();
+		tproc++;
+		p.setId_processo(tproc);
+		String numero_completo = numero_processo + "/" + ano_processo;
+		p.setNumero_processo(numero_completo);
+		p.setData_abertura(data_processo);
+		switch(tipo_processo)
+		{
+			case "Pagamento":
+				p.setTipo_processo(TipoProcesso.Pagamento);
+			break;
+			case "Renovacao":
+				p.setTipo_processo(TipoProcesso.Renovacao);
+			break;
+		}
+		Usuario user = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
+		p.setUsuario(user);
+		processos.save(p);
+		
+		//Processo proc = processos.findOne(Id_processo);
+		lancamento.setProcesso(p);
 		
 		if( d.getDays() >= 0 ) { 
 			if(lancamento_id_contrato != null)
@@ -283,7 +330,7 @@ public class LancamentoController {
 			lancamento.setHora(dataFormatada);
 			
 		//	System.out.println(gastoMedio(c));
-			//mailer.enviar_lancamento_gestor(lancamento,"anderson.araujo@ctb.ba.gov.br");
+		//	mailer.enviar_lancamento_gestor(lancamento,"anderson.araujo@ctb.ba.gov.br");
 		//	checaGastoContrato(c, gastoMedio(c), lancamento.getValor());
 			contratos.save(c);
 			lancamentos.save(lancamento);		
@@ -310,6 +357,24 @@ public class LancamentoController {
 			if(proc.getTipo_processo().getTipo().equals("Pagamento") && proc.getLancamento() == null)
 			{
 				np.add(proc);
+			}
+		}
+		return np;
+	}
+	
+	@ModelAttribute("todosProcessosUsuario")
+	public List<Processo> todosProcessosUsuario()
+	{
+		//List <Processo> p = processos.findAll();
+		List <Processo> np = new ArrayList<Processo>();
+		Usuario user = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
+		if(user.getProcessos() != null) {
+		for(Processo proc:user.getProcessos())
+		{
+			if(proc.getTipo_processo().getTipo().equals("Pagamento") && proc.getLancamento() == null)
+			{
+				np.add(proc);
+			}
 			}
 		}
 		return np;
@@ -442,16 +507,21 @@ public class LancamentoController {
 		mv.addObject(new LancamentoController());
 		Lancamento teste = lancamentos.findOne(lancamento.getId_lancamento());
 		Contrato c = contratos.findOne(teste.getContrato().getId_contrato());
+		Processo p = processos.findOne(lancamento.getProcesso().getId_processo());
 		lancamento.setContrato(c);
 		mv.addObject(lancamento);
 		mv.addObject("contrato", c);
+		mv.addObject("processo", p);
+		String [] numero = p.getNumero_processo().split("/");
+		mv.addObject("n_p", numero[0]);
+		mv.addObject("a_p", numero[1]);
 		return mv;
 		
 	}
 	
 
 	@RequestMapping(value = "/editar_lancamento/{id_lancamento}", method=RequestMethod.POST)
-	public ModelAndView edicao(Lancamento lancamento, Contrato contrato)
+	public ModelAndView edicao(Lancamento lancamento, Contrato contrato, String numero_processo, String ano_processo, String tipo_processo, @DateTimeFormat(pattern= "dd/MM/yyyy") Date data_processo)
 	{
 		ModelAndView mv = new ModelAndView(EDICAO_VIEW);
 		Lancamento lancbd = lancamentos.findOne(lancamento.getId_lancamento());
@@ -464,6 +534,19 @@ public class LancamentoController {
 		lancbd.setPossui_aditivo(lancamento.getPossui_aditivo());
 		lancbd.setObservacao(lancamento.getObservacao());
 		lancbd.setTipoAditivo(lancamento.getTipoAditivo());
+		String numero_completo = numero_processo + "/" + ano_processo;
+		Processo p = processos.findOne(lancbd.getProcesso().getId_processo());
+		p.setNumero_processo(numero_completo);
+		p.setData_abertura(data_processo);
+		switch(tipo_processo)
+		{
+			case "Pagamento":
+				p.setTipo_processo(TipoProcesso.Pagamento);
+			break;
+			case "Renovacao":
+				p.setTipo_processo(TipoProcesso.Renovacao);
+			break;
+		}
 		if(lancamento.getValor_aditivo() == null)
 		{
 			lancbd.setValor_aditivo(BigDecimal.ZERO);
@@ -486,7 +569,7 @@ public class LancamentoController {
 		System.out.println(lancamento.getData().toString());
 		String ano = datas[5];
 		lancbd.setCompetencia(lancamento.getCompetencia()+"/"+ ano);
-		
+		processos.save(p);
 		lancamentos.save(lancbd);
 		recalcularSaldos(lancbd.getContrato());
 		mv.addObject("mensagem", "Lançamento editado com sucesso");

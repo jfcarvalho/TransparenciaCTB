@@ -25,8 +25,7 @@
 	
 	
 	<div class="panel-body">
-	<input type="hidden" th:field="*{id_lancamento}" />
-	<input type="hidden" th:field="*{contrato}" id="lancamento_id_contrato" name="lancamento_id_contrato"/>
+<input type="hidden" th:field="*{id_lancamento}" />
 	
 		
 		
@@ -49,7 +48,8 @@
 				<input type="text" class="form-control" id="data" name="data" th:field="*{data}" data-provide="datepicker" data-date-format="dd/mm/yyyy" data-date-language="pt-BR" data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom" value="teste"/>
 			</div>
 		</div>
-			<div class="form-group" >
+		
+		<div class="form-group" >
 			<label for="nome" class="col-sm-2 control-label" >Mês de competência:</label>
 		<div class="col-sm-2">
 				<select class="form-control" name="competencia">
@@ -68,7 +68,6 @@
 				</select>
 			</div>
 			</div>
-			
 		<div class="form-group" >
 		
 		</div>
@@ -87,12 +86,46 @@
 		</div>
 		
 		
+		<div class="form-group">
+			<label for="cnpj" class="col-sm-2 control-label">Contrato:</label>
+			<div class="col-sm-2">
+				<select class="form-control" name="lancamento_id_contrato">
+					<option th:value="${contrato.id_contrato}" th:text="${contrato.numero}"></option>
+				</select>
+			</div>
+		</div>
 		
-
+		<div class="form-group" >
+			<label for="funcao" class="col-sm-2 control-label">Número/Ano do processo:</label>
+			<div class="col-sm-1">
+				<input type="text"  class="form-control" id="numero_processo" name="numero_processo" th:value="${n_p}"/>
+			</div>
+			<div class="col-sm-1">
+				<input type="text"  class="form-control" id="ano_processo" name="ano_processo" th:value="${a_p}"/>
+			</div>
+		</div>
+		
+		<div class="form-group" >
+			<label for="funcao" class="col-sm-2 control-label">Data de abertura do processo:</label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control" id="data_processo" name="data_processo" data-provide="datepicker" data-date-format="dd/mm/yyyy" data-date-language="pt-BR" data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom" th:value="${processo.data_abertura}"/>
+			</div>
+		</div>
+		
+				<div class="form-group" >
+			<label for="nome" class="col-sm-2 control-label" >Tipo de processo:</label>
+		<div class="col-sm-2">
+				<select class="form-control" name="tipo_processo">
+					<option value="Pagamento">Pagamento</option>
+					<option value="Renovacao">Renovação</option>
+				
+				</select>
+			</div>
+			</div>
+		  
 		
 		
-		
-			<input type="checkbox" class="enable-aditivo-lancamento-botao" name="possui_aditivo" th:checked="${lancamento} ? ${lancamento.possui_aditivo}"/>Este lançamento possui aditivo?<br/>
+			<input type="checkbox" class="enable-aditivo-lancamento-botao" name="possui_aditivo" th:checked="${possui_aditivo}"/>Este lançamento possui aditivo?<br/>
 		
 	<div class="form-group" >
 			<label for="nome" class="col-sm-2 control-label" >Número do aditivo:</label>

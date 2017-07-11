@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -19,6 +20,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.ctb.contratos.model.Contrato;
 import com.ctb.contratos.model.Fonte;
 import com.ctb.contratos.model.Lancamento;
+import com.ctb.contratos.model.Usuario;
 
 @Entity
 public class Processo {
@@ -43,6 +45,10 @@ public class Processo {
 	@OneToOne
 	@JoinColumn(name="processo_id_contrato")
 	private Contrato contrato;
+	
+	@ManyToOne
+	@JoinColumn(name= "processo_id_usuario")
+	private Usuario usuario;
 	
 	
 	
@@ -124,6 +130,16 @@ public class Processo {
 	public void setContrato(Contrato contrato)
 	{
 		this.contrato = contrato;
+	}
+	
+	public Usuario getUsuario()
+	{
+		return this.usuario;
+	}
+	
+	public void setUsuario(Usuario usuario)
+	{
+		this.usuario= usuario;
 	}
 	
 	

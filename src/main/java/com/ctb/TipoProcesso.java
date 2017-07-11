@@ -3,8 +3,7 @@ package com.ctb;
 public enum TipoProcesso {
 	Pagamento("Pagamento"),
 	Renovacao("Renovação"),
-	Licitacao("Nova licitação"),
-	Aditivo("Aditivo");
+	Licitacao("Nova licitação");
 	
 	private String tipo;
 

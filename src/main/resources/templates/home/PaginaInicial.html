@@ -184,7 +184,7 @@
 						<td class="text-center" th:text="${lancamento} ? |R$ ${{lancamento.valor}}| : 'Não informado'"></td>
 						<td class="text-center" th:text="${lancamento} ? ${#dates.format(lancamento.data, 'dd/MM/yyyy')} : 'Não informado'"></td>
 						<td class="text-center" th:text="${lancamento.hora} ? ${lancamento.hora} : 'Não informado'"></td>
-						<td class="text-center"><div th:switch="${lancamento.processo} ? ${lancamento.processo.pago}" ><span class="label label-success" th:text="'Pago'" th:case="true" ></span><a  th:href="@{/transparenciactb/lancamentos/gerar_pagamento/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" class="btn btn-link btn-xs" th:case="null" ><span class="glyphicon glyphicon-usd">Registrar Pagamento</span></a></div> </td>
+						<td class="text-center"><div th:switch="${lancamento.processo} ? ${lancamento.processo.pago}" ><span class="label label-success" th:text="'Pago'" th:case="true" ></span><a  th:href="@{/transparenciactb/lancamentos/gerar_pagamento/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" class="btn btn-link btn-xs" th:case="false" ><span class="glyphicon glyphicon-usd">Registrar Pagamento</span></a></div> </td>
 				</tr>
 				
 			<tr>
@@ -224,8 +224,8 @@
 						<td class="text-center" th:text="${lancamento} ? |R$ ${{lancamento.valor}}| : 'Não informado'"></td>
 						<td class="text-center" th:text="${lancamento} ? ${#dates.format(lancamento.data, 'dd/MM/yyyy')} + '-' + ${lancamento.hora} : 'Não informado'"></td>
 						<td class="text-center" th:text="${lancamento.dataliquidacao} ? ${#dates.format(lancamento.dataliquidacao, 'dd/MM/yyyy')}  : 'Nota não liquidada'"></td>
-						<td class="text-center"><div th:switch="${lancamento.processo} ? ${lancamento.processo.pago}" ><span  th:text="${lancamento.processo} ? ${lancamento.processo.numero_processo}" th:if="${lancamento.processo}" ></span><span class="label label-warning" th:text="'Não há processo'" th:case="null" ></span></div> </td>
-					<td class="text-center"><div th:switch="${lancamento.liquidado}" ><span  th:text="${lancamento.processo} and ${lancamento.processo.data_abertura} ? ${#dates.format(lancamento.processo.data_abertura, 'dd/MM/yyyy')}"  ></span><span class="label label-warning" th:text="'Não há processo'" th:case="false" ></span></div> </td>
+						<td class="text-center"><div th:switch="${lancamento.processo} ? ${lancamento.processo.pago}" ><span  th:text="${lancamento.processo} ? ${lancamento.processo.numero_processo}" th:if="${lancamento.processo}" ></span><span class="label label-warning" th:text="'Processo não pago ainda'" th:case="null" ></span></div> </td>
+					<td class="text-center"><div th:switch="${lancamento.liquidado}" ><span  th:text="${lancamento.processo} and ${lancamento.processo.data_abertura} ? ${#dates.format(lancamento.processo.data_abertura, 'dd/MM/yyyy')}"  ></span></div> </td>
 				</tr>
 				
 			<tr>
@@ -263,7 +263,7 @@
 						<td class="text-center" th:text="${lancamento} ? |R$ ${{lancamento.valor}}| : 'Não informado'"></td>
 						<td class="text-center" th:text="${lancamento} ? ${#dates.format(lancamento.data, 'dd/MM/yyyy')} : 'Não informado'"></td>
 						<td class="text-center" th:text="${lancamento.hora} ? ${lancamento.hora} : 'Não informado'"></td>
-						<td class="text-center"><div th:switch="${lancamento.processo} ? ${lancamento.processo.pago}" ><span class="label label-success" th:text="'Pago'" th:case="true" ></span><a  th:href="@{/transparenciactb/lancamentos/gerar_pagamento/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" class="btn btn-link btn-xs" th:case="null" ><span class="glyphicon glyphicon-usd">Registrar Pagamento</span></a></div> </td>
+						<td class="text-center"><div th:switch="${lancamento.processo} ? ${lancamento.processo.pago}" ><span class="label label-success" th:text="'Pago'" th:case="true" ></span><a  th:href="@{/transparenciactb/lancamentos/gerar_pagamento/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" class="btn btn-link btn-xs" th:case="false" ><span class="glyphicon glyphicon-usd">Registrar Pagamento</span></a></div> </td>
 				</tr>
 				
 			<tr>
