@@ -809,7 +809,7 @@ public class HomesController {
 	
 	}
 	
-	@ModelAttribute("ultimoslancamentos_sem_processo")
+	@ModelAttribute("ultimoslancamentos_sem_pgto")
 	public List<Lancamento> ultimosLancamentosSemProcesso()
 	{
 		List<Lancamento> todos = lancamentos.findAll();
@@ -824,11 +824,14 @@ public class HomesController {
 		List<Lancamento> novaListaLimitada = new ArrayList<Lancamento>(); 
 		for (Lancamento l : todos)
 		{
-			if(l.getProcesso() == null) { //Ou seja, se nao foi registrado ianda nenhum processo de pagamento.
-				novaListaLimitada.add(l);
-			}	
+			if(l.getProcesso() != null) {
+				if(l.getProcesso().getPago() == false && l.getProcesso().getTipo_processo() == TipoProcesso.Pagamento) { //Ou seja, se nao foi registrado ianda nenhum processo de pagamento.
+					novaListaLimitada.add(l);
+				}	
+			}
 		}
 		
+		Collections.sort(novaListaLimitada, cmp);
 		
 		return novaListaLimitada;
 	

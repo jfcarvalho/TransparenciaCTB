@@ -311,7 +311,8 @@ public class LancamentoController {
 				resultop3 = new BigDecimal(lancamento.getValor().toString());
 					
 			}
-			else{lancamento.setValor(BigDecimal.ZERO);}
+			else{lancamento.setValor(BigDecimal.ZERO);
+				 }
 		
 			
 		
@@ -330,7 +331,7 @@ public class LancamentoController {
 			lancamento.setHora(dataFormatada);
 			
 		//	System.out.println(gastoMedio(c));
-		//	mailer.enviar_lancamento_gestor(lancamento,"anderson.araujo@ctb.ba.gov.br");
+			mailer.enviar_lancamento_gestor(lancamento,"anderson.araujo@ctb.ba.gov.br");
 		//	checaGastoContrato(c, gastoMedio(c), lancamento.getValor());
 			contratos.save(c);
 			lancamentos.save(lancamento);		
@@ -617,8 +618,7 @@ public class LancamentoController {
 	@RequestMapping(value="/remove/{id_lancamento}")
 	public String excluir(@PathVariable Integer id_lancamento, RedirectAttributes attributes)
 	{
-		Lancamento lancamento = lancamentos.findOne(id_lancamento);
-		//attributes.addFlashAttribute("mensagem", "Contrato excluído com sucesso com sucesso!");	
+		Lancamento lancamento = lancamentos.findOne(id_lancamento);	
 		Contrato c = contratos.findOne(lancamento.getContrato().getId_contrato());
 		BigDecimal resultop1 = new BigDecimal(c.getSaldo_contrato().toString());
 		BigDecimal resultop2 = new BigDecimal(lancamento.getValor().toString());
