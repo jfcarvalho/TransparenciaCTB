@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+<head>
+<title>Pesquisa de Usuários</title>
+<link rel="stylesheet" type="text/css" href="/layout/stylesheets/vendors.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/algaworks.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/application.css"/>
+
+</head>
+
+<body>
+<div class="aw-layout-page">
+<div layout:include="/cabecalho/Cabecalho"></div>
+
+<div layout:include="/cabecalho/DashBoard"></div>
+
+<section class="aw-layout-content  js-content">
+
+
+<div class="panel panel-default">
+		
+		<div class="panel-heading">
+		<div class="clearfix">	
+			<h1 class="panel-title">Pesquisa de Usuários</h1>
+			<form method="GET" action="/transparenciactb/usuarios">
+			<div class="col-lg-3">
+   				 <div class="input-group">
+     				 <input type="text" class="form-control" placeholder="Pesquise aqui..." name="busca"/>
+    				  <span class="input-group-btn">
+       					 <button class="btn btn-default" type="submit">Go!</button>
+      				</span>
+   				 </div>
+ 			 </div>
+ 			 <div class="col-lg-12">
+ 			 	<input type="radio" name ="nome" /> Nome
+ 			 	<input type="radio" name ="setor" /> Setor
+ 			 	<input type="radio" name ="matricula" /> Matricula
+ 			 </div>
+ 			  
+ 			</form>
+			<a class="btn btn-link aw-link-panel" href="/transparenciactb/usuarios/novo">Novo usuário</a>
+		</div>
+		</div>
+		<div class="table-responsive  bw-tabela-simples">
+		<div class="panel-body">
+		
+		<table class="table  table-hover">
+		
+			<thead>
+				<tr>
+				<th class="text-center col-md-2">Nome</th>
+				<th class="text-center col-md-2">Matricula</th>
+				<th class="text-center col-md-2">Setor</th>
+				<th class="text-center col-md-2">Função/Cargo</th>
+				<th class="text-center col-md-2">Email</th>
+				<th class="text-center col-md-1">Telefone</th>
+				<th class="text-center col-md-1" th:if="${permissao}">Ação</th>
+				</tr>
+				
+			</thead>
+			<tbody>
+				<tr th:each="usuario : ${buscaUsuarios}">
+					<td class="text-center" th:text="${usuario.nome}"></td>
+					<td class="text-center" th:text="${usuario.matricula}"></td>
+					<td class="text-center" th:text="${usuario.setor}"></td>
+					<td class="text-center" th:text="${usuario.funcao}"></td>
+					<td class="text-center" th:text="${usuario.email}"></td>
+					<td class="text-center" th:text="${usuario.telefone}"></td>
+					<td class="text-center"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/usuarios/{id_usuario}(id_usuario=${usuario.id_usuario})}"  th:if="${permissao}"><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:href="@{/transparenciactb/usuarios/remove/{id_usuario}(id_usuario=${usuario.id_usuario})}" class="btn btn-link btn-xs"  th:if="${permissao}"><span class="glyphicon glyphicon-remove" th:if="${permissao}"> Remover</span></a><a th:href="@{/transparenciactb/usuarios/visualizar/{id_usuario}(id_usuario=${usuario.id_usuario})}" class="btn btn-link btn-xs"  th:if="${permissao}"><span class="glyphicon glyphicon-eye-open"> visualizar</span></a></td>
+				</tr>
+				
+			<tr>
+				<td colspan="6" th:if="${#lists.isEmpty(buscaUsuarios)}">Nenhum usuário encontrado</td>
+			</tr>
+			</tbody>
+		
+		</table>
+		</div>
+		</div>
+	</div>	
+</section>
+</div>
+
+<script src="/layout/javascripts/vendors.min.js"></script>
+<script src="/layout/javascripts/algaworks.min.js"></script>
+
+
+</body>
+</html>

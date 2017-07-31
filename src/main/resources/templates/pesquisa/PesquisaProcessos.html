@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+<head>
+<title>Pesquisa de Processos</title>
+<link rel="stylesheet" type="text/css" href="/layout/stylesheets/vendors.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/algaworks.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/application.css"/>
+
+
+</head>
+
+<body>
+
+<div class="aw-layout-page">
+<div layout:include="/cabecalho/Cabecalho"></div>
+
+<div layout:include="/cabecalho/DashBoard"></div>
+
+
+<section class="aw-layout-content  js-content">
+
+
+<div class="panel panel-default">
+		
+		<div class="panel-heading">
+		<div class="clearfix">	
+			<h1 class="panel-title">Pesquisa de Processos</h1>
+			<form method="GET" action="/transparenciactb/processos">
+			<div class="col-lg-3">
+   				 <div class="input-group">
+     				 <input type="text" class="form-control" placeholder="Pesquise aqui..." name="busca"/>
+    				  <span class="input-group-btn">
+       					 <button class="btn btn-default" type="submit">Go!</button>
+      				</span>
+   				 </div>
+ 			 </div>
+ 			 <div class="col-lg-12">
+ 			 	<input type="radio" name ="numero" /> Número do processo
+ 			 	<input type="radio" name ="data" /> Data de abertura
+ 			 </div>
+ 			  
+ 			</form>
+			<a class="btn btn-link aw-link-panel" href="/transparenciactb/processos/novo" th:if="${permissao}">Novo processo</a>
+		</div>
+		</div>
+		<div class="table-responsive  bw-tabela-simples">
+		<div class="panel-body">
+		
+			<table class="table  table-hover">
+		
+			<thead>
+				<tr>
+				<th class="text-center col-md-2">Número do processo</th>
+				<th class="text-center col-md-2">Tipo de processo</th>
+				<th class="text-center col-md-2">Número de CI</th>
+				<th class="text-center col-md-2">Data de abertura</th>
+				
+				<!--  <th class="text-center col-md-2">Data de pagamento</th> 
+				<th class="text-center col-md-2">Pago</th> -->
+				<th class="text-center col-md-2" th:if="${permissao}">Ação</th>
+				</tr>
+				
+			</thead>
+			<tbody>
+				<tr th:each="processo : ${buscaProcessos}">
+					<td class="text-center" th:text="${processo.numero_processo}"></td>
+					<td class="text-center" th:text="${processo.tipo_processo.tipo}"></td>
+					<td class="text-center" th:text="${processo.numero_ci}"></td>
+					<td class="text-center" th:text="${processo.data_abertura} ? ${#dates.format(processo.data_abertura, 'dd/MM/yyyy')}"></td>
+					<td class="text-center" th:if="${permissao}"><a class="btn btn-link btn-xs" th:href="@{/transparenciactb/processos/{id_processo}(id_processo=${processo.id_processo})}" ><span class="glyphicon glyphicon-pencil" >Editar</span></a><a th:href="@{/transparenciactb/processos/remove/{id_processo}(id_processo=${processo.id_processo})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-remove"> Remover</span></a></td>	
+				</tr>
+				
+			<tr>
+				<td colspan="6" th:if="${#lists.isEmpty(buscaProcessos)}">Nenhum processo encontrado</td>
+			</tr>
+			</tbody>
+		
+		</table>
+		
+				<div class="col-sm-12 text-center">
+		
+				<nav aria-label="Page navigation">
+  <ul class="pagination">
+    <li>
+      <a href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    <li><a href="?page=0">1</a></li>
+    <li><a href="?page=1">2</a></li>
+    <li><a href="?page=2">3</a></li>
+    <li><a href= "?page=3">4</a></li>
+    <li><a href= "?page=4">5</a></li>
+    <li><a href="?page=5">6</a></li>
+    <li><a href= "?page=6">7</a></li>
+    <li><a href= "?page=7">8</a></li>
+     <li><a href= "?page=8">9</a></li>
+      <li><a href= "?page=9">10</a></li>
+       <li><a href= "?page=10">11</a></li>
+        <li><a href= "?page=11">12</a></li>
+         <li><a href= "?page=12">13</a></li>
+          <li><a href= "?page=13">14</a></li>
+    <li>
+      <a href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+		</div>
+		
+		</div>
+		</div>
+	</div>	
+</section>
+</div>
+
+<script src="/layout/javascripts/vendors.min.js"></script>
+<script src="/layout/javascripts/algaworks.min.js"></script>
+
+</body>
+</html>

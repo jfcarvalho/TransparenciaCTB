@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+<link rel="stylesheet" type="text/css" href="/layout/stylesheets/bootstrap-datepicker.standalone.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/bootstrap.min.css"/>
+ 	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/vendors.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/algaworks.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/application.css"/>
+<head>
+
+
+<title>Resumo consignado de Contrato</title>
+</head>
+
+<body>
+
+<section class="aw-layout-content  js-content is-toggled">
+
+<div class="aw-layout-page">
+
+<div layout:include="/cabecalho/CabecalhoLancamento"></div>
+
+<label></label>
+<div >
+<form method="GET" th:action="@{/transparenciactb/contratos/resumoconsignado/}" >
+
+<div class="col-sm-6">
+				<select class="form-control disable-solicitante-manutencao-input"  name="id_usuario">
+					<option th:each="usuario : ${todosGestores}" th:value="${usuario.id_usuario}" th:text="${usuario.nome}" ></option>
+				</select>
+</div>
+
+ <div class="input-group">
+    				  <span class="input-group-btn">
+       					 <button class="btn btn-default" type="submit">Gerar</button>
+      				</span>
+   				</div>
+</form>
+</div>
+
+</div>
+
+</section>
+
+</body>
+<script src="/layout/javascripts/vendors.min.js"></script>
+<script src="/layout/javascripts/algaworks.min.js"></script>
+
+
+<script src="/layout/javascripts/bootstrap-datepicker.min.js"></script>
+ <script src="/layout/javascripts/bootstrap-datepicker.pt-BR.min.js"></script>
+<script src="/layout/javascripts/bootstrap.min.js"></script>
+<script src="/layout/javascripts/jquery-2.2.0.min.js"></script>
+
+</html>
