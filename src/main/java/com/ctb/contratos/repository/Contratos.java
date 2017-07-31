@@ -10,8 +10,7 @@ import com.ctb.contratos.model.Contrato;
 import com.ctb.contratos.model.Usuario;
 
 public interface Contratos extends JpaRepository<Contrato, Integer>{
-	List<Contrato> findByNumeroContaining(String numero);
-	List<Contrato> findByObjetoContaining(String objeto);
+	
 	
 	
 }

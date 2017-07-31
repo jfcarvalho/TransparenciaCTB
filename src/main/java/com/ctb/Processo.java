@@ -4,8 +4,6 @@ package com.ctb;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,10 +13,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
-
-import com.ctb.contratos.model.Contrato;
-import com.ctb.contratos.model.Fonte;
-import com.ctb.contratos.model.Lancamento;
 
 @Entity
 public class Processo {
@@ -33,19 +27,6 @@ public class Processo {
 	@DateTimeFormat(pattern= "dd/MM/yyyy")
 	private Date data_pagamento;
 	private boolean pago;
-	private String numero_ci;
-	@Enumerated(EnumType.STRING)
-	private TipoProcesso tipo_processo;
-	@OneToOne
-	@JoinColumn(name="processo_id_lancamento")
-	private Lancamento lancamento;
-	
-	@OneToOne
-	@JoinColumn(name="processo_id_contrato")
-	private Contrato contrato;
-	
-	
-	
 	
 	
 	public Integer getId_processo()
@@ -90,41 +71,5 @@ public class Processo {
 	{
 		this.pago = pago;
 	}
-	public String getNumero_ci() {
-		return numero_ci;
-	}
-	public void setNumero_ci(String numero_ci) {
-		this.numero_ci = numero_ci;
-	}
-	
-	public TipoProcesso getTipo_processo()
-	{
-		return this.tipo_processo;
-	}
-	
-	public void setTipo_processo(TipoProcesso tipo_processo)
-	{
-		this.tipo_processo = tipo_processo;
-	}
-	
-	public Lancamento getLancamento()
-	{
-		return this.lancamento;
-	}
-	
-	public void setLancamento(Lancamento lancamento)
-	{
-		this.lancamento = lancamento;
-	}
-	public Contrato getContrato()
-	{
-		return this.contrato;
-	}
-	
-	public void setContrato(Contrato contrato)
-	{
-		this.contrato = contrato;
-	}
-	
 	
 }

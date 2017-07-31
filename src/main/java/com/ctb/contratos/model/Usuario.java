@@ -6,11 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.Size;
 
 @Entity
 
@@ -20,7 +16,6 @@ public class Usuario {
 	private Integer id_usuario;
 	private String nome;
 	private String matricula;
-	private String password;
 	private String setor;
 	private String funcao;
 	private String email;
@@ -29,12 +24,6 @@ public class Usuario {
 	private List<Contrato> contratosGeridos;
 	@OneToMany(mappedBy="fiscal")
 	private List<Contrato> contratosFiscalizados;
-	
-	@ManyToMany
-	@JoinTable(name = "usuario_grupo", joinColumns = @JoinColumn(name = "codigo_usuario")
-				, inverseJoinColumns = @JoinColumn(name = "codigo_grupo"))	
-	private List<Grupo> grupos;
-
 	
 	public Integer getId_usuario()
 	{
@@ -113,21 +102,4 @@ public class Usuario {
 	{
 		this.contratosFiscalizados= contratosFiscalizados;
 	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	public List<Grupo> getGrupos() {
-		return grupos;
-	}
-
-	public void setGrupos(List<Grupo> grupos) {
-		this.grupos = grupos;
-	}
-
-	
 }

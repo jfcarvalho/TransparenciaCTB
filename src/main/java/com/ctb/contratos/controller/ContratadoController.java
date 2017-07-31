@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +21,6 @@ import com.ctb.contratos.model.Contrato;
 import com.ctb.contratos.repository.Contratados;
 import com.ctb.contratos.repository.Contratos;
 import com.ctb.contratos.repository.Usuarios;
-import com.ctb.security.AppUserDetailsService;
 
 @Controller
 @RequestMapping("/transparenciactb/contratados")
@@ -46,41 +44,21 @@ public class ContratadoController {
 		return mv;
 	}
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView salvar(@Validated Contratado contratado, RedirectAttributes attributes, Errors errors)
+	public String salvar(@Validated Contratado contratado, RedirectAttributes attributes)
 	{
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
-		if(errors.hasErrors())
-		{
-			return mv;
-		}
 		contratados.save(contratado);		
-		mv.addObject("mensagem", "Empresa contratada salva com sucesso!");	
-		return mv;
+		attributes.addFlashAttribute("mensagem", "Empresa contratada salva com sucesso!");	
+		return "redirect:/transparenciactb/contratados/novo";
 	}
 	
 	@RequestMapping(method= RequestMethod.GET)
-	public ModelAndView pesquisar(String busca, String nome, String cnpj) throws ParseException
+	public ModelAndView pesquisar(String busca, String nome, String setor) throws ParseException
 	{
 		ModelAndView mv = new ModelAndView("/pesquisa/PesquisaContratados");
-		if(nome != null) {
-			if(busca != null && nome.equals("on")) {
-				List<Contratado> todosContratados = contratados.findByNomeContaining(busca);
-				mv.addObject("buscaContratados", todosContratados);
-			
-				
-				return mv;
-			}
-		}
-		else if(cnpj != null) {
-			if(busca != null && cnpj.equals("on")) {
-				List<Contratado> todosContratados = contratados.findByNomeContaining(busca);
-				mv.addObject("buscaContratados", todosContratados);
-				return mv;
-			}
-		}
-		 //  List<Contratado> todosContratados = contratados.findAll();
-		   mv.addObject("buscaContratados", contratados.findAll());
-		   return mv;
+		//mv.addObject("usuarios", todosUsuarios);
+    
+	return mv;
 	}
 	@RequestMapping("{id_contratado}")
 	public ModelAndView edicao(@PathVariable("id_contratado") Contratado contratado)
@@ -112,7 +90,21 @@ public class ContratadoController {
 	{
 		return contratados.findAll();
 	}
-	
+	/*
+	public Contrato pegarContrato(List<Contrato> contratos)
+	{
+		Iterator it = contratos.iterator();
+		while(it.hasNext())
+		{
+			Contrato obj = (Contrato) it.next();
+			
+			if(obj.getComputadores().isEmpty())
+			{
+					//todasImpressorasDisponiveis.add(obj);
+			}
+}
+	}
+	 */
 
 	public List<Contrato> desvincularContratos(List<Contrato> contratosADesvincular)
 	{
@@ -134,11 +126,6 @@ public class ContratadoController {
 	public String teste()
 	{
 		return "/cadastro/cadastro-produto";
-	}
-	
-	@ModelAttribute("permissao")
-	public boolean temPermissao() {
-		return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
 	}
 	
 }

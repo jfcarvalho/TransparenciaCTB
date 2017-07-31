@@ -8,7 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.Size;
 
 
 @Entity
@@ -17,9 +16,7 @@ public class Contratado {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id_contratado;
-	@Size(min=2, max=500, message="Tamanho do nome campo deve ter tamanho entre 2 e 30")
 	private String nome;
-	@Size(min=2, max=300, message="Tamanho do cnpj campo deve ter tamanho entre 2 e 30")
 	private String cnpj;
 	@OneToMany(mappedBy="contratado")
 	private List<Contrato> contratos;

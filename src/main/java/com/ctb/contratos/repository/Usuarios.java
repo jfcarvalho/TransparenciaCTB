@@ -8,10 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ctb.contratos.model.Usuario;
 
-public interface Usuarios extends JpaRepository<Usuario, Integer>, UsuariosQueries{
+public interface Usuarios extends JpaRepository<Usuario, Integer>{
 	List<Usuario> findByNomeContaining(String nome);
-	List<Usuario> findByMatriculaContaining(String matricula);
-	List<Usuario> findBySetorContaining(String setor);
-	Usuario findByEmail(String email);
+	
 	
 }

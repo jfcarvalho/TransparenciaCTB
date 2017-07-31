@@ -2,7 +2,6 @@ package com.ctb.contratos.controller;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -17,16 +16,13 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ctb.Processo;
-import com.ctb.TipoProcesso;
 import com.ctb.contratos.model.Contratado;
 import com.ctb.contratos.model.Contrato;
 import com.ctb.contratos.model.Lancamento;
-import com.ctb.contratos.model.Recurso;
 import com.ctb.contratos.model.Usuario;
 import com.ctb.contratos.repository.Contratados;
 import com.ctb.contratos.repository.Lancamentos;
 import com.ctb.contratos.repository.Processos;
-import com.ctb.security.AppUserDetailsService;
 
 @Controller
 @RequestMapping("/transparenciactb/processos")
@@ -63,7 +59,7 @@ public class ProcessoController {
 	{
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
 		processos.save(processo);		
-		attributes.addFlashAttribute("mensagem", "Processo salvo com sucesso!");	
+		attributes.addFlashAttribute("mensagem", "Empresa contratada salva com sucesso!");	
 		return "redirect:/transparenciactb/processos/novo";
 	}
 	
@@ -92,10 +88,8 @@ public class ProcessoController {
 		
 		Lancamento lancamento = buscarLancamentoProcesso(id_processo);
 		Processo processo = processos.findOne(id_processo);
-		if(lancamento != null) {
-			lancamento.setProcesso(null);
-			lancamentos.save(lancamento);
-		}
+		lancamento.setProcesso(null);
+		lancamentos.save(lancamento);
 		processos.delete(processo);
 		
 		
@@ -118,14 +112,5 @@ public class ProcessoController {
 		}
 		return null;
 	}
-	@ModelAttribute("permissao")
-	public boolean temPermissao() {
-		return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
-	}
 	
-	@ModelAttribute("todosTiposProcessos")
-	public List<TipoProcesso> todosTiposProcessos() {
-		return Arrays.asList(TipoProcesso.values());
 }
-}
-
