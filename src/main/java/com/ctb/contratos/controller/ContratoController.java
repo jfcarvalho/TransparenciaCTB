@@ -154,6 +154,29 @@ public class ContratoController {
 	    		 ctx.add(c);
 	    	 }
 	     }
+	     
+	     ds.setValueIntoCell("Planilha1", 0, 4, "Código");
+	     ds.setValueIntoCell("Planilha1", 1, 4, "Nome");
+	     ds.setValueIntoCell("Planilha1", 2, 4, "Código");
+	     ds.setValueIntoCell("Planilha1", 3, 4, "Nome");
+	     ds.setValueIntoCell("Planilha1", 4, 4, "Contratado");
+	     ds.setValueIntoCell("Planilha1", 5, 4, "CNPJ");
+	     ds.setValueIntoCell("Planilha1", 6, 4, "CPF");
+	     ds.setValueIntoCell("Planilha1", 7, 4, "Número do Contrato");
+	     ds.setValueIntoCell("Planilha1", 8, 4, "Objeto");
+	     ds.setValueIntoCell("Planilha1", 9, 4, "D.O.E");
+	     ds.setValueIntoCell("Planilha1", 10, 4, "Número");
+	     ds.setValueIntoCell("Planilha1", 11, 4, "Modalidade");
+	     ds.setValueIntoCell("Planilha1", 12, 4, "Data de início");
+	     ds.setValueIntoCell("Planilha1", 13, 4, "Data final");
+	     ds.setValueIntoCell("Planilha1", 14, 4, "Inicial");
+	     ds.setValueIntoCell("Planilha1", 15, 4, "Atual");
+	     ds.setValueIntoCell("Planilha1", 16, 4, "Qtde de Aditivos");
+	     ds.setValueIntoCell("Planilha1", 17, 4, "No exercicio");
+	     ds.setValueIntoCell("Planilha1", 18, 4, "Acumulado");
+	     ds.setValueIntoCell("Planilha1", 19, 4, "Observações");
+	     
+	     
 	     List<PrestacaoContas> prestacao = new ArrayList<PrestacaoContas>();
 	   // int linhaAtual = 5;
 	    for (Contrato c:ctx) {
@@ -179,11 +202,11 @@ public class ContratoController {
 		    pc.setDoe(c.getDoe());
 		    if(pc.getDoe() != null)
 		    {
-		    	ds.setValueIntoCell("Planilha1", linhaPlanilha, colunaPlanilha++, pc.getDoe().toString());
+		    	ds.setValueIntoCell("Planilha1", colunaPlanilha++, linhaPlanilha,pc.getDoe().toString());
 		    }
 		    else
 		    {
-		    	ds.setValueIntoCell("Planilha1", linhaPlanilha, colunaPlanilha++, "--------");
+		    	ds.setValueIntoCell("Planilha1", colunaPlanilha++,  linhaPlanilha, "--------");
 		    }
 		   // ds.setValueIntoCell("Planilha1", linhaPlanilha, colunaPlanilha++, pc.getDoe().toString());
 		    if(c.getLicitacao() != null) {
@@ -223,6 +246,7 @@ public class ContratoController {
 		     BigDecimal pagoAcumulado = totalPagoAcumulado(c);
 		     pc.setPagoAcumulado(pagoAcumulado);
 		     ds.setValueIntoCell("Planilha1", colunaPlanilha++ ,linhaPlanilha, pc.getPagoAcumulado().toString());
+		     ds.setValueIntoCell("Planilha1", colunaPlanilha++ ,linhaPlanilha, " ");
 		     prestacao.add(pc);
 		     linhaPlanilha++;
 		     colunaPlanilha = 0;

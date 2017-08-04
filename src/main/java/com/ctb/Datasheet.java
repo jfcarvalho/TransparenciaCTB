@@ -19,8 +19,8 @@ public class Datasheet {
 	    {
 	        try
 	        {
-	            wbook = Workbook.getWorkbook(new File("C:\\Users\\nessk\\Desktop\\testSampleData.xls"));
-	            wwbCopy = Workbook.createWorkbook(new File("C:\\Users\\nessk\\Desktop\\testSampleDataCopy.xls"), wbook);
+	            wbook = Workbook.getWorkbook(new File("C:\\Users\\TECI\\Desktop\\testSampleData.xls"));
+	            wwbCopy = Workbook.createWorkbook(new File("C:\\Users\\TECI\\Desktop\\testSampleDataCopy.xls"), wbook);
 	            shSheet = wwbCopy.getSheet(0);
 	        }
 	        catch (Exception e)
@@ -46,8 +46,12 @@ public class Datasheet {
 	        }
 	        cell = wshTemp.getColumnView(iColumnNumber);
 	      //  cell.setAutosize(true);
-	        cell.setSize(5000);
-	      
+	        if(iColumnNumber == 4 || iColumnNumber == 8) {
+	        	cell.setSize(14000);
+	        }
+	        else {
+	        	cell.setSize(5000);
+	        }
 	        cell2 = wshTemp.getRowView(iRowNumber);
 	        cell2.setSize(750);
 	        
