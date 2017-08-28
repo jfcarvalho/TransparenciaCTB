@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+<head>
+<title>Pesquisa de Usuários</title>
+<link rel="stylesheet" type="text/css" href="/layout/stylesheets/vendors.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/algaworks.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/layout/stylesheets/application.css"/>
+</head>
+
+<body>
+<div class="aw-layout-page">
+
+
+<section class="aw-layout-content  js-content is-toggled">
+<div layout:include="/cabecalho/CabecalhoLancamento"></div>
+
+
+<div class="panel panel-default">
+		
+		<div class="panel-heading">
+		<div class="clearfix">	
+			<h1 class="panel-title">Pesquisa de Pagamentos não efetuados</h1>
+			<form method="GET" th:action="@{/transparenciactb/contratos/pagamentos_a_efetuar}">
+			<div class="col-lg-3">
+   				 <div class="input-group">
+     				 <input type="text" class="form-control" placeholder="Pesquise aqui..." name="busca"/>
+    				  <span class="input-group-btn">
+       					 <button class="btn btn-default" type="submit">Go!</button>
+      				</span>
+   				 </div>
+ 			 </div>
+ 			 <div class="col-lg-12">
+ 			 	<input type="radio" name ="nota_fiscal" /> Numero nota fiscal
+ 			 	<input type="radio" name ="contrato_numero" /> Numero do contrato
+ 			 	<input type="radio" name ="nome_empresa" /> Nome Empresa
+ 			 </div>
+ 			  
+ 			</form>
+			<a class="btn btn-link aw-link-panel" th:href="@{/transparenciactb/}">Voltar a home</a> 
+		</div>
+		</div>
+		<div class="panel-body">
+		
+		<table class="table table-bordered table-striped">
+		
+			<thead>
+				<tr>
+				<th class="text-center col-md-2">Número de nota fiscal</th>
+				<th class="text-center col-md-2">Mês de Competência</th>
+				<th class="text-center col-md-2">Contrato</th>
+				<th class="text-center col-md-2">Empresa</th>
+				<th class="text-center col-md-2">Valor</th>
+			 	<th class="text-center col-md-2">Ação</th> 
+				</tr>
+				
+			</thead>
+			<tbody>
+				<tr th:each="lancamento : ${todosLancamentos}">
+					<td class="text-center" th:text="${lancamento.numero_nota_fiscal}"></td>
+					<td class="text-center" th:text="${lancamento.competencia}"></td>
+					<td class="text-center" th:text="${lancamento.contrato.numero}"></td>
+					<td class="text-center" th:text="${lancamento.contrato.contratado.nome}"></td>
+					<td class="text-center" th:text=" |R$ ${{lancamento.valor}}|"></td>
+					<td class="text-center"><a  target="_blank" th:if="${permissao}" th:href="@{/transparenciactb/lancamentos/gerar_pagamento/{id_lancamento}(id_lancamento=${lancamento.id_lancamento})}" class="btn btn-link btn-xs" ><span class="glyphicon glyphicon-usd"> Registrar Pagamento</span></a></td> 
+					
+				</tr>
+				
+			<tr>
+				<td colspan="6" th:if="${#lists.isEmpty(todosLancamentos)}">Nenhum lançamento encontrado</td>
+			</tr>
+			</tbody>
+		
+		</table>
+		
+		<div class="col-sm-12 text-center">
+		
+				<nav aria-label="Page navigation">
+  <ul class="pagination">
+    <li>
+      <a href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    <li><a href="?page=0">1</a></li>
+    <li><a href="?page=1">2</a></li>
+    <li><a href="?page=2">3</a></li>
+    <li><a href="?page=3">4</a></li>
+    <li><a href="?page=4">5</a></li>
+    <li><a href="?page=5">6</a></li>
+    <li><a href="?page=6">7</a></li>
+    <li><a href="?page=7">8</a></li>
+    
+    <li>
+      <a href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+		</div>
+		
+		</div>
+	</div>	
+</section>
+</div>
+<script src="/layout/javascripts/vendors.min.js"></script>
+<script src="/layout/javascripts/algaworks.min.js"></script>
+</body>
+</html>

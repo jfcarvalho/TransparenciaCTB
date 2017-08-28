@@ -67,6 +67,9 @@ public class Contrato {
 	@ManyToOne(fetch=FetchType.LAZY, cascade = {CascadeType.PERSIST})
 	@JoinColumn(name="contrato_id_contrato")
 	private Contratado contratado;
+	
+	
+	
 	@ManyToOne(fetch=FetchType.LAZY, cascade = {CascadeType.PERSIST})
 	@JoinColumn(name="contrato_id_gestor")
 	private Usuario gestor;
@@ -95,6 +98,10 @@ public class Contrato {
 	@DateTimeFormat(pattern= "dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	private Date doe;
+	
+	@OneToOne
+	@JoinColumn(name="contrato_id_comissao")
+	private Comissao comissao;
 	
 	
 	
@@ -322,6 +329,17 @@ public class Contrato {
 	public void setRiscofinanceiro(boolean riscofinanceiro) {
 		this.riscofinanceiro = riscofinanceiro;
 	}
+	
+	public Comissao getComissao()
+	{
+		return this.comissao;
+	}
+	
+	public void setComissao(Comissao comissao)
+	{
+		this.comissao = comissao;
+	}
+	
 	
 	
 	

@@ -23,6 +23,8 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.Months;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,27 +46,22 @@ import com.ctb.contratos.repository.Lancamentos;
 import com.ctb.contratos.repository.Processos;
 import com.ctb.contratos.repository.Usuarios;
 import com.ctb.security.AppUserDetailsService;
-import com.ctb.Datasheet;
 
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.WorkbookSettings;
 import jxl.read.biff.BiffException;
-import jxl.write.Label;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
-import jxl.write.WriteException;
 
 @Controller
 @RequestMapping("/transparenciactb/")
 
 
 public class HomesController {
-	public static final long TEMPO_MENSAGEM = (1000*60*60);
+	public static final long TEMPO_MENSAGEM = (19999999);
 	private String HOME_VIEW = "/home/PaginaInicial";
-	static int id_inicial = 992;
-	static int id_proc =560;
+	static int id_inicial = 782;
+	static int id_proc =605;
 	@Autowired
 	private Usuarios usuarios;
 	
@@ -84,14 +81,10 @@ public class HomesController {
 	@Autowired
 	private ConfAvisoss cfs;
 	
-	 private Workbook wbook;
-	    private WritableWorkbook wwbCopy;
-	    private WritableSheet shSheet;
-	
 	ModelAndView mv = new ModelAndView(HOME_VIEW);	
 	
 	@RequestMapping(method=RequestMethod.GET)
-	public ModelAndView index() throws BiffException, IOException, ParseException, WriteException
+	public ModelAndView index() throws BiffException, IOException, ParseException
 	{
 			
 		
@@ -117,67 +110,102 @@ public class HomesController {
 		DateTime date = new DateTime();
 		ano = Integer.toString(date.getYear());
 		teste = contratosVSvalores();
+		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\DUCTOR.xls", 10, 169);
+		//
+		
+		
+	//	alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\ENGEVIX.xls", 11, 94);
+		
+	//	alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\TELEMARLINK.xls", 25, 74);
+	//	alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\TELEMARLINK.xls", 25, 74);
+		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\TRIVALE.xls", 41, 25);
+		//zerarAvisos(contratos.findAll());
+	//	conferirAvisos();
 		/*
-		Datasheet ds = new Datasheet();
-		ds.readExcel();
-		ds.setValueIntoCell("Planilha1", 5, 1, "AHHH VAI TOMAR NO TEU CU MANO, PELA SACO DO CARAI FII");
-		ds.closeFile();
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\MJR.xls", 2, 30);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\BRASPE1.xls", 2, 70);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\BRASPE2.xls", 2, 65);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\ALBERONI.xls", 4, 29);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\BATUR.xls", 28, 35);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\BASE.xls", 12, 35);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\CALDAS.xls", 13, 53);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\ECT2.xls", 23, 65);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\EGBA.xls", 6, 50);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\ENTEL.xls", 18, 58);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\IEL.xls", 20, 87);
 		*/
 		
-		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\MJR.xls", 2, 28);
-		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\BRASPECL.xls", 3, 64);
-		/*alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\ALBERONI.xls", 4, 27);
-		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\BASE.xls", 12, 31);
-		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\BATUR.xls", 28, 32);
-		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\BMW.xls", 15, 17);
-		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\BRASPEB.xls", 1, 68);
-		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\BRASPECL.xls", 2, 63);
-		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\CALDAS.xls", 13, 50);
-		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\ECT.xls", 23, 62);
-		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\EGBA.xls", 6, 44);
-		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\ENTEL.xls", 18, 55);
+		/*
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\GIBBOR.xls", 19, 35);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\PERFORMANCE.xls", 14, 18);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\PLUS.xls", 37, 55);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\PRODEB.xls", 7, 62);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\PROSEGUR.xls", 30, 62);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\REALIZA.xls", 27, 57);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\SODEXO.xls", 23, 23);
+		
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\SOFCON.xls", 31, 17);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\TELEMARLD.xls", 24, 43);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\TRIVALE.xls", 24, 25);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\BMW.xls", 15, 17);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\TTC1.xls", 38, 19);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\FF.xls", 17, 24);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\FF2.xls", 42, 16);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\FF3.xls", 16, 24);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\FPMF.xls", 44, 15);
+		
+		
+		/*alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\ALBERONI.xls", 4, 27);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\BASE.xls", 12, 31);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\BATUR.xls", 28, 32);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\BMW.xls", 15, 17);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\BRASPEB.xls", 1, 68);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\BRASPECL.xls", 2, 63);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\CALDAS.xls", 13, 50);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\ECT.xls", 23, 62);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\EGBA.xls", 6, 44);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\ENTEL.xls", 18, 55);
 		
 	
-		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\IEL.xls", 20, 72);
-		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\IPSE.xls", 29, 16);
-		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\LARCLEAN.xls", 35, 16);
-		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\LRX.xls", 36, 18);
-		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\PERFORMANCE.xls", 14, 18);
-		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\PLUS.xls", 37, 53);
-		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\PRODEB.xls", 7, 59);
-		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\PROSEGUR.xls", 30, 59);
-		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\REALIZA.xls", 27, 54);
-		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\UNIMED.xls", 26, 38);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\IEL.xls", 20, 72);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\IPSE.xls", 29, 16);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\LARCLEAN.xls", 35, 16);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\LRX.xls", 36, 18);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\PERFORMANCE.xls", 14, 18);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\PLUS.xls", 37, 53);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\PRODEB.xls", 7, 59);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\PROSEGUR.xls", 30, 59);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\REALIZA.xls", 27, 54);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\UNIMED.xls", 26, 38);
 		*/
 		
-		/*alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\MJR.xls", 2, 28);
-		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\VIVO.xls", 8, 20);
-		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\TTC1.xls", 38, 19);
-		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\TRIVALE.xls", 41, 23);
-		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\SOS.xls", 32, 26);
-		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\SOFCON.xls", 31, 17);
-		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\TELEMARLD.xls", 24, 40);
-		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\TELEMARREDE.xls", 25, 73);
-		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\FFGARE.xls", 17, 20);
+		/*alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\MJR.xls", 2, 28);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\VIVO.xls", 8, 20);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\TTC1.xls", 38, 19);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\TRIVALE.xls", 41, 23);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\SOS.xls", 32, 26);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\SOFCON.xls", 31, 17);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\TELEMARLD.xls", 24, 40);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\TELEMARREDE.xls", 25, 73);
+		alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\FFGARE.xls", 17, 20);
 		*/
-		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\FFSCONSTRUCOES.xls", 16, 24);
-		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\DUCTOR.xls", 10, 169);
-		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\ENGEVIX.xls", 11, 94);
+		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\FFSCONSTRUCOES.xls", 16, 24);
+		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\DUCTOR.xls", 10, 169);
+		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\ENGEVIX.xls", 11, 94);
 		
-		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\GIBBOR.xls", 19, 35);
-	//	alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\FFPASSEIO.xls", 42, 15);
-		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\VOLUNTARIAS.xls", 45, 18);
-		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\FPMF.xls", 44, 15);
-	//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-SGC\\PROJCONSULT.xls", 40, 22);
+		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\GIBBOR.xls", 19, 35);
+	//	alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\FFPASSEIO.xls", 42, 15);
+		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\VOLUNTARIAS.xls", 45, 18);
+		//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\FPMF.xls", 44, 15);
+	//alimentarSistema("C:\\Users\\TECI\\Downloads\\Contratos-21_08\\PROJCONSULT.xls", 40, 22);
 		/*
-	         Timer timer = null;  
+	 Timer timer = null;  
 	         if (timer == null) {  
 	             timer = new Timer();  
 	             TimerTask tarefa = new TimerTask() {  
 	                 public void run() {  
 	                     try {  
-	                         //System.out.println("Teste Agendador");  
-	                        //chamar metodo
+	                    	 
 	                    	 if(cfs.findAll().size() > 0) {
 		                    	 ConfAvisos cf = cfs.findOne(1);
 		                    	 if(cf.getData_aviso().toString().equals(DateTime.now().toString()))
@@ -196,6 +224,7 @@ public class HomesController {
 	             timer.scheduleAtFixedRate(tarefa, TEMPO_MENSAGEM, TEMPO_MENSAGEM);  
 	         }
 	         */
+		
 		while(it.hasNext())
 		{
 			Contrato obj = (Contrato) it.next();
@@ -281,6 +310,34 @@ public class HomesController {
 		return mv;
 }	
 
+	public void conferirAvisos()
+	{
+		List<ConfAvisos> cf = cfs.findAll();
+		Date dt = new Date();
+		if(cf.size() > 0)
+		{
+			ConfAvisos c = cf.get(0);
+			
+			if(!Integer.toString(c.getData_aviso().getDay()).equals(Integer.toString(dt.getDay())))
+			{
+				checarAvisosContratos(usuarios.findAll());
+				ConfAvisos cs = cfs.findOne(1);
+				cs.setData_aviso(new Date());
+				cfs.save(cs);
+			}
+			
+		}
+		else 
+		{
+			ConfAvisos newc = new ConfAvisos();
+			newc.setId_aviso(1);
+			newc.setTipo_aviso("Vencimento Contrato");
+			newc.setData_aviso(new Date());
+			cfs.save(newc);
+			checarAvisosContratos(usuarios.findAll());
+		}
+	}
+	
 	public void alimentarSistema(String caminhoPlanilha, Integer id_contrato, Integer linhasALer) throws  IOException, BiffException, ParseException
 	{
 		
@@ -636,7 +693,7 @@ public class HomesController {
 						contratos.save(contrato);
 						ct_xvencimento65.add(contrato);
 					}
-					else if(diasVencimento <= 60 && diasVencimento > 50 && avisos_dias[0] == false)
+					else if(diasVencimento <= 60 && diasVencimento > 0 && avisos_dias[0] == false)
 					{
 						avisos_dias[6] = true;
 						contratos.save(contrato);
@@ -647,31 +704,31 @@ public class HomesController {
 			}
 	if(ct_xvencimento90.size() > 0)
 	{
-		mailer.enviar_vencimento_gestor(ct_xvencimento90, "jfcarvalho@ctb.ba.gov.br", 90);
+		mailer.enviar_vencimento_gestor(ct_xvencimento90, "anderson.araujo@ctb.ba.gov.br", 90);
 	}
 	if(ct_xvencimento85.size() > 0)
 	{
-		mailer.enviar_vencimento_gestor(ct_xvencimento85, "jfcarvalho@ctb.ba.gov.br", 85);
+		mailer.enviar_vencimento_gestor(ct_xvencimento85, "anderson.araujo@ctb.ba.gov.br", 85);
 	}
 	if(ct_xvencimento80.size() > 0)
 	{
-		mailer.enviar_vencimento_gestor(ct_xvencimento80, "jfcarvalho@ctb.ba.gov.br", 80);
+		mailer.enviar_vencimento_gestor(ct_xvencimento80, "anderson.araujo@ctb.ba.gov.br", 80);
 	}
 	if(ct_xvencimento75.size() > 0)
 	{
-		mailer.enviar_vencimento_gestor(ct_xvencimento75, "jfcarvalho@ctb.ba.gov.br", 75);
+		mailer.enviar_vencimento_gestor(ct_xvencimento75, "anderson.araujo@ctb.ba.gov.br", 75);
 	}
 	if(ct_xvencimento70.size() > 0)
 	{
-		mailer.enviar_vencimento_gestor(ct_xvencimento70, "jfcarvalho@ctb.ba.gov.br", 70);
+		mailer.enviar_vencimento_gestor(ct_xvencimento70, "anderson.araujo@ctb.ba.gov.br", 70);
 	}
 	if(ct_xvencimento65.size() > 0)
 	{
-		mailer.enviar_vencimento_gestor(ct_xvencimento65, "jfcarvalho@ctb.ba.gov.br", 65);
+		mailer.enviar_vencimento_gestor(ct_xvencimento65, "anderson.araujo@ctb.ba.gov.br", 65);
 	}
 	if(ct_xvencimento60.size() > 0)
 	{
-		mailer.enviar_vencimento_gestor(ct_xvencimento60, "jfcarvalho@ctb.ba.gov.br", 60);
+		mailer.enviar_vencimento_gestor(ct_xvencimento60, "anderson.araujo@ctb.ba.gov.br", 60);
 	}
 	}
 	
@@ -692,17 +749,22 @@ public class HomesController {
 	
 	@ModelAttribute("permissao")
 	public boolean temPermissao() {
-		return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
+		Object usuarioLogado = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return ((UserDetails)usuarioLogado).getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
 	}
 	
 	@ModelAttribute("home_gestor_contratos")
 	public boolean homeGestor() {
-		return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_HOME_GESTOR_CONTRATOS");
+		//return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_HOME_GESTOR_CONTRATOS");
+		Object usuarioLogado = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return ((UserDetails)usuarioLogado).getAuthorities().toString().contains("ROLE_HOME_GESTOR_CONTRATOS");
 	}
 	
 	@ModelAttribute("registrar_processo")
 	public boolean homeProcesso() {
-		return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_PROCESSO");
+		//return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_PROCESSO");
+		Object usuarioLogado = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return ((UserDetails)usuarioLogado).getAuthorities().toString().contains("ROLE_CADASTRAR_PROCESSO");
 	}
 	
 	
@@ -711,7 +773,10 @@ public class HomesController {
 	{
 		List<Contrato> todosContratos = contratos.findAll();
 		List<Contrato> contratosGeridos = new ArrayList<Contrato>();
-		Usuario gestor = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
+	//	Usuario gestor = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
+		Usuario gestor = new Usuario();
+		Object usuarioLogado = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		gestor = usuarios.findByEmail(((UserDetails) usuarioLogado).getUsername());
 		Iterator it = todosContratos.iterator();
 	
 		while(it.hasNext())
@@ -858,7 +923,11 @@ public class HomesController {
 	public int ncontratosGeridos()
 	{
 		List<Contrato> todosContratos = contratos.findAll();
-		Usuario gestor = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
+		//Usuario gestor = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
+		Usuario gestor = new Usuario();
+		Object usuarioLogado = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		gestor = usuarios.findByEmail(((UserDetails) usuarioLogado).getUsername());
+		
 		int n_geridos = 0;
 		Iterator it = todosContratos.iterator();
 	
@@ -874,14 +943,15 @@ public class HomesController {
 	
 	}
 	
-	
-	
-	
 	@ModelAttribute("gestor")
 	public Usuario gestor()
 	{
-		 Usuario gestor = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
-		 return gestor;
+		// Usuario gestor = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
+		Usuario gestor = new Usuario();
+		Object usuarioLogado = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		gestor = usuarios.findByEmail(((UserDetails) usuarioLogado).getUsername());
+		
+		return gestor;
 	}
 	
 	@ModelAttribute("vencimento90dias")

@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
@@ -177,7 +179,8 @@ public class UsuarioController {
 	
 	@ModelAttribute("permissao")
 	public boolean temPermissao() {
-		return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_USUARIO");
+		Object usuarioLogado = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return ((UserDetails)usuarioLogado).getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
 	}
 	
 	@ModelAttribute("grupos")

@@ -17,6 +17,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.thymeleaf.TemplateEngine;
@@ -65,8 +67,8 @@ public class Mailer {
 			MimeMessage mimeMessage = mailSender.createMimeMessage();
 			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 			helper.setFrom("suporte.ctb1210@ctb.ba.gov.br");
-			helper.setTo("romeuoj@ctb.ba.gov.br");
-			helper.setSubject("E-mail Teste Contratos");
+			helper.setTo(Email);
+			helper.setSubject("Aviso de Vencimento de Contratos");
 			helper.setText(email, true);
 			mailSender.send(mimeMessage);
 		} catch(MessagingException e) {
@@ -79,7 +81,10 @@ public class Mailer {
 	public void enviar_lancamento_gestor(Lancamento lc, String Email)
 	{
 		
-		Usuario u = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
+		//Usuario u = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
+		Object usuarioLogado = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Usuario u = new Usuario();
+		u = usuarios.findByEmail(((UserDetails)usuarioLogado).getUsername());
 		Context context = new Context();
 		context.setVariable("lancamento", lc);
 		context.setVariable("contrato", lc.getContrato());
@@ -96,6 +101,34 @@ public class Mailer {
 			logger.error("Erro enviando e-mail", e);
 		}
 		thymeleaf.process("mail/AvisoLancamento", context);
+	}
+	
+	@Async
+	public void enviar_pagamento_contrato(Lancamento lc, Processo p, String Email)
+	{
+		
+	//	Usuario u = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
+		Object usuarioLogado = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Usuario u = new Usuario();
+		u = usuarios.findByEmail(((UserDetails)usuarioLogado).getUsername());
+		Context context = new Context();
+		context.setVariable("lancamento", lc);
+		context.setVariable("contrato", lc.getContrato());
+		context.setVariable("processo", p);
+		
+		String email = thymeleaf.process("mail/AvisoPagamento", context);
+		try {
+			MimeMessage mimeMessage = mailSender.createMimeMessage();
+			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+			helper.setFrom("suporte.ctb1210@ctb.ba.gov.br");
+			helper.setTo(Email);
+			helper.setSubject("SGC - Aviso de Pagamento");
+			helper.setText(email, true);
+			mailSender.send(mimeMessage);
+		} catch(MessagingException e) {
+			logger.error("Erro enviando e-mail", e);
+		}
+		thymeleaf.process("mail/AvisoPagamento", context);
 	}
 	
 	

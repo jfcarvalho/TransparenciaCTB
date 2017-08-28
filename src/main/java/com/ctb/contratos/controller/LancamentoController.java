@@ -32,6 +32,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -120,10 +122,6 @@ public class LancamentoController {
 		{
 			Months m = Months.monthsBetween(inicio, fim);
 			BigDecimal meses = new BigDecimal (Integer.toString(m.getMonths()));
-			
-			//BigDecimal totalAditivos = new BigDecimal("0");
-			//totalAditivos = calcularAditivos(contrato.getLancamentos());
-			//totalAditivos = totalAditivos.add(contrato.getValor_contrato());
 			valorEstimado = contrato.getSaldo_contrato().divide(meses);
 			int comp = valorgasto.compareTo(gastomedio);
 			int comp2 = valorgasto.compareTo(valorEstimado);
@@ -150,45 +148,10 @@ public class LancamentoController {
 		}
 		return acumulador;
 	}
-	/*
-	@RequestMapping(value= "/pagar/{id_lancamento}", method=RequestMethod.POST)
-	public ModelAndView pagar(Lancamento lancamento, @RequestParam Date data_pagamento, @RequestParam boolean pago )
-	{
-		ModelAndView mv = new ModelAndView(PAGAMENTO_VIEW);
-		Lancamento lancamentobd = lancamentos.findOne(lancamento.getId_lancamento());
-		//mv.addObject("lancamento", lancamentobd);
-		lancamento.setAditivo_n(lancamentobd.getAditivo_n());
-		lancamento.setContrato(lancamentobd.getContrato());
-		lancamento.setData(lancamentobd.getData());
-		lancamento.setMeses_prorrogacao(lancamentobd.getMeses_prorrogacao());
-		lancamento.setNumero_nota_fiscal(lancamentobd.getNumero_nota_fiscal());
-		lancamento.setObservacao(lancamentobd.getObservacao());
-		lancamento.setPossui_aditivo(lancamentobd.getPossui_aditivo());
-		lancamento.setSaldo_contrato(lancamentobd.getSaldo_contrato());
-		lancamento.setHora(lancamentobd.getHora());
-		lancamento.setMedicao(lancamentobd.getMedicao());
-		lancamento.setTipoAditivo(lancamentobd.getTipoAditivo());
-		lancamento.setValor(lancamentobd.getValor());
-		lancamento.setValor_aditivo(lancamentobd.getValor_aditivo());
-		lancamento.setDoe_aditivo(lancamentobd.getDoe_aditivo());
-		lancamento.setCompetencia(lancamentobd.getCompetencia());
-		Processo p = processos.findOne(Id_processo);
-		p.setData_pagamento(data_pagamento);
-		p.setPago(pago);
-		lancamento.setProcesso(p);
-		p.setLancamento(lancamento);
-		processos.save(p);
-		lancamento.setLiquidado(true);
 
-		lancamentos.save(lancamento);
-		mv.addObject(lancamento);
-		mv.addObject("mensagem", "Pagamento registrado com sucesso!");
-		return mv;
-	}
-	*/
 	
 	@RequestMapping(value= "/pagar/{id_lancamento}", method=RequestMethod.POST)
-	public ModelAndView pagar(Lancamento lancamento, @RequestParam Date data_pagamento, @RequestParam boolean pago )
+	public ModelAndView pagar(Lancamento lancamento, @RequestParam @DateTimeFormat(pattern= "dd/MM/yyyy") Date data_pagamento, @RequestParam boolean pago )
 	{
 		ModelAndView mv = new ModelAndView(PAGAMENTO_VIEW);
 		Lancamento lancbd = lancamentos.findOne(lancamento.getId_lancamento());
@@ -201,6 +164,7 @@ public class LancamentoController {
 		lancamentos.save(lancbd);
 		mv.addObject(lancbd);
 		mv.addObject("mensagem", "Pagamento registrado com sucesso!");
+		mailer.enviar_pagamento_contrato(lancbd, p, lancbd.getContrato().getGestor().getEmail());
 		return mv;
 		
 		
@@ -210,7 +174,6 @@ public class LancamentoController {
 	{
 		ModelAndView mv = new ModelAndView(PAGAMENTO_VIEW);
 		Lancamento lancamentobd = lancamentos.findOne(lancamento.getId_lancamento());
-		//mv.addObject("lancamento", lancamentobd);
 		lancamento.setAditivo_n(lancamentobd.getAditivo_n());
 		lancamento.setContrato(lancamentobd.getContrato());
 		lancamento.setData(lancamentobd.getData());
@@ -235,6 +198,7 @@ public class LancamentoController {
 
 		lancamentos.save(lancamento);
 		mv.addObject(lancamento);
+		
 		mv.addObject("mensagem", "Pagamento registrado com sucesso!");
 		return mv;
 	}
@@ -242,19 +206,18 @@ public class LancamentoController {
 
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView salvar(Lancamento lancamento, @RequestParam Integer lancamento_id_contrato, String tipo_processo ,String numero_processo , String ano_processo, 
+	public String salvar(Lancamento lancamento, @RequestParam Integer lancamento_id_contrato, String tipo_processo ,String numero_processo , String ano_processo, 
 	@DateTimeFormat(pattern= "dd/MM/yyyy") Date data_processo,RedirectAttributes attributes)
 	{
-		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
+		//ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
 		Contrato c = contratos.findOne(lancamento_id_contrato);
-		mv.addObject("contrato",c);
+		//mv.addObject("contrato",c);
 		lancamento.setLiquidado(false);
 		
 		DateTime inicio = new DateTime();
 		DateTime fim = new DateTime(c.getData_vencimento());
 		Months m = Months.monthsBetween(inicio, fim);
 		Days d = Days.daysBetween(inicio, fim);
-		System.out.println("Número do processo: "+ numero_processo+ " ano do processo: " + ano_processo+ " data do processo" + data_processo);
 		Processo p = new Processo();
 		int tproc = processos.findAll().size();
 		tproc++;
@@ -269,20 +232,22 @@ public class LancamentoController {
 			break;
 			case "Renovacao":
 				p.setTipo_processo(TipoProcesso.Renovacao);
+				c.setProcesso(p);
+				
 			break;
 		}
-		Usuario user = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
+	//	Usuario user = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
+		Usuario user = new Usuario();
+		Object usuarioLogado = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		user = usuarios.findByEmail(((UserDetails) usuarioLogado).getUsername());
 		p.setUsuario(user);
 		processos.save(p);
-		
-		//Processo proc = processos.findOne(Id_processo);
 		lancamento.setProcesso(p);
 		
-		if( d.getDays() >= 0 ) { 
+		//if( d.getDays() >= 0 ) { 
 			if(lancamento_id_contrato != null)
 			{
 				Contrato contrato = contratos.findOne(lancamento_id_contrato);
-				//contrato.setSaldo_contrato(contrato.getSaldo_contrato() - lancamento.getValor());
 				lancamento.setContrato(contrato);
 				contratos.save(contrato);
 			}
@@ -329,22 +294,19 @@ public class LancamentoController {
 			lancamento.setCompetencia(lancamento.getCompetencia()+"/"+ ano);
 			String dataFormatada = sdf.format(hora);
 			lancamento.setHora(dataFormatada);
-			
-		//	System.out.println(gastoMedio(c));
 			mailer.enviar_lancamento_gestor(lancamento,"anderson.araujo@ctb.ba.gov.br");
-		//	checaGastoContrato(c, gastoMedio(c), lancamento.getValor());
 			contratos.save(c);
-			lancamentos.save(lancamento);		
-			mv.addObject("mensagem", "Lancamento salvo com sucesso!");
-			//attributes.addFlashAttribute("mensagem", "Lancamento salvo com sucesso!");	
-			//return "redirect:/transparenciactb/lancamentos/pesquisar/" + lancamento.getContrato().getId_contrato();
-			return mv;
-		}
-		else {
+			lancamentos.save(lancamento);
+			return "redirect:/transparenciactb/lancamentos/pesquisar/" +lancamento.getContrato().getId_contrato();
+		//	mv.addObject("mensagem", "Lancamento salvo com sucesso!");
+		//	return mv;
+	//	}
+	/*	else {
 				  mv.addObject("vencido", true);
 				  mv.addObject("mensagem", "Este contrato está vencido!, não será mais possivel fazer lancamentos nele");
 				  return mv;
 		}
+		*/
 	}
 
 	
@@ -366,9 +328,12 @@ public class LancamentoController {
 	@ModelAttribute("todosProcessosUsuario")
 	public List<Processo> todosProcessosUsuario()
 	{
-		//List <Processo> p = processos.findAll();
 		List <Processo> np = new ArrayList<Processo>();
-		Usuario user = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
+		//Usuario user = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
+		Usuario user = new Usuario();
+		Object usuarioLogado = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		user = usuarios.findByEmail(((UserDetails) usuarioLogado).getUsername());
+		
 		if(user.getProcessos() != null) {
 		for(Processo proc:user.getProcessos())
 		{
@@ -412,8 +377,10 @@ public class LancamentoController {
 		int paginaAtual = pageable.getPageNumber();
 		int totalRegistrosPorPagina = pageable.getPageSize();
 		int primeiroRegistro = paginaAtual * totalRegistrosPorPagina;
-		Usuario us = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
-		
+		//Usuario us = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
+		Usuario us = new Usuario();
+		Object usuarioLogado = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		us = usuarios.findByEmail(((UserDetails) usuarioLogado).getUsername());
 		
 		criteria.setFirstResult(primeiroRegistro);
         criteria.setMaxResults(totalRegistrosPorPagina);
@@ -421,8 +388,6 @@ public class LancamentoController {
     	criteria.addOrder(Order.desc("data"));
     	if(numero != null) {
 			if(busca != null && numero.equals("on")) {
-				//List<Lancamento> todosLancamentos = lancamentosQ.porNota(busca, us.getId_usuario());
-				//Usuario us = usuarios.findOne(id_usuario);
 				Contrato contratos_usuario = contratos.findOne(Id_contrato);
 				List<Lancamento> lancamentos_limitados = new ArrayList<Lancamento>();
 					for(Lancamento l: contratos_usuario.getLancamentos())
@@ -476,26 +441,12 @@ public class LancamentoController {
 	          return l1.getId_lancamento().compareTo(l2.getId_lancamento());
 	        }
 	    };
-	    /*
-    	Comparator<Lancamento> cmp = new Comparator<Lancamento>() {
-	        public int compare(Lancamento l1, Lancamento l2) {
-	          return l2.getId_lancamento().compareTo(l1.getId_lancamento());
-	        }
-	    };
-	    */
+
 	    List<Lancamento> lancamentosOrdenados = criteria.list();
-	   // lancamentosOrdenados.sort(cmp2);
-	    //Collections.sort(lancamentosOrdenados);
-	   // Collections.reverse(lancamentosOrdenados);
-	    //lancamentosOrdenados.sort(cmp);
-	   
-		//criteria.add(Restrictions.eq("contrato", c));
-		
-		//List<Lancamento> lanc= c.getLancamentos();
+	
 		Page<Lancamento> pags = new PageImpl<Lancamento>(lancamentosOrdenados, pageable, lancamentosOrdenados.size());
 	
-		//Page<Lancamento> lancamentos = criteria.list();
-		//c.getLancamentos();
+	
 		mv.addObject("todosLancamentos",pags);
 		mv.addObject("contrato", c);
 		return mv;
@@ -506,16 +457,77 @@ public class LancamentoController {
 	{
 		ModelAndView mv = new ModelAndView(EDICAO_VIEW);
 		mv.addObject(new LancamentoController());
-		Lancamento teste = lancamentos.findOne(lancamento.getId_lancamento());
-		Contrato c = contratos.findOne(teste.getContrato().getId_contrato());
+		Lancamento lanc = lancamentos.findOne(lancamento.getId_lancamento());
+		Contrato c = contratos.findOne(lanc.getContrato().getId_contrato());
 		Processo p = processos.findOne(lancamento.getProcesso().getId_processo());
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		if(lancamento.getPossui_aditivo() && lancamento.getMeses_prorrogacao() != null)
+		{
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(lancamento.getContrato().getData_vencimento());
+			cal.add(Calendar.MONTH, lancamento.getMeses_prorrogacao());
+	
+			
+			
+			c.setDuracao_meses(c.getDuracao_meses()+ lancamento.getMeses_prorrogacao());
+			c.setMeses_vencimento(c.getMeses_vencimento()+ lancamento.getMeses_prorrogacao());
+			c.setData_vencimento(cal.getTime());
+			
+		}
 		lancamento.setContrato(c);
+		String[] competencia = lanc.getCompetencia().split("/");
+		contratos.save(c);
+		switch(competencia[0].toUpperCase())
+		{
+			case "JANEIRO":
+				mv.addObject("mes", "Janeiro");
+			break;
+			case "FEVEREIRO":
+				mv.addObject("mes", "Fevereiro");
+			break;
+			case "MARÇO":
+				mv.addObject("mes", "Março");
+			break;
+			case "ABRIL":
+				mv.addObject("mes", "Abril");
+			break;
+			case "MAIO":
+				mv.addObject("mes", "Maio");
+			break;
+			case "JUNHO":
+				mv.addObject("mes", "Junho");
+			break;
+			case "JULHO":
+				mv.addObject("mes", "Julho");
+			break;
+			case "AGOSTO":
+				mv.addObject("mes", "Agosto");
+			break;
+			case "SETEMBRO":
+				mv.addObject("mes", "Setembro");
+			break;
+			case "OUTUBRO":
+				mv.addObject("mes", "Outubro");
+			break;
+			case "NOVEMBRO":
+				mv.addObject("mes", "Novembro");
+			break;
+			case "DEZEMBRO":
+				mv.addObject("mes", "Dezembro");
+			break;
+		}
+		mv.addObject("data_processo", sdf.format(lanc.getProcesso().getData_abertura()));
+		
 		mv.addObject(lancamento);
 		mv.addObject("contrato", c);
 		mv.addObject("processo", p);
-		String [] numero = p.getNumero_processo().split("/");
-		mv.addObject("n_p", numero[0]);
-		mv.addObject("a_p", numero[1]);
+		if(p.getNumero_processo().contains("/"))
+		{
+			String [] numero = p.getNumero_processo().split("/");
+			mv.addObject("n_p", numero[0]);
+			mv.addObject("a_p", numero[1]);
+		}
+	
 		return mv;
 		
 	}
@@ -528,26 +540,33 @@ public class LancamentoController {
 		Lancamento lancbd = lancamentos.findOne(lancamento.getId_lancamento());
 		lancbd.setAditivo_n(lancamento.getAditivo_n());
 		lancbd.setData(lancamento.getData());
-		lancbd.setDataliquidacao(lancamento.getDataliquidacao());
+		//lancbd.setDataliquidacao(lancamento.getDataliquidacao());
 		lancbd.setMeses_prorrogacao(lancamento.getMeses_prorrogacao());
 		lancbd.setNumero_nota_fiscal(lancamento.getNumero_nota_fiscal());
 		lancbd.setObservacao(lancamento.getObservacao());
 		lancbd.setPossui_aditivo(lancamento.getPossui_aditivo());
 		lancbd.setObservacao(lancamento.getObservacao());
 		lancbd.setTipoAditivo(lancamento.getTipoAditivo());
+		lancbd.setMedicao(lancamento.getMedicao());
+		
 		String numero_completo = numero_processo + "/" + ano_processo;
 		Processo p = processos.findOne(lancbd.getProcesso().getId_processo());
-		p.setNumero_processo(numero_completo);
-		p.setData_abertura(data_processo);
-		switch(tipo_processo)
+		if(p.getId_processo() != 1)
 		{
-			case "Pagamento":
-				p.setTipo_processo(TipoProcesso.Pagamento);
-			break;
-			case "Renovacao":
-				p.setTipo_processo(TipoProcesso.Renovacao);
-			break;
+			p.setNumero_processo(numero_completo);
+			p.setData_abertura(data_processo);
+			switch(tipo_processo)
+			{
+				case "Pagamento":
+					p.setTipo_processo(TipoProcesso.Pagamento);
+				break;
+				case "Renovacao":
+					p.setTipo_processo(TipoProcesso.Renovacao);
+				break;
+			}
 		}
+		
+		
 		if(lancamento.getValor_aditivo() == null)
 		{
 			lancbd.setValor_aditivo(BigDecimal.ZERO);
@@ -574,6 +593,7 @@ public class LancamentoController {
 		lancamentos.save(lancbd);
 		recalcularSaldos(lancbd.getContrato());
 		mv.addObject("mensagem", "Lançamento editado com sucesso");
+		mv.addObject("contrato", c);
 		return mv;
 	}
 	
@@ -641,9 +661,8 @@ public class LancamentoController {
 		{
 			c.setSaldo_contrato(resultop1.subtract(resultop3));
 		}
+		recalcularSaldos(c);
 		contratos.save(c);
-		//usuarios.delete(id_usuario);
-		//desvincularLancamento(lancamento);
 		lancamentos.delete(lancamento);
 		return "redirect:/transparenciactb/lancamentos/pesquisar/"+ c.getId_contrato();	
 	
@@ -657,23 +676,7 @@ public void desvincularLancamento(Lancamento lancamento)
 	{
 		desvincularContratoLancamento(lancamento.getContrato());
 	}
-	
-	
-	
-	/*
-	Iterator it = contratosLancamentos.iterator();
-	
-	while(it.hasNext())
-	{
-		Lancamento obj = (Lancamento) it.next();
-		System.out.println("Entrou aqui nesse laço");
-		System.out.println(obj.getContrato().getNumero());
-		if(obj.getContrato().getNumero() == contrato.getNumero()) {
-			obj.setContrato(null);
-			lancamentos.save(obj);
-			}
-		}
-		*/
+
 		
 	}
 
@@ -708,7 +711,8 @@ private Long total(Criteria criteria) {
 
 @ModelAttribute("permissao")
 public boolean temPermissao() {
-	return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
+	Object usuarioLogado = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	return ((UserDetails)usuarioLogado).getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
 }
 
 }

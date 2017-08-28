@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" >
+
+
+<body>
+
+<i><h4>Foi registrado um novo pagamento no sistema, segue abaixo mais informações </h4></i>
+
+<table style="width: 100%; border-collapse: collapse;  margin: 20px 0">
+	<thead>
+				<tr>
+				<th class="text-center col-md-2">Contrato/Empresa</th>
+				<th class="text-center col-md-2">Gestor/Email</th>
+				<th class="text-center col-md-2">Mês de Competência</th>
+				<th class="text-center col-md-2">Nota Fiscal</th>
+				<th class="text-center col-md-2">Valor</th>
+				<th class="text-center col-md-2">Saldo do contrato</th>
+				<th class="text-center col-md-2">Número do Processo</th>
+				<th class="text-center col-md-2">Data de liquidação</th>
+				<th class="text-center col-md-2">Data de pagamento</th>
+				</tr>
+				
+			</thead>
+			<tbody>
+				<tr>
+					<td class="text-center" th:text="${contrato} ? ${contrato.numero} + '-' + ${contrato.contratado.nome} : 'Não informado'"></td>
+				  	<td class="text-center" th:text="${contrato} ? ${contrato.gestor.nome} + '-' + ${contrato.gestor.email}  : 'Não informado'"></td> 
+					<td class="text-center" th:text="${lancamento} ? ${lancamento.competencia}  : 'Não informado'"></td>
+					<td class="text-center" th:text=" ${lancamento} ? ${lancamento.numero_nota_fiscal}"></td>
+					<td class="text-center" th:text=" |R$ ${{lancamento.valor}}|"></td>
+					<td class="text-center" th:text=" |R$ ${{lancamento.saldo_contrato}}|"></td>
+					<td class="text-center" th:text=" ${processo} ? ${processo.numero_processo}"></td>
+					<td class="text-center" th:text=" ${lancamento} ?  ${#dates.format(lancamento.dataliquidacao, 'dd/MM/yyyy')}"></td>
+					<td class="text-center" th:text=" ${processo} ?  ${#dates.format(processo.data_pagamento, 'dd/MM/yyyy')}"></td>
+								
+				</tr>
+			
+			</tbody>
+</table>
+
+</body>
+
+</html>

@@ -23,7 +23,7 @@ public class AppUserDetailsService implements UserDetailsService  {
 
 	@Autowired
 	private Usuarios usuarios;
-	public static UserDetails cusuario = null;
+	//public static UserDetails cusuario = null;
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		Optional<Usuario> usuarioOptional = usuarios.porEmail(email);
@@ -31,7 +31,7 @@ public class AppUserDetailsService implements UserDetailsService  {
 		
 		UserDetails aux = new UsuarioSistema(usuario, getPermissoes(usuario));
 		
-		AppUserDetailsService.cusuario = aux;
+	//	AppUserDetailsService.cusuario = aux;
 		return aux;
 	}
 	

@@ -28,12 +28,12 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/TECI/Downloads/TransparenciaCTB-master/TransparenciaCTB/src/lib/joda-time-2.9.9/joda-time-2.9.9.jar"/>
-	<classpathentry kind="lib" path="C:/Users/TECI/Downloads/TransparenciaCTB-master/TransparenciaCTB/src/lib/joda-time-2.9.9/joda-time-2.9.9-javadoc.jar"/>
-	<classpathentry kind="lib" path="C:/Users/TECI/Downloads/TransparenciaCTB-master/TransparenciaCTB/src/lib/joda-time-2.9.9/joda-time-2.9.9-no-tzdb.jar"/>
-	<classpathentry kind="lib" path="C:/Users/TECI/Downloads/TransparenciaCTB-master/TransparenciaCTB/src/lib/joda-time-2.9.9/joda-time-2.9.9-no-tzdb-sources.jar"/>
-	<classpathentry kind="lib" path="C:/Users/TECI/Downloads/TransparenciaCTB-master/TransparenciaCTB/src/lib/joda-time-2.9.9/joda-time-2.9.9-sources.jar"/>
-	<classpathentry kind="lib" path="C:/Users/TECI/Downloads/TransparenciaCTB-master/TransparenciaCTB/src/lib/jxl.jar"/>
-	<classpathentry kind="lib" path="C:/Users/TECI/Downloads/TransparenciaCTB-master/TransparenciaCTB/src/lib/mail.jar"/>
+	<classpathentry kind="lib" path="C:/Users/TECI/Desktop/TransparenciaCTB-master/src/lib/jxl.jar"/>
+	<classpathentry kind="lib" path="C:/Users/TECI/Desktop/TransparenciaCTB-master/src/lib/mail.jar"/>
+	<classpathentry kind="lib" path="C:/Users/TECI/Desktop/TransparenciaCTB-master/src/lib/joda-time-2.9.9/joda-time-2.9.9.jar"/>
+	<classpathentry kind="lib" path="C:/Users/TECI/Desktop/TransparenciaCTB-master/src/lib/joda-time-2.9.9/joda-time-2.9.9-javadoc.jar"/>
+	<classpathentry kind="lib" path="C:/Users/TECI/Desktop/TransparenciaCTB-master/src/lib/joda-time-2.9.9/joda-time-2.9.9-no-tzdb.jar"/>
+	<classpathentry kind="lib" path="C:/Users/TECI/Desktop/TransparenciaCTB-master/src/lib/joda-time-2.9.9/joda-time-2.9.9-no-tzdb-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Users/TECI/Desktop/TransparenciaCTB-master/src/lib/joda-time-2.9.9/joda-time-2.9.9-sources.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

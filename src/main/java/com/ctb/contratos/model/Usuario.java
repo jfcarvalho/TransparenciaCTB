@@ -2,13 +2,16 @@ package com.ctb.contratos.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 
@@ -39,7 +42,10 @@ public class Usuario {
 	@JoinTable(name = "usuario_grupo", joinColumns = @JoinColumn(name = "codigo_usuario")
 				, inverseJoinColumns = @JoinColumn(name = "codigo_grupo"))	
 	private List<Grupo> grupos;
-
+	
+	@ManyToOne(fetch=FetchType.LAZY, cascade = {CascadeType.PERSIST})
+	@JoinColumn(name="usuario_id_comissao")
+	private Comissao usuario_comissao;
 	
 	public Integer getId_usuario()
 	{

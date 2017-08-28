@@ -20,6 +20,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -137,7 +139,11 @@ public class ProcessoController {
 	public String salvar(@Validated Processo processo, RedirectAttributes attributes)
 	{
 		ModelAndView mv = new ModelAndView(CADASTRO_VIEW);
-		Usuario user = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
+	//	Usuario user = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
+		Usuario user = new Usuario();
+		Object usuarioLogado = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		user = usuarios.findByEmail(((UserDetails) usuarioLogado).getUsername());
+		
 		processo.setUsuario(user);
 		processos.save(processo);		
 		attributes.addFlashAttribute("mensagem", "Processo salvo com sucesso!");	
@@ -223,7 +229,8 @@ public class ProcessoController {
 	
 	@ModelAttribute("permissao")
 	public boolean temPermissao() {
-		return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
+		Object usuarioLogado = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return ((UserDetails)usuarioLogado).getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
 	}
 	
 	@ModelAttribute("todosTiposProcessos")

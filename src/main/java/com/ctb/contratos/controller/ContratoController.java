@@ -1,7 +1,13 @@
 package com.ctb.contratos.controller;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,6 +27,7 @@ import java.util.Queue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
@@ -33,8 +40,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.ctb.Datasheet;
 import com.ctb.Processo;
+import com.ctb.TipoProcesso;
 import com.ctb.contratos.model.AditivoSetting;
 import com.ctb.contratos.model.AnoResumo;
 import com.ctb.contratos.model.Contratado;
@@ -52,13 +59,12 @@ import com.ctb.contratos.repository.Processos;
 import com.ctb.contratos.repository.Usuarios;
 import com.ctb.licitacoes.model.Licitacao;
 import com.ctb.security.UsuarioSistema;
-
-import jxl.write.WriteException;
-
 import com.ctb.security.AppUserDetailsService;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -71,6 +77,7 @@ import org.joda.time.Months;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 
 
@@ -91,6 +98,8 @@ public class ContratoController {
 	private static final String EDICAOGESTORES_VIEW = "/edicao/EditarContratoGestor";
 	private static final String EDICAO_VIEW = "/edicao/EdicaoContrato";
 	private static final String RENOVACAO_VIEW = "/cadastro/Renovacao";
+	private static final String PAGAMENTOS_EFETUAR_VIEW = "/pesquisa/PesquisaPagamentos";
+	
 	public static Integer numero_contrato =0;
 	static final ArrayList<AditivoSetting> aditivos = new ArrayList();
 	private static final String DASHBOARD_VIEW = "/cabecalho/DashBoard";
@@ -134,99 +143,44 @@ public class ContratoController {
 		mv.addObject("contrato", c);
 		return mv;
 	}
-	
+
 	@RequestMapping("/relatorio_tce")
-	public ModelAndView gerarTCE() throws WriteException
+	public ModelAndView gerarTCE()
 	{
 		ModelAndView mv = new ModelAndView(RELATORIOTCE_VIEW);
 	     List<Contrato> ct = contratos.findAll();
 	     List<Contrato> ctx = new ArrayList<Contrato>();
-	     Datasheet ds = new Datasheet();
-	     ds.readExcel();
-	     int linhaPlanilha = 5;
-	     int colunaPlanilha = 0;
 	     
 	     for(Contrato c:ct)
 	     {
 	    	 String [] data = c.getData_vencimento().toString().split("-");
-	    	 if(Integer.parseInt(data[0]) >= 2016)
+	    	 if(Integer.parseInt(data[0]) >= 2017)
 	    	 {
 	    		 ctx.add(c);
 	    	 }
 	     }
-	     
-	     ds.setValueIntoCell("Planilha1", 0, 4, "Código");
-	     ds.setValueIntoCell("Planilha1", 1, 4, "Nome");
-	     ds.setValueIntoCell("Planilha1", 2, 4, "Código");
-	     ds.setValueIntoCell("Planilha1", 3, 4, "Nome");
-	     ds.setValueIntoCell("Planilha1", 4, 4, "Contratado");
-	     ds.setValueIntoCell("Planilha1", 5, 4, "CNPJ");
-	     ds.setValueIntoCell("Planilha1", 6, 4, "CPF");
-	     ds.setValueIntoCell("Planilha1", 7, 4, "Número do Contrato");
-	     ds.setValueIntoCell("Planilha1", 8, 4, "Objeto");
-	     ds.setValueIntoCell("Planilha1", 9, 4, "D.O.E");
-	     ds.setValueIntoCell("Planilha1", 10, 4, "Número");
-	     ds.setValueIntoCell("Planilha1", 11, 4, "Modalidade");
-	     ds.setValueIntoCell("Planilha1", 12, 4, "Data de início");
-	     ds.setValueIntoCell("Planilha1", 13, 4, "Data final");
-	     ds.setValueIntoCell("Planilha1", 14, 4, "Inicial");
-	     ds.setValueIntoCell("Planilha1", 15, 4, "Atual");
-	     ds.setValueIntoCell("Planilha1", 16, 4, "Qtde de Aditivos");
-	     ds.setValueIntoCell("Planilha1", 17, 4, "No exercicio");
-	     ds.setValueIntoCell("Planilha1", 18, 4, "Acumulado");
-	     ds.setValueIntoCell("Planilha1", 19, 4, "Observações");
-	     
-	     
 	     List<PrestacaoContas> prestacao = new ArrayList<PrestacaoContas>();
 	   // int linhaAtual = 5;
 	    for (Contrato c:ctx) {
 	    	PrestacaoContas pc = new PrestacaoContas();
 	    	pc.setCuo("26402");
-	    	ds.setValueIntoCell("Planilha1", colunaPlanilha++,linhaPlanilha, pc.getCuo());
 	    	pc.setNuo("CTB");
-	    	ds.setValueIntoCell("Planilha1", colunaPlanilha++,linhaPlanilha, pc.getNuo());
 	    	pc.setCug("1");
-	    	ds.setValueIntoCell("Planilha1", colunaPlanilha++,linhaPlanilha, pc.getCug());
 	    	pc.setNug("CTB");
-	    	ds.setValueIntoCell("Planilha1", colunaPlanilha++,linhaPlanilha, pc.getNuo());
 	    	pc.setContratado(c.getContratado().getNome());
-	    	ds.setValueIntoCell("Planilha1", colunaPlanilha++ ,linhaPlanilha, pc.getContratado());
 	    	pc.setCnpj(c.getContratado().getCnpj());
-	    	ds.setValueIntoCell("Planilha1", colunaPlanilha++,linhaPlanilha, pc.getCnpj());
 		    pc.setCpf(c.getCpfResponsavel());
-		    ds.setValueIntoCell("Planilha1", colunaPlanilha++,linhaPlanilha,  pc.getCpf());
 		    pc.setNumero(c.getNumero());
-		    ds.setValueIntoCell("Planilha1", colunaPlanilha++,linhaPlanilha, pc.getNumero());
 		    pc.setObjeto(c.getObjeto());
-		    ds.setValueIntoCell("Planilha1", colunaPlanilha++,linhaPlanilha, pc.getObjeto());
 		    pc.setDoe(c.getDoe());
-		    if(pc.getDoe() != null)
-		    {
-		    	ds.setValueIntoCell("Planilha1", colunaPlanilha++, linhaPlanilha,pc.getDoe().toString());
-		    }
-		    else
-		    {
-		    	ds.setValueIntoCell("Planilha1", colunaPlanilha++,  linhaPlanilha, "--------");
-		    }
-		   // ds.setValueIntoCell("Planilha1", linhaPlanilha, colunaPlanilha++, pc.getDoe().toString());
 		    if(c.getLicitacao() != null) {
 			    pc.setLicitacao_modalidade(c.getLicitacao().getModalidade().getDescricao());
-			    ds.setValueIntoCell("Planilha1", colunaPlanilha++,linhaPlanilha, pc.getLicitacao_modalidade());
 			    pc.setLicitacao_numero(c.getLicitacao().getNumero());
-			    ds.setValueIntoCell("Planilha1", colunaPlanilha++,linhaPlanilha, pc.getLicitacao_numero());
-		    }
-		    else
-		    {
-		    	 ds.setValueIntoCell("Planilha1", colunaPlanilha++,linhaPlanilha,"--------");
-		    	 ds.setValueIntoCell("Planilha1", colunaPlanilha++,linhaPlanilha, "--------");
 		    }
 		    pc.setContrato_vigencia(c.getData_assinatura());
-		    ds.setValueIntoCell("Planilha1", colunaPlanilha++,linhaPlanilha, pc.getContrato_vigencia().toString());
 		    pc.setContrato_fim(c.getData_vencimento());
-		    ds.setValueIntoCell("Planilha1", colunaPlanilha++,linhaPlanilha, pc.getContrato_fim().toString());
 		   pc.setValor(c.getValor_contrato());
-		   ds.setValueIntoCell("Planilha1", colunaPlanilha++ ,linhaPlanilha, pc.getValor().toString());
-		   
+		 
 
 		 		 
 
@@ -234,25 +188,21 @@ public class ContratoController {
 		    valorTotalAditivos = valorTotalAditivos.add(c.getValor_contrato());
 		 
 		    pc.setValor_com_aditivo(valorTotalAditivos);
-		    ds.setValueIntoCell("Planilha1", colunaPlanilha++ ,linhaPlanilha, pc.getValor_com_aditivo().toString());
+		    
 		     Integer qAditivos = totalAditivos(c);
 		     pc.setN_aditivos(qAditivos);
-		     ds.setValueIntoCell("Planilha1", colunaPlanilha++ ,linhaPlanilha, pc.getN_aditivos().toString());
 		    
-		     BigDecimal pagoExercicio = totalPagoExercicio(c, "2016"); 
+		    
+		     BigDecimal pagoExercicio = totalPagoExercicio(c, "2017"); 
 		    pc.setPagoExercicio(pagoExercicio);
-		    ds.setValueIntoCell("Planilha1", colunaPlanilha++ ,linhaPlanilha, pc.getPagoExercicio().toString());
 		     
 		     BigDecimal pagoAcumulado = totalPagoAcumulado(c);
 		     pc.setPagoAcumulado(pagoAcumulado);
-		     ds.setValueIntoCell("Planilha1", colunaPlanilha++ ,linhaPlanilha, pc.getPagoAcumulado().toString());
-		     ds.setValueIntoCell("Planilha1", colunaPlanilha++ ,linhaPlanilha, " ");
+		     
 		     prestacao.add(pc);
-		     linhaPlanilha++;
-		     colunaPlanilha = 0;
 	    }
 	    mv.addObject("todos", prestacao); 
-	    ds.closeFile();
+	   
 		return mv;
 	}
 	
@@ -826,8 +776,12 @@ public class ContratoController {
 	{
 		
 		
-		Usuario currentUser = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
-		boolean tem_permissao = AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
+		
+		//boolean tem_permissao = AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
+		Object usuarioLogado = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Usuario currentUser = usuarios.findByEmail(((UserDetails)usuarioLogado).getUsername());
+		boolean tem_permissao = ((UserDetails)usuarioLogado).getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
+		
 		ModelAndView mv = new ModelAndView("/pesquisa/PesquisaContratos");
 		//mv.addObject("usuarios", todosUsuarios);
 		mv.addObject("tem_permissao", tem_permissao);
@@ -847,7 +801,7 @@ public class ContratoController {
 		criteria.setFirstResult(primeiroRegistro);
 		criteria.setMaxResults(pageable.getPageSize());
 		criteria.addOrder(Order.desc("ultima_atualizacao"));
-		if(numero != null && AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO") == true) {
+		if(numero != null && tem_permissao == true) {
 			if(busca != null && numero.equals("on")) {
 				List<Contrato> todosContratos = contratos.findByNumeroContaining(busca);
 				mv.addObject("buscaContratos", todosContratos);
@@ -856,14 +810,14 @@ public class ContratoController {
 				return mv;
 			}
 		}
-		else if(objeto != null && AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO") == true) {
+		else if(objeto != null && tem_permissao) {
 			if(busca != null && objeto.equals("on")) {
 				List<Contrato> todosContratos = contratos.findByObjetoContaining(busca);
 				mv.addObject("buscaContratos", todosContratos);
 				return mv;
 			}
 		}
-		else if(nome_empresa != null && AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO") == true)
+		else if(nome_empresa != null && tem_permissao)
 		{
 			if(busca != null && nome_empresa.equals("on"))
 			{
@@ -874,7 +828,7 @@ public class ContratoController {
 		}
 
 		   
-		   if(AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO") == false) //Ou seja, se for um gestor comum
+		   if(tem_permissao == false) //Ou seja, se for um gestor comum
 		   {
 			   
 			   List<Contrato> contratosUsuario = currentUser.getContratosGeridos();
@@ -896,8 +850,9 @@ public class ContratoController {
 	{
 		
 		
-		Usuario currentUser = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
-		boolean tem_permissao = AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
+		Object usuarioLogado = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Usuario currentUser = usuarios.findByEmail(((UserDetails)usuarioLogado).getUsername());
+		boolean tem_permissao = ((UserDetails)usuarioLogado).getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
 		ModelAndView mv = new ModelAndView("/pesquisa/PesquisaContratosVencidos");
 		//mv.addObject("usuarios", todosUsuarios);
 		mv.addObject("tem_permissao", tem_permissao);
@@ -917,7 +872,7 @@ public class ContratoController {
 		criteria.setFirstResult(primeiroRegistro);
 		criteria.setMaxResults(pageable.getPageSize());
 		criteria.addOrder(Order.desc("ultima_atualizacao"));
-		if(numero != null && AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO") == true) {
+		if(numero != null && tem_permissao == true) {
 			if(busca != null && numero.equals("on")) {
 				List<Contrato> todosContratos = todosContratosVencidos(contratos.findByNumeroContaining(busca));
 				mv.addObject("buscaContratos", todosContratos);
@@ -926,7 +881,7 @@ public class ContratoController {
 				return mv;
 			}
 		}
-		else if(objeto != null && AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO") == true) {
+		else if(objeto != null && tem_permissao == true) {
 			if(busca != null && objeto.equals("on")) {
 				List<Contrato> todosContratos = todosContratosVencidos(contratos.findByObjetoContaining(busca));
 				mv.addObject("buscaContratos", todosContratos);
@@ -934,7 +889,7 @@ public class ContratoController {
 			}
 		}
 		
-		else if(nome_empresa != null && AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO") == true)
+		else if(nome_empresa != null && tem_permissao == true)
 		{
 			if(busca != null && nome_empresa.equals("on"))
 			{
@@ -945,7 +900,7 @@ public class ContratoController {
 		}
 
 		   
-		   if(AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO") == false) //Ou seja, se for um gestor comum
+		   if(tem_permissao == false) //Ou seja, se for um gestor comum
 		   {
 			   
 			 
@@ -967,8 +922,10 @@ public class ContratoController {
 	{
 		
 		
-		Usuario currentUser = usuarios.findByEmail(AppUserDetailsService.cusuario.getUsername());
-		boolean tem_permissao = AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
+		Object usuarioLogado = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Usuario currentUser = usuarios.findByEmail(((UserDetails)usuarioLogado).getUsername());
+		boolean tem_permissao = ((UserDetails)usuarioLogado).getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
+		
 		ModelAndView mv = new ModelAndView("/pesquisa/PesquisaContratosVigente");
 		//mv.addObject("usuarios", todosUsuarios);
 		mv.addObject("tem_permissao", tem_permissao);
@@ -1005,7 +962,7 @@ public class ContratoController {
 			}
 		}
 		
-		else if(nome_empresa != null && AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO") == true)
+		else if(nome_empresa != null && tem_permissao == true)
 		{
 			if(busca != null && nome_empresa.equals("on"))
 			{
@@ -1016,7 +973,7 @@ public class ContratoController {
 		}
 
 		   
-		   if(AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO") == false) //Ou seja, se for um gestor comum
+		   if(tem_permissao == false) //Ou seja, se for um gestor comum
 		   {
 			   
 			 
@@ -1919,7 +1876,8 @@ public class ContratoController {
 }
 	@ModelAttribute("permissao")
 	public boolean temPermissao() {
-		return AppUserDetailsService.cusuario.getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
+		Object usuarioLogado = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return ((UserDetails)usuarioLogado).getAuthorities().toString().contains("ROLE_CADASTRAR_CONTRATO");
 	}
 	
 
@@ -2037,8 +1995,219 @@ public class ContratoController {
 		return acumulado;
 	}
 	
+	@RequestMapping(value="/download", method=RequestMethod.GET)
+	public void download(HttpServletRequest request, HttpServletResponse response)	throws IOException {
+		File file = new File("C:\\Users\\TECI\\Desktop\\testSampleDataCopy.xls");
+		InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+		String mimeType = URLConnection.guessContentTypeFromStream(inputStream);
+		if(mimeType == null)
+		{
+			mimeType = "application/octet-stream";
+		}
+		response.setContentType(mimeType);
+		response.setContentLength((int) file.length());
+		response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"",  file.getName()));
+		FileCopyUtils.copy(inputStream, response.getOutputStream());
+	}
+	
+	@RequestMapping(value="/pagamentos_a_efetuar")
+	public ModelAndView pesquisa_pagamentos(String nota_fiscal, String busca, String contrato_numero, String nome_empresa, @PageableDefault(size=15) Pageable pageable) throws ParseException
+	{
+		ModelAndView mv = new ModelAndView(PAGAMENTOS_EFETUAR_VIEW);
+		Criteria criteria = manager.unwrap(Session.class).createCriteria(Lancamento.class);
+		int paginaAtual = pageable.getPageNumber();
+		int totalRegistrosPorPagina = pageable.getPageSize();
+		int primeiroRegistro = paginaAtual * totalRegistrosPorPagina;
+		List<Lancamento> lancs = lancamentos.findAll();
+		criteria.setFirstResult(primeiroRegistro);
+        criteria.setMaxResults(totalRegistrosPorPagina);
+        criteria.addOrder(Order.desc("data"));
+        if(nota_fiscal != null) {
+			if(busca != null && nota_fiscal.equals("on")) {
+				
+				List<Lancamento> lancamentos_limitados = new ArrayList<Lancamento>();
+				
+					for(Lancamento l: lancs)
+					{
+						
+						if(l.getNumero_nota_fiscal() != null && l.getProcesso().getPago()== false && l.getProcesso().getTipo_processo() != TipoProcesso.Renovacao) {
+							if(l.getNumero_nota_fiscal().contains(busca))
+								
+							{
+								lancamentos_limitados.add(l);
+							}
+						}
+					}
+				
+				mv.addObject("todosLancamentos", lancamentos_limitados);
+				
+				
+				return mv;
+			}
+		}
+    	else if(contrato_numero != null) {
+    		if(busca != null && contrato_numero.equals("on")) {
+    			
+    			List<Lancamento> lancamentos_limitados = new ArrayList<Lancamento>();
+    				for(Lancamento l: lancs)
+    				{
+    					Contrato c = l.getContrato();
+    					if(c.getNumero() != null) {
+    						if(c.getNumero().contains(busca) && l.getProcesso().getPago()== false && l.getProcesso().getTipo_processo() != TipoProcesso.Renovacao)
+    							
+    						{
+    							lancamentos_limitados.add(l);
+    						}
+    					}
+    				}
+    			
+    			mv.addObject("todosLancamentos", lancamentos_limitados);
+    			return mv;
+    		}
+    	}
+
+    	else if(nome_empresa != null) {
+    		if(busca != null && nome_empresa.equals("on")) {
+    			
+    			List<Lancamento> lancamentos_limitados = new ArrayList<Lancamento>();
+    				for(Lancamento l: lancs)
+    				{
+    					Contratado ct = l.getContrato().getContratado();
+    					if(ct.getNome() != null) {
+    						if(ct.getNome().contains(busca) && l.getProcesso().getPago()== false && l.getProcesso().getTipo_processo() != TipoProcesso.Renovacao)
+    							
+    						{
+    							lancamentos_limitados.add(l);
+    						}
+    					}
+    				}
+    			
+    			mv.addObject("todosLancamentos", lancamentos_limitados);
+    			return mv;
+    		}
+    	}
+    	
+        List<Lancamento> lc= todasNotasAPagar(criteria.list());
+		  mv.addObject("todosLancamentos", lc);
+		   
+			return mv;
+	
+	}
+	
+	@RequestMapping(value="/pagamentos_efetuados")
+	public ModelAndView pesquisa_pagos(String nota_fiscal, String busca, String contrato_numero, String nome_empresa, @PageableDefault(size=15) Pageable pageable) throws ParseException
+	{
+		ModelAndView mv = new ModelAndView(PAGAMENTOS_EFETUAR_VIEW);
+		Criteria criteria = manager.unwrap(Session.class).createCriteria(Lancamento.class);
+		int paginaAtual = pageable.getPageNumber();
+		int totalRegistrosPorPagina = pageable.getPageSize();
+		int primeiroRegistro = paginaAtual * totalRegistrosPorPagina;
+		List<Lancamento> lancs = lancamentos.findAll();
+		criteria.setFirstResult(primeiroRegistro);
+        criteria.setMaxResults(totalRegistrosPorPagina);
+        criteria.addOrder(Order.desc("data"));
+        if(nota_fiscal != null) {
+			if(busca != null && nota_fiscal.equals("on")) {
+				
+				List<Lancamento> lancamentos_limitados = new ArrayList<Lancamento>();
+				
+					for(Lancamento l: lancs)
+					{
+						
+						if(l.getNumero_nota_fiscal() != null && l.getProcesso().getPago()== true && l.getProcesso().getTipo_processo() != TipoProcesso.Renovacao) {
+							if(l.getNumero_nota_fiscal().contains(busca))
+								
+							{
+								lancamentos_limitados.add(l);
+							}
+						}
+					}
+				
+				mv.addObject("todosLancamentos", lancamentos_limitados);
+				
+				
+				return mv;
+			}
+		}
+    	else if(contrato_numero != null) {
+    		if(busca != null && contrato_numero.equals("on")) {
+    			
+    			List<Lancamento> lancamentos_limitados = new ArrayList<Lancamento>();
+    				for(Lancamento l: lancs)
+    				{
+    					Contrato c = l.getContrato();
+    					if(c.getNumero() != null) {
+    						if(c.getNumero().contains(busca) && l.getProcesso().getPago()== true && l.getProcesso().getTipo_processo() != TipoProcesso.Renovacao)
+    							
+    						{
+    							lancamentos_limitados.add(l);
+    						}
+    					}
+    				}
+    			
+    			mv.addObject("todosLancamentos", lancamentos_limitados);
+    			return mv;
+    		}
+    	}
+
+    	else if(nome_empresa != null) {
+    		if(busca != null && nome_empresa.equals("on")) {
+    			
+    			List<Lancamento> lancamentos_limitados = new ArrayList<Lancamento>();
+    				for(Lancamento l: lancs)
+    				{
+    					Contratado ct = l.getContrato().getContratado();
+    					if(ct.getNome() != null) {
+    						if(ct.getNome().contains(busca) && l.getProcesso().getPago()== true && l.getProcesso().getTipo_processo() != TipoProcesso.Renovacao)
+    							
+    						{
+    							lancamentos_limitados.add(l);
+    						}
+    					}
+    				}
+    			
+    			mv.addObject("todosLancamentos", lancamentos_limitados);
+    			return mv;
+    		}
+    	}
+    	
+        List<Lancamento> lc= todasNotasPagas(criteria.list());
+		  mv.addObject("todosLancamentos", lc);
+		   
+			return mv;
+	
+	}
 	
 	
+	public List<Lancamento> todasNotasAPagar(List<Lancamento> lcs)
+	{
+		List<Lancamento> nova_lista_limitada = new ArrayList<Lancamento>();
+		for(Lancamento l:lcs)
+		{
+			if(l.getProcesso().getPago() == false && l.getProcesso().getTipo_processo() != TipoProcesso.Renovacao)
+			{
+				nova_lista_limitada.add(l);
+				
+			}
+		}
+		return nova_lista_limitada;
+	}
+	
+	public List<Lancamento> todasNotasPagas(List<Lancamento> lcs)
+	{
+		List<Lancamento> nova_lista_limitada = new ArrayList<Lancamento>();
+		for(Lancamento l:lcs)
+		{
+			if(l.getProcesso().getPago() == true && l.getProcesso().getTipo_processo() != TipoProcesso.Renovacao)
+			{
+				nova_lista_limitada.add(l);
+				
+			}
+		}
+		return nova_lista_limitada;
+	}
+
+
 	
 	
 }

@@ -23,8 +23,6 @@ public class PrestacaoContas {
 	private Integer n_aditivos;
 	private BigDecimal pagoExercicio;
 	private BigDecimal pagoAcumulado;
-	private String observacoes;
-	
 	public String getCuo() {
 		return cuo;
 	}
@@ -138,12 +136,6 @@ public class PrestacaoContas {
 	}
 	public void setPagoAcumulado(BigDecimal pagoAcumulado) {
 		this.pagoAcumulado = pagoAcumulado;
-	}
-	public String getObservacoes() {
-		return observacoes;
-	}
-	public void setObservacoes(String observacoes) {
-		this.observacoes = observacoes;
 	}
 	
 }

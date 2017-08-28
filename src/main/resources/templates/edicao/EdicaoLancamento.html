@@ -19,7 +19,7 @@
 		<div class="panel-heading">
 			<div class="clearfix">
 			<h1 class="panel-title">Editando Lançamento</h1>
-		<a class="btn btn-link aw-link-panel" th:href="@{/transparenciactb/lancamentos/pesquisar/{id_contrato}(id_contrato = ${contrato.id_contrato})}">Voltar para pesquisa de lançamentos</a>
+		<a class="btn btn-link aw-link-panel" th:href="@{/transparenciactb/lancamentos/pesquisar/{id_contrato}(id_contrato = ${contrato.id_contrato})}">Voltar para pesquisa de lançamentos</a>	| <a class="btn btn-link aw-link-panel" href="/transparenciactb/">Voltar para home</a>
 		</div>
 		</div>
 	
@@ -53,18 +53,18 @@
 			<label for="nome" class="col-sm-2 control-label" >Mês de competência:</label>
 		<div class="col-sm-2">
 				<select class="form-control" name="competencia">
-					<option value="Janeiro">Janeiro</option>
-					<option value="Fevereiro">Fevereiro</option>
-					<option value="Março">Março</option>
-					<option value="Abril">Abril</option>
-					<option value="Maio">Maio</option>
-					<option value="Junho">Junho</option>
-					<option value="Julho">Julho</option>
-					<option value="Agosto">Agosto</option>
-					<option value="Setembro">Setembro</option>
-					<option value="Outubro">Outubro</option>
-					<option value="Novembro">Novembro</option>
-					<option value="Dezembro">Dezembro</option>
+					<option value="Janeiro" th:selected="${mes} == 'Janeiro'">Janeiro</option>
+					<option value="Fevereiro" th:selected="${mes} == 'Fevereiro'">Fevereiro</option>
+					<option value="Março" th:selected="${mes} == 'Março'">Março</option>
+					<option value="Abril" th:selected="${mes} == 'Abril'">Abril</option>
+					<option value="Maio" th:selected="${mes} == 'Maio'">Maio</option>
+					<option value="Junho" th:selected="${mes} == 'Junho'">Junho</option>
+					<option value="Julho" th:selected="${mes} == 'Julho'">Julho</option>
+					<option value="Agosto" th:selected="${mes} == 'Agosto'">Agosto</option>
+					<option value="Setembro" th:selected="${mes} == 'Setembro'">Setembro</option>
+					<option value="Outubro" th:selected="${mes} == 'Outubro'">Outubro</option>
+					<option value="Novembro" th:selected="${mes} == 'Novembro'">Novembro</option>
+					<option value="Dezembro" th:selected="${mes} == 'Dezembro'">Dezembro</option>
 				</select>
 			</div>
 			</div>
@@ -108,7 +108,7 @@
 		<div class="form-group" >
 			<label for="funcao" class="col-sm-2 control-label">Data de abertura do processo:</label>
 			<div class="col-sm-2">
-				<input type="text" class="form-control" id="data_processo" name="data_processo" data-provide="datepicker" data-date-format="dd/mm/yyyy" data-date-language="pt-BR" data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom" th:value="${processo.data_abertura}"/>
+				<input type="text" class="form-control" id="data_processo" name="data_processo" data-provide="datepicker" data-date-format="dd/mm/yyyy" data-date-language="pt-BR" data-date-autoclose="true" data-date-today-highlight="true" data-date-orientation="bottom" th:value="${data_processo}"/>
 			</div>
 		</div>
 		
@@ -180,17 +180,20 @@
 	</div>
 </form>
 </section>
+
+<script src="/layout/javascripts/jquery-2.2.0.min.js"></script>
+<script src="/layout/javascripts/jquery.maskMoney.min.js"></script>
+<script src="/layout/javascripts/jquery.maskMoney.js"></script>
+<script src="/layout/javascripts/bootstrap.min.js"></script>
 <script src="/layout/javascripts/vendors.min.js"></script>
 <script src="/layout/javascripts/algaworks.min.js"></script>
 
 
 <script src="/layout/javascripts/bootstrap-datepicker.min.js"></script>
  <script src="/layout/javascripts/bootstrap-datepicker.pt-BR.min.js"></script>
-<script src="/layout/javascripts/bootstrap.min.js"></script>
-<script src="/layout/javascripts/jquery-2.2.0.min.js"></script>
-<script src="/layout/javascripts/jquery.maskMoney.min.js"></script>
-<script src="/layout/javascripts/jquery.maskMoney.js"></script>
 
-<script src="/layout/javascripts/ctb.js"></script>
+
+
+
 <script src="/layout/javascripts/formulario_lancamento.js"></script>
 </html>
