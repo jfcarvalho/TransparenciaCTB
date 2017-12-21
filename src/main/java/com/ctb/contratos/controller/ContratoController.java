@@ -404,9 +404,14 @@ public class ContratoController {
 		DateTime inicio = new DateTime();
 		DateTime fim = new DateTime(c.getData_vencimento());
 		Months m = Months.monthsBetween(inicio, fim);
+		Days d = Days.daysBetween(inicio, fim);
 		c.setMeses_vencimento(m.getMonths());
 		contratos.save(c);
 		
+	
+		mv.addObject("dias", d.getDays() <= 90 && d.getDays() >0);
+		mv.addObject("ndias", d.getDays());
+		mv.addObject("vencido", d.getDays() < 0);
 		mv.addObject("contrato", c);
 		mv.addObject("total_aditivos", totalAditivos);
 		mv.addObject("total", valorTotal);

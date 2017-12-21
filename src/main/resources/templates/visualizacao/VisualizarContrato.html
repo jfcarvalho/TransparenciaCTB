@@ -16,7 +16,8 @@
 <div class="aw-layout-page">
 <section class="aw-layout-content  js-content is-toggled">
 <div layout:include="/cabecalho/CabecalhoLancamento"></div>
-
+<h2 align="center" style="color:red " th:if="${dias}">Faltam <span th:text="${ndias}"></span> dias para o vencimento do contrato</h2>
+<h2 align="center" style="color:blue" th:if="${vencido}">Contrato vencido</h2>
 <div style="display: block; float:left; margin-top:20px; margin-bottom:20px;">
 <table>
  <tr>
@@ -203,6 +204,10 @@
 <p></p>
 <p></p>
 <p></p>
+<!--  th:if="${noventadias}"-->
+<!--  th:if="${vencido}" -->
+
+
 <table class="table table-bordered table-striped">
 <thead>
 				<tr>
